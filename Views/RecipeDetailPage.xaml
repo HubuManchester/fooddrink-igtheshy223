@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ssk.ViewModels"
+             xmlns:models="clr-namespace:ssk.Models"
+             xmlns:converters="clr-namespace:ssk.Converters"
+             x:Class="ssk.Views.RecipeDetailPage"
+             x:DataType="viewmodels:RecipeDetailViewModel"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.Resources>
+        <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+        <converters:BoolToColorConverter x:Key="FavoriteColorConverter" TrueColor="#EF4444" FalseColor="#9CA3AF"/>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Row 0: 根据设备类型切换布局 -->
+        <OnIdiom x:TypeArguments="View" Grid.Row="0">
+
+            <!-- ==================== 手机布局：保持原样 ==================== -->
+            <OnIdiom.Phone>
+                <ScrollView>
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- 顶部大图区域 250高度 -->
+                        <Grid HeightRequest="250">
+                            <!-- 底层错误占位 -->
+                            <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
+                                <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
+                                           TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                    <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                           TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                    <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                           TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+                            <!-- 上层图片 -->
+                            <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
+                                   Aspect="AspectFill"
+                                   HeightRequest="250"
+                                   HorizontalOptions="Fill" />
+
+                            <!-- 左上角返回按钮 -->
+                            <Border HorizontalOptions="Start" VerticalOptions="Start"
+                                    Margin="16,40"
+                                    StrokeShape="RoundRectangle 20"
+                                    WidthRequest="40" HeightRequest="40"
+                                    BackgroundColor="#80000000"
+                                    StrokeThickness="0"
+                                    AutomationId="BtnBack">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="&#xf060;" FontFamily="FA" FontSize="16"
+                                       TextColor="White"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+
+                            <!-- 右上角收藏按钮 -->
+                            <Border HorizontalOptions="End" VerticalOptions="Start"
+                                    Margin="16,40"
+                                    StrokeShape="RoundRectangle 20"
+                                    WidthRequest="40" HeightRequest="40"
+                                    BackgroundColor="#80000000"
+                                    StrokeThickness="0"
+                                    AutomationId="BtnFavorite">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="&#xf004;" FontFamily="FA" FontSize="18"
+                                       TextColor="{Binding CurrentRecipe.IsFavorite, Converter={StaticResource FavoriteColorConverter}}"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- 信息区 -->
+                        <VerticalStackLayout Padding="20" Spacing="16">
+
+                            <!-- 标题 + 描述 -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding CurrentRecipe.Title}"
+                                       FontSize="{DynamicResource Font22}" FontAttributes="Bold"
+                                       SemanticProperties.HeadingLevel="Level1"
+                                       AutomationId="LblRecipeTitle" />
+                                <Label Text="{Binding CurrentRecipe.Description}"
+                                       FontSize="{DynamicResource Font14}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                       LineBreakMode="WordWrap"
+                                       AutomationId="LblRecipeDesc" />
+                            </VerticalStackLayout>
+
+                            <!-- 标签 -->
+                            <HorizontalStackLayout Spacing="8"
+                                                   BindableLayout.ItemsSource="{Binding TagList}"
+                                                   AutomationId="TagsLayout">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border StrokeShape="RoundRectangle 12"
+                                                BackgroundColor="{StaticResource PrimaryLight}"
+                                                Padding="12,4"
+                                                StrokeThickness="0">
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font12}"
+                                                   TextColor="{StaticResource Primary}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+
+                            <!-- 3个信息项横排 -->
+                            <Grid ColumnDefinitions="*,*,*"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="8"
+                                  Margin="0,4">
+                                <!-- 准备时间 -->
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 烹饪时间 -->
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 份数 -->
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- 分隔线 -->
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                                     Margin="0,4" />
+
+                            <!-- 烹饪步骤区 -->
+                            <Label Text="烹饪步骤"
+                                   FontSize="{DynamicResource Font18}" FontAttributes="Bold"
+                                   SemanticProperties.HeadingLevel="Level2"
+                                   AutomationId="LblSteps" />
+
+                            <VerticalStackLayout Spacing="0"
+                                                 BindableLayout.ItemsSource="{Binding Steps}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:StepModel">
+                                        <VerticalStackLayout>
+                                            <Grid ColumnDefinitions="36,*"
+                                                  ColumnSpacing="12"
+                                                  Padding="0,8">
+                                                <!-- 序号圆圈 -->
+                                                <Border Grid.Column="0"
+                                                        StrokeShape="RoundRectangle 16"
+                                                        WidthRequest="32" HeightRequest="32"
+                                                        BackgroundColor="{StaticResource PrimaryLight}"
+                                                        StrokeThickness="0"
+                                                        HorizontalOptions="Center"
+                                                        VerticalOptions="Start">
+                                                    <Label Text="{Binding Index, StringFormat='{}{0}'}"
+                                                           FontSize="{DynamicResource Font13}" FontAttributes="Bold"
+                                                           TextColor="{StaticResource Primary}"
+                                                           HorizontalOptions="Center"
+                                                           VerticalOptions="Center" />
+                                                </Border>
+                                                <!-- 步骤文字 -->
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Text}"
+                                                       FontSize="{DynamicResource Font14}"
+                                                       LineBreakMode="WordWrap"
+                                                       VerticalOptions="Center" />
+                                            </Grid>
+                                            <!-- 分隔线（非最后一项） -->
+                                            <BoxView HeightRequest="1"
+                                                     BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
+                                                     Margin="48,4,0,4" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+
+                            <!-- 分隔线 -->
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                                     Margin="0,8" />
+
+                            <!-- 营养信息卡片 -->
+                            <Border StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                    Padding="16">
+                                <Border.Shadow>
+                                    <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                            Offset="0,2" Radius="8" Opacity="0.3"/>
+                                </Border.Shadow>
+
+                                <VerticalStackLayout Spacing="12">
+                                    <Label Text="营养信息"
+                                           FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
+                                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <!-- 热量 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCalories}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 蛋白质 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionProtein}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 碳水 -->
+                                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCarbs}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
+                                        <!-- 脂肪 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFat}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 纤维 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFiber}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 底部留白给固定操作栏 -->
+                            <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </OnIdiom.Phone>
+
+            <!-- ==================== 平板/桌面布局：双列分栏 ==================== -->
+            <OnIdiom.Tablet>
+                <Grid ColumnDefinitions="55*,45*"
+                      ColumnSpacing="0"
+                      MaximumWidthRequest="1200"
+                      HorizontalOptions="Center">
+
+                    <!-- 左列：大图 + 烹饪步骤 -->
+                    <ScrollView Grid.Column="0">
+                        <VerticalStackLayout Spacing="0">
+
+                            <!-- 顶部大图区域 300高度 -->
+                            <Grid HeightRequest="300">
+                                <!-- 底层错误占位 -->
+                                <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
+                                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                        <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                        <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <!-- 上层图片 -->
+                                <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
+                                       Aspect="AspectFill"
+                                       HeightRequest="300"
+                                       HorizontalOptions="Fill" />
+
+                                <!-- 左上角返回按钮 -->
+                                <Border HorizontalOptions="Start" VerticalOptions="Start"
+                                        Margin="16,40"
+                                        StrokeShape="RoundRectangle 20"
+                                        WidthRequest="40" HeightRequest="40"
+                                        BackgroundColor="#80000000"
+                                        StrokeThickness="0"
+                                        AutomationId="BtnBack">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="&#xf060;" FontFamily="FA" FontSize="16"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <!-- 右上角收藏按钮 -->
+                                <Border HorizontalOptions="End" VerticalOptions="Start"
+                                        Margin="16,40"
+                                        StrokeShape="RoundRectangle 20"
+                                        WidthRequest="40" HeightRequest="40"
+                                        BackgroundColor="#80000000"
+                                        StrokeThickness="0"
+                                        AutomationId="BtnFavorite">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="&#xf004;" FontFamily="FA" FontSize="18"
+                                           TextColor="{Binding CurrentRecipe.IsFavorite, Converter={StaticResource FavoriteColorConverter}}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+
+                            <!-- 烹饪步骤区 -->
+                            <VerticalStackLayout Padding="20" Spacing="16">
+                                <Label Text="烹饪步骤"
+                                       FontSize="{DynamicResource Font18}" FontAttributes="Bold"
+                                       SemanticProperties.HeadingLevel="Level2"
+                                       AutomationId="LblSteps" />
+
+                                <VerticalStackLayout Spacing="0"
+                                                     BindableLayout.ItemsSource="{Binding Steps}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:StepModel">
+                                            <VerticalStackLayout>
+                                                <Grid ColumnDefinitions="36,*"
+                                                      ColumnSpacing="12"
+                                                      Padding="0,8">
+                                                    <!-- 序号圆圈 -->
+                                                    <Border Grid.Column="0"
+                                                            StrokeShape="RoundRectangle 16"
+                                                            WidthRequest="32" HeightRequest="32"
+                                                            BackgroundColor="{StaticResource PrimaryLight}"
+                                                            StrokeThickness="0"
+                                                            HorizontalOptions="Center"
+                                                            VerticalOptions="Start">
+                                                        <Label Text="{Binding Index, StringFormat='{}{0}'}"
+                                                               FontSize="{DynamicResource Font13}" FontAttributes="Bold"
+                                                               TextColor="{StaticResource Primary}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center" />
+                                                    </Border>
+                                                    <!-- 步骤文字 -->
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Text}"
+                                                           FontSize="{DynamicResource Font14}"
+                                                           LineBreakMode="WordWrap"
+                                                           VerticalOptions="Center" />
+                                                </Grid>
+                                                <!-- 分隔线（非最后一项） -->
+                                                <BoxView HeightRequest="1"
+                                                         BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
+                                                         Margin="48,4,0,4" />
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <!-- 底部留白给固定操作栏 -->
+                                <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- 右列：标题、描述、标签、时间信息、营养卡片 -->
+                    <ScrollView Grid.Column="1">
+                        <VerticalStackLayout Padding="20" Spacing="16">
+
+                            <!-- 标题 + 描述 -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding CurrentRecipe.Title}"
+                                       FontSize="{DynamicResource Font22}" FontAttributes="Bold"
+                                       SemanticProperties.HeadingLevel="Level1"
+                                       AutomationId="LblRecipeTitle" />
+                                <Label Text="{Binding CurrentRecipe.Description}"
+                                       FontSize="{DynamicResource Font14}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                       LineBreakMode="WordWrap"
+                                       AutomationId="LblRecipeDesc" />
+                            </VerticalStackLayout>
+
+                            <!-- 标签 -->
+                            <HorizontalStackLayout Spacing="8"
+                                                   BindableLayout.ItemsSource="{Binding TagList}"
+                                                   AutomationId="TagsLayout">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border StrokeShape="RoundRectangle 12"
+                                                BackgroundColor="{StaticResource PrimaryLight}"
+                                                Padding="12,4"
+                                                StrokeThickness="0">
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font12}"
+                                                   TextColor="{StaticResource Primary}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+
+                            <!-- 3个信息项横排 -->
+                            <Grid ColumnDefinitions="*,*,*"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="8"
+                                  Margin="0,4">
+                                <!-- 准备时间 -->
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 烹饪时间 -->
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 份数 -->
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- 分隔线 -->
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                                     Margin="0,4" />
+
+                            <!-- 营养信息卡片 -->
+                            <Border StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                    Padding="16">
+                                <Border.Shadow>
+                                    <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                            Offset="0,2" Radius="8" Opacity="0.3"/>
+                                </Border.Shadow>
+
+                                <VerticalStackLayout Spacing="12">
+                                    <Label Text="营养信息"
+                                           FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
+                                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <!-- 热量 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCalories}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 蛋白质 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionProtein}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 碳水 -->
+                                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCarbs}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
+                                        <!-- 脂肪 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFat}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 纤维 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFiber}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 底部留白给固定操作栏 -->
+                            <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </OnIdiom.Tablet>
+
+            <!-- ==================== 桌面布局：与平板相同 ==================== -->
+            <OnIdiom.Desktop>
+                <Grid ColumnDefinitions="55*,45*"
+                      ColumnSpacing="0"
+                      MaximumWidthRequest="1200"
+                      HorizontalOptions="Center">
+
+                    <!-- 左列：大图 + 烹饪步骤 -->
+                    <ScrollView Grid.Column="0">
+                        <VerticalStackLayout Spacing="0">
+
+                            <!-- 顶部大图区域 300高度 -->
+                            <Grid HeightRequest="300">
+                                <!-- 底层错误占位 -->
+                                <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
+                                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                        <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                        <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                               TextColor="#9CA3AF" HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+                                <!-- 上层图片 -->
+                                <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
+                                       Aspect="AspectFill"
+                                       HeightRequest="300"
+                                       HorizontalOptions="Fill" />
+
+                                <!-- 左上角返回按钮 -->
+                                <Border HorizontalOptions="Start" VerticalOptions="Start"
+                                        Margin="16,40"
+                                        StrokeShape="RoundRectangle 20"
+                                        WidthRequest="40" HeightRequest="40"
+                                        BackgroundColor="#80000000"
+                                        StrokeThickness="0"
+                                        AutomationId="BtnBack">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding GoBackCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="&#xf060;" FontFamily="FA" FontSize="16"
+                                           TextColor="White"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <!-- 右上角收藏按钮 -->
+                                <Border HorizontalOptions="End" VerticalOptions="Start"
+                                        Margin="16,40"
+                                        StrokeShape="RoundRectangle 20"
+                                        WidthRequest="40" HeightRequest="40"
+                                        BackgroundColor="#80000000"
+                                        StrokeThickness="0"
+                                        AutomationId="BtnFavorite">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                                    </Border.GestureRecognizers>
+                                    <Label Text="&#xf004;" FontFamily="FA" FontSize="18"
+                                           TextColor="{Binding CurrentRecipe.IsFavorite, Converter={StaticResource FavoriteColorConverter}}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+
+                            <!-- 烹饪步骤区 -->
+                            <VerticalStackLayout Padding="20" Spacing="16">
+                                <Label Text="烹饪步骤"
+                                       FontSize="{DynamicResource Font18}" FontAttributes="Bold"
+                                       SemanticProperties.HeadingLevel="Level2"
+                                       AutomationId="LblSteps" />
+
+                                <VerticalStackLayout Spacing="0"
+                                                     BindableLayout.ItemsSource="{Binding Steps}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:StepModel">
+                                            <VerticalStackLayout>
+                                                <Grid ColumnDefinitions="36,*"
+                                                      ColumnSpacing="12"
+                                                      Padding="0,8">
+                                                    <!-- 序号圆圈 -->
+                                                    <Border Grid.Column="0"
+                                                            StrokeShape="RoundRectangle 16"
+                                                            WidthRequest="32" HeightRequest="32"
+                                                            BackgroundColor="{StaticResource PrimaryLight}"
+                                                            StrokeThickness="0"
+                                                            HorizontalOptions="Center"
+                                                            VerticalOptions="Start">
+                                                        <Label Text="{Binding Index, StringFormat='{}{0}'}"
+                                                               FontSize="{DynamicResource Font13}" FontAttributes="Bold"
+                                                               TextColor="{StaticResource Primary}"
+                                                               HorizontalOptions="Center"
+                                                               VerticalOptions="Center" />
+                                                    </Border>
+                                                    <!-- 步骤文字 -->
+                                                    <Label Grid.Column="1"
+                                                           Text="{Binding Text}"
+                                                           FontSize="{DynamicResource Font14}"
+                                                           LineBreakMode="WordWrap"
+                                                           VerticalOptions="Center" />
+                                                </Grid>
+                                                <!-- 分隔线（非最后一项） -->
+                                                <BoxView HeightRequest="1"
+                                                         BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
+                                                         Margin="48,4,0,4" />
+                                            </VerticalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+
+                                <!-- 底部留白给固定操作栏 -->
+                                <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </ScrollView>
+
+                    <!-- 右列：标题、描述、标签、时间信息、营养卡片 -->
+                    <ScrollView Grid.Column="1">
+                        <VerticalStackLayout Padding="20" Spacing="16">
+
+                            <!-- 标题 + 描述 -->
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="{Binding CurrentRecipe.Title}"
+                                       FontSize="{DynamicResource Font22}" FontAttributes="Bold"
+                                       SemanticProperties.HeadingLevel="Level1"
+                                       AutomationId="LblRecipeTitle" />
+                                <Label Text="{Binding CurrentRecipe.Description}"
+                                       FontSize="{DynamicResource Font14}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                       LineBreakMode="WordWrap"
+                                       AutomationId="LblRecipeDesc" />
+                            </VerticalStackLayout>
+
+                            <!-- 标签 -->
+                            <HorizontalStackLayout Spacing="8"
+                                                   BindableLayout.ItemsSource="{Binding TagList}"
+                                                   AutomationId="TagsLayout">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <Border StrokeShape="RoundRectangle 12"
+                                                BackgroundColor="{StaticResource PrimaryLight}"
+                                                Padding="12,4"
+                                                StrokeThickness="0">
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font12}"
+                                                   TextColor="{StaticResource Primary}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </HorizontalStackLayout>
+
+                            <!-- 3个信息项横排 -->
+                            <Grid ColumnDefinitions="*,*,*"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="8"
+                                  Margin="0,4">
+                                <!-- 准备时间 -->
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 烹饪时间 -->
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                                <!-- 份数 -->
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- 分隔线 -->
+                            <BoxView HeightRequest="1"
+                                     BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                                     Margin="0,4" />
+
+                            <!-- 营养信息卡片 -->
+                            <Border StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                    Padding="16">
+                                <Border.Shadow>
+                                    <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                            Offset="0,2" Radius="8" Opacity="0.3"/>
+                                </Border.Shadow>
+
+                                <VerticalStackLayout Spacing="12">
+                                    <Label Text="营养信息"
+                                           FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
+                                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                        <!-- 热量 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCalories}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 蛋白质 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionProtein}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 碳水 -->
+                                        <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionCarbs}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
+                                        <!-- 脂肪 -->
+                                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFat}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                        <!-- 纤维 -->
+                                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
+                                            <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
+                                                   TextColor="{StaticResource NutritionFiber}"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
+                                                   FontSize="{DynamicResource Font16}" FontAttributes="Bold"
+                                                   HorizontalOptions="Center" />
+                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 底部留白给固定操作栏 -->
+                            <BoxView HeightRequest="80" BackgroundColor="Transparent" />
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </OnIdiom.Desktop>
+
+        </OnIdiom>
+
+        <!-- 底部固定操作栏（所有设备共享） -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*"
+              ColumnSpacing="12"
+              Padding="16,12"
+              BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+            <Grid.Shadow>
+                <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                        Offset="0,-2" Radius="8" Opacity="0.3"/>
+            </Grid.Shadow>
+
+            <!-- 朗读/停止朗读 -->
+            <Button Grid.Column="0"
+                    Text="{Binding SpeakButtonText}"
+                    Command="{Binding ToggleSpeakingCommand}"
+                    FontFamily="FA"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    BorderColor="{StaticResource Primary}"
+                    BorderWidth="1"
+                    CornerRadius="12"
+                    FontSize="14"
+                    SemanticProperties.Hint="朗读烹饪步骤"
+                    AutomationId="BtnSpeak" />
+
+            <!-- 加入饮食计划 -->
+            <Button Grid.Column="1"
+                    Text="&#xf067; 加入饮食计划"
+                    Command="{Binding AddToPlanCommand}"
+                    FontFamily="FA"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    FontSize="14"
+                    FontAttributes="Bold"
+                    SemanticProperties.Hint="加入饮食计划"
+                    AutomationId="BtnAddToPlan" />
+        </Grid>
+    </Grid>
+</ContentPage>

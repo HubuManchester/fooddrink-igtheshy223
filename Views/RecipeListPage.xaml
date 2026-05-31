@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ssk.ViewModels"
+             xmlns:models="clr-namespace:ssk.Models"
+             xmlns:controls="clr-namespace:ssk.Controls"
+             x:Class="ssk.Views.RecipeListPage"
+             x:DataType="viewmodels:RecipeListViewModel"
+             Title="食谱">
+
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+    <Grid RowDefinitions="Auto,Auto,*,Auto"
+          Padding="16,8"
+          MaximumWidthRequest="{OnIdiom Phone=0, Tablet=1200, Desktop=1200}"
+          HorizontalOptions="{OnIdiom Phone=Fill, Tablet=Center, Desktop=Center}">
+
+        <!-- 搜索栏 -->
+        <SearchBar Grid.Row="0"
+                   Placeholder="搜索食谱..."
+                   Text="{Binding SearchText}"
+                   SearchCommand="{Binding SearchCommand}"
+                   Margin="0,0,0,8"
+                   AutomationId="SearchBar"
+                   SemanticProperties.Hint="搜索食谱" />
+
+        <!-- 分类标签 -->
+        <ScrollView Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalScrollBarVisibility="Never"
+                    Margin="0,0,0,12">
+            <HorizontalStackLayout x:Name="CategoryLayout"
+                                   Spacing="8" />
+        </ScrollView>
+
+        <!-- 食谱网格列表 -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding Recipes}"
+                        RemainingItemsThreshold="3"
+                        RemainingItemsThresholdReachedCommand="{Binding SearchCommand}"
+                        AutomationId="RecipeList">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout x:Name="RecipeGridLayout"
+                                 Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="8"
+                                 VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Recipe">
+                    <controls:RecipeCard
+                        Recipe="{Binding .}"
+                        FavoriteCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecipeListViewModel}}, Path=ToggleFavoriteCommand}">
+                        <controls:RecipeCard.GestureRecognizers>
+                            <TapGestureRecognizer
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:RecipeListViewModel}}, Path=NavigateToDetailCommand}"
+                                CommandParameter="{Binding .}" />
+                        </controls:RecipeCard.GestureRecognizers>
+                    </controls:RecipeCard>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 底部新建按钮 -->
+        <Button Grid.Row="3"
+                Text="&#xf067; 新建食谱"
+                FontFamily="FA"
+                Command="{Binding NavigateToAddCommand}"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                CornerRadius="12"
+                FontSize="16"
+                FontAttributes="Bold"
+                HeightRequest="50"
+                Margin="0,8,0,0"
+                SemanticProperties.Hint="新建食谱"
+                AutomationId="BtnAddRecipe" />
+
+    </Grid>
+    </RefreshView>
+</ContentPage>

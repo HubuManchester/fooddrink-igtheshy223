@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ssk.ViewModels"
+             xmlns:models="clr-namespace:ssk.Models"
+             xmlns:controls="clr-namespace:ssk.Controls"
+             xmlns:converters="clr-namespace:ssk.Converters"
+             x:Class="ssk.Views.HomePage"
+             x:DataType="viewmodels:HomeViewModel"
+             Title="">
+
+    <ContentPage.Resources>
+        <converters:StringToUriConverter x:Key="StringToUriConverter"/>
+        <converters:NotNullConverter x:Key="NotNullConverter"/>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+    </ContentPage.Resources>
+
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+    <ScrollView>
+        <OnIdiom x:TypeArguments="View">
+            <OnIdiom.Phone>
+                <VerticalStackLayout Padding="20,16" Spacing="20">
+
+                    <!-- 顶部区域：问候 + 相机按钮 -->
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto"
+                          Margin="0,8,0,0">
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="{Binding Greeting}"
+                               FontSize="{DynamicResource Font22}"
+                               FontAttributes="Bold"
+                               SemanticProperties.HeadingLevel="Level1"
+                               AutomationId="LblGreeting" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="{Binding DateDisplay}"
+                               FontSize="{DynamicResource Font14}"
+                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                               AutomationId="LblDate" />
+
+                        <!-- 相机按钮 -->
+                        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                StrokeShape="RoundRectangle 24"
+                                WidthRequest="48" HeightRequest="48"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                StrokeThickness="0"
+                                VerticalOptions="Center"
+                                HorizontalOptions="End">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToCameraCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="&#xf030;"
+                                   FontFamily="FA"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+
+                    <!-- 登录提示卡片 -->
+                    <Border StrokeShape="RoundRectangle 16"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#2D1B00}"
+                            Padding="16"
+                            IsVisible="{Binding ShowLoginPrompt}"
+                            AutomationId="LoginPromptCard">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                    Offset="0,2" Radius="8" Opacity="0.3"/>
+                        </Border.Shadow>
+
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="&#xf023;" FontFamily="FA" FontSize="14"
+                                   TextColor="#F59E0B" Margin="0,0,8,0" VerticalOptions="Center"
+                                   IsVisible="{Binding IsLoggedIn, Converter={StaticResource InverseBoolConverter}}" />
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="登录以保存个人数据"
+                                   FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="#92400E"
+                                   VerticalOptions="Center" Margin="0" />
+                            <!-- 关闭按钮 -->
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="&#xf00d;" FontFamily="FA" FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}"
+                                   VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding DismissLoginPromptCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <!-- 登录按钮 -->
+                            <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                    Text="立即登录"
+                                    Command="{Binding LoginCommand}"
+                                    BackgroundColor="#F59E0B"
+                                    TextColor="White"
+                                    CornerRadius="10"
+                                    FontSize="{DynamicResource Font14}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="40"
+                                    AutomationId="LoginPromptButton" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 营养卡片 -->
+                    <Border StrokeShape="RoundRectangle 16"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16"
+                            IsVisible="{Binding TodayNutrition, Converter={StaticResource NotNullConverter}}"
+                            AutomationId="NutritionCard">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                    Offset="0,2" Radius="8" Opacity="0.3"/>
+                        </Border.Shadow>
+
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="今日营养摄入"
+                                   FontSize="{DynamicResource Font16}"
+                                   FontAttributes="Bold" />
+
+                            <!-- 热量进度 -->
+                            <Grid ColumnDefinitions="Auto,*"
+                                  RowDefinitions="Auto,Auto"
+                                  RowSpacing="4">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="&#xf06d;" FontFamily="FA" FontSize="14"
+                                       TextColor="#EF4444" Margin="0,0,8,0" VerticalOptions="Center" />
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="{Binding CaloriesDisplay}"
+                                       FontSize="{DynamicResource Font13}" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                             Progress="{Binding CaloriesProgress}"
+                                             ProgressColor="{StaticResource Primary}"/>
+                            </Grid>
+
+                            <!-- 蛋白质 / 碳水 / 脂肪 三个指标 -->
+                            <Grid ColumnDefinitions="*,*,*" HorizontalOptions="Fill">
+                                <!-- 蛋白质 -->
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding TodayNutrition.TotalProtein, StringFormat='{0:F0}g'}"
+                                           FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                           HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                                <!-- 碳水 -->
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding TodayNutrition.TotalCarbs, StringFormat='{0:F0}g'}"
+                                           FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                           HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                                <!-- 脂肪 -->
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="{Binding TodayNutrition.TotalFat, StringFormat='{0:F0}g'}"
+                                           FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                           HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </Grid>
+
+                            <!-- 查看详情 -->
+                            <Label Text="查看详情 &#xf054;"
+                                   FontFamily="FA"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="End">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToNutritionCommand}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 今日推荐标题 -->
+                    <Label Text="今日推荐"
+                           FontSize="{DynamicResource Font18}"
+                           FontAttributes="Bold"
+                           SemanticProperties.HeadingLevel="Level2"
+                           AutomationId="LblRecommended" />
+
+                    <!-- 推荐食谱横向列表 -->
+                    <ScrollView Orientation="Horizontal"
+                                HorizontalScrollBarVisibility="Never">
+                        <HorizontalStackLayout Spacing="12"
+                                               BindableLayout.ItemsSource="{Binding RecommendedRecipes}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="models:Recipe">
+                                    <controls:RecipeCard
+                                        WidthRequest="180"
+                                        Recipe="{Binding .}"
+                                        FavoriteCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=ShakeRecommendCommand}">
+                                        <controls:RecipeCard.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=NavigateToRecipeDetailCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </controls:RecipeCard.GestureRecognizers>
+                                    </controls:RecipeCard>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </HorizontalStackLayout>
+                    </ScrollView>
+
+                    <!-- 快捷操作标题 -->
+                    <Label Text="快捷操作"
+                           FontSize="{DynamicResource Font18}"
+                           FontAttributes="Bold"
+                           AutomationId="LblQuickActions" />
+
+                    <!-- 快捷操作 2x2 Grid -->
+                    <Grid RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,*"
+                          RowSpacing="12"
+                          ColumnSpacing="12">
+
+                        <!-- 购物清单 -->
+                        <Border Grid.Row="0" Grid.Column="0"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                Padding="16,20"
+                                AutomationId="BtnShopping">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToShoppingCommand}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="&#xf07a;" FontFamily="FA" FontSize="28"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="购物清单" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 摇一摇推荐 -->
+                        <Border Grid.Row="0" Grid.Column="1"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                Padding="16,20"
+                                AutomationId="BtnShake">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShakeRecommendCommand}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="&#xf063;" FontFamily="FA" FontSize="28"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="摇一摇推荐" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 附近商店 -->
+                        <Border Grid.Row="1" Grid.Column="0"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                Padding="16,20"
+                                AutomationId="BtnStores">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding NavigateToStoresCommand}" />
+                            </Border.GestureRecognizers>
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="&#xf3c5;" FontFamily="FA" FontSize="28"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="附近商店" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 更多功能 -->
+                        <Border Grid.Row="1" Grid.Column="1"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                Padding="16,20"
+                                AutomationId="BtnMore">
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                <Label Text="&#xf141;" FontFamily="FA" FontSize="28"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                                <Label Text="更多功能" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </OnIdiom.Phone>
+
+            <!-- 平板/桌面布局：双列 Grid -->
+            <OnIdiom.Tablet>
+                <Grid ColumnDefinitions="3*,2*"
+                      ColumnSpacing="20"
+                      Padding="20,16"
+                      MaximumWidthRequest="1200"
+                      HorizontalOptions="Center">
+
+                    <!-- 左列 (60%) -->
+                    <VerticalStackLayout Grid.Column="0" Spacing="20">
+
+                        <!-- 顶部区域：问候 + 相机按钮 -->
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto"
+                              Margin="0,8,0,0">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Greeting}"
+                                   FontSize="{DynamicResource Font22}"
+                                   FontAttributes="Bold"
+                                   SemanticProperties.HeadingLevel="Level1"
+                                   AutomationId="LblGreeting" />
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding DateDisplay}"
+                                   FontSize="{DynamicResource Font14}"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                   AutomationId="LblDate" />
+
+                            <!-- 相机按钮 -->
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                    StrokeShape="RoundRectangle 24"
+                                    WidthRequest="48" HeightRequest="48"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="End">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToCameraCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="&#xf030;"
+                                       FontFamily="FA"
+                                       FontSize="20"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- 登录提示卡片 -->
+                        <Border StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#2D1B00}"
+                                Padding="16"
+                                IsVisible="{Binding ShowLoginPrompt}"
+                                AutomationId="LoginPromptCard">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                        Offset="0,2" Radius="8" Opacity="0.3"/>
+                            </Border.Shadow>
+
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="&#xf023;" FontFamily="FA" FontSize="14"
+                                       TextColor="#F59E0B" Margin="0,0,8,0" VerticalOptions="Center"
+                                       IsVisible="{Binding IsLoggedIn, Converter={StaticResource InverseBoolConverter}}" />
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="登录以保存个人数据"
+                                       FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                       TextColor="#92400E"
+                                       VerticalOptions="Center" Margin="0" />
+                                <!-- 关闭按钮 -->
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="&#xf00d;" FontFamily="FA" FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}"
+                                       VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding DismissLoginPromptCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <!-- 登录按钮 -->
+                                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                        Text="立即登录"
+                                        Command="{Binding LoginCommand}"
+                                        BackgroundColor="#F59E0B"
+                                        TextColor="White"
+                                        CornerRadius="10"
+                                        FontSize="{DynamicResource Font14}"
+                                        FontAttributes="Bold"
+                                        HeightRequest="40"
+                                        AutomationId="LoginPromptButton" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 营养卡片 -->
+                        <Border StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                Padding="16"
+                                IsVisible="{Binding TodayNutrition, Converter={StaticResource NotNullConverter}}"
+                                AutomationId="NutritionCard">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                        Offset="0,2" Radius="8" Opacity="0.3"/>
+                            </Border.Shadow>
+
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="今日营养摄入"
+                                       FontSize="{DynamicResource Font16}"
+                                       FontAttributes="Bold" />
+
+                                <!-- 热量进度 -->
+                                <Grid ColumnDefinitions="Auto,*"
+                                      RowDefinitions="Auto,Auto"
+                                      RowSpacing="4">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="&#xf06d;" FontFamily="FA" FontSize="14"
+                                           TextColor="#EF4444" Margin="0,0,8,0" VerticalOptions="Center" />
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding CaloriesDisplay}"
+                                           FontSize="{DynamicResource Font13}" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                    <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                                 Progress="{Binding CaloriesProgress}"
+                                                 ProgressColor="{StaticResource Primary}"/>
+                                </Grid>
+
+                                <!-- 蛋白质 / 碳水 / 脂肪 三个指标 -->
+                                <Grid ColumnDefinitions="*,*,*" HorizontalOptions="Fill">
+                                    <!-- 蛋白质 -->
+                                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalProtein, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <!-- 碳水 -->
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalCarbs, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <!-- 脂肪 -->
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalFat, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- 查看详情 -->
+                                <Label Text="查看详情 &#xf054;"
+                                       FontFamily="FA"
+                                       FontSize="13"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="End">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding NavigateToNutritionCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 快捷操作 3x2 Grid (3 columns) -->
+                        <Grid RowDefinitions="Auto,Auto"
+                              ColumnDefinitions="*,*,*"
+                              RowSpacing="12"
+                              ColumnSpacing="12">
+
+                            <!-- 购物清单 -->
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnShopping">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToShoppingCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf07a;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="购物清单" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 摇一摇推荐 -->
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnShake">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShakeRecommendCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf063;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="摇一摇推荐" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 附近商店 -->
+                            <Border Grid.Row="0" Grid.Column="2"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnStores">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToStoresCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf3c5;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="附近商店" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 更多功能 -->
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnMore">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf141;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="更多功能" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                    </VerticalStackLayout>
+
+                    <!-- 右列 (40%) -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="20">
+
+                        <!-- 今日推荐标题 -->
+                        <Label Text="今日推荐"
+                               FontSize="{DynamicResource Font18}"
+                               FontAttributes="Bold"
+                               SemanticProperties.HeadingLevel="Level2"
+                               AutomationId="LblRecommended" />
+
+                        <!-- 推荐食谱纵向列表 -->
+                        <CollectionView ItemsSource="{Binding RecommendedRecipes}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Recipe">
+                                    <controls:RecipeCard Recipe="{Binding .}"
+                                        FavoriteCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=ShakeRecommendCommand}">
+                                        <controls:RecipeCard.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=NavigateToRecipeDetailCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </controls:RecipeCard.GestureRecognizers>
+                                    </controls:RecipeCard>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+
+                </Grid>
+            </OnIdiom.Tablet>
+
+            <OnIdiom.Desktop>
+                <Grid ColumnDefinitions="3*,2*"
+                      ColumnSpacing="20"
+                      Padding="20,16"
+                      MaximumWidthRequest="1200"
+                      HorizontalOptions="Center">
+
+                    <!-- 左列 (60%) -->
+                    <VerticalStackLayout Grid.Column="0" Spacing="20">
+
+                        <!-- 顶部区域：问候 + 相机按钮 -->
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto"
+                              Margin="0,8,0,0">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Greeting}"
+                                   FontSize="{DynamicResource Font22}"
+                                   FontAttributes="Bold"
+                                   SemanticProperties.HeadingLevel="Level1"
+                                   AutomationId="LblGreeting" />
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding DateDisplay}"
+                                   FontSize="{DynamicResource Font14}"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                   AutomationId="LblDate" />
+
+                            <!-- 相机按钮 -->
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                    StrokeShape="RoundRectangle 24"
+                                    WidthRequest="48" HeightRequest="48"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    StrokeThickness="0"
+                                    VerticalOptions="Center"
+                                    HorizontalOptions="End">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToCameraCommand}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="&#xf030;"
+                                       FontFamily="FA"
+                                       FontSize="20"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center" />
+                            </Border>
+                        </Grid>
+
+                        <!-- 登录提示卡片 -->
+                        <Border StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=#FFF7ED, Dark=#2D1B00}"
+                                Padding="16"
+                                IsVisible="{Binding ShowLoginPrompt}"
+                                AutomationId="LoginPromptCard">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                        Offset="0,2" Radius="8" Opacity="0.3"/>
+                            </Border.Shadow>
+
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="&#xf023;" FontFamily="FA" FontSize="14"
+                                       TextColor="#F59E0B" Margin="0,0,8,0" VerticalOptions="Center"
+                                       IsVisible="{Binding IsLoggedIn, Converter={StaticResource InverseBoolConverter}}" />
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       Text="登录以保存个人数据"
+                                       FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                       TextColor="#92400E"
+                                       VerticalOptions="Center" Margin="0" />
+                                <!-- 关闭按钮 -->
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="&#xf00d;" FontFamily="FA" FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}"
+                                       VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding DismissLoginPromptCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <!-- 登录按钮 -->
+                                <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                        Text="立即登录"
+                                        Command="{Binding LoginCommand}"
+                                        BackgroundColor="#F59E0B"
+                                        TextColor="White"
+                                        CornerRadius="10"
+                                        FontSize="{DynamicResource Font14}"
+                                        FontAttributes="Bold"
+                                        HeightRequest="40"
+                                        AutomationId="LoginPromptButton" />
+                            </Grid>
+                        </Border>
+
+                        <!-- 营养卡片 -->
+                        <Border StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                Padding="16"
+                                IsVisible="{Binding TodayNutrition, Converter={StaticResource NotNullConverter}}"
+                                AutomationId="NutritionCard">
+                            <Border.Shadow>
+                                <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}"
+                                        Offset="0,2" Radius="8" Opacity="0.3"/>
+                            </Border.Shadow>
+
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="今日营养摄入"
+                                       FontSize="{DynamicResource Font16}"
+                                       FontAttributes="Bold" />
+
+                                <!-- 热量进度 -->
+                                <Grid ColumnDefinitions="Auto,*"
+                                      RowDefinitions="Auto,Auto"
+                                      RowSpacing="4">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="&#xf06d;" FontFamily="FA" FontSize="14"
+                                           TextColor="#EF4444" Margin="0,0,8,0" VerticalOptions="Center" />
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding CaloriesDisplay}"
+                                           FontSize="{DynamicResource Font13}" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
+                                    <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                                 Progress="{Binding CaloriesProgress}"
+                                                 ProgressColor="{StaticResource Primary}"/>
+                                </Grid>
+
+                                <!-- 蛋白质 / 碳水 / 脂肪 三个指标 -->
+                                <Grid ColumnDefinitions="*,*,*" HorizontalOptions="Fill">
+                                    <!-- 蛋白质 -->
+                                    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalProtein, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <!-- 碳水 -->
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalCarbs, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                    <!-- 脂肪 -->
+                                    <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                        <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                                               HorizontalOptions="Center" />
+                                        <Label Text="{Binding TodayNutrition.TotalFat, StringFormat='{0:F0}g'}"
+                                               FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                                               HorizontalOptions="Center"/>
+                                    </VerticalStackLayout>
+                                </Grid>
+
+                                <!-- 查看详情 -->
+                                <Label Text="查看详情 &#xf054;"
+                                       FontFamily="FA"
+                                       FontSize="13"
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="End">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding NavigateToNutritionCommand}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- 快捷操作 3x2 Grid (3 columns) -->
+                        <Grid RowDefinitions="Auto,Auto"
+                              ColumnDefinitions="*,*,*"
+                              RowSpacing="12"
+                              ColumnSpacing="12">
+
+                            <!-- 购物清单 -->
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnShopping">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToShoppingCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf07a;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="购物清单" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 摇一摇推荐 -->
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnShake">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ShakeRecommendCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf063;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="摇一摇推荐" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 附近商店 -->
+                            <Border Grid.Row="0" Grid.Column="2"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnStores">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToStoresCommand}" />
+                                </Border.GestureRecognizers>
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf3c5;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="附近商店" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- 更多功能 -->
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    StrokeShape="RoundRectangle 16"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{StaticResource PrimaryLight}"
+                                    Padding="16,20"
+                                    AutomationId="BtnMore">
+                                <VerticalStackLayout HorizontalOptions="Center" Spacing="8">
+                                    <Label Text="&#xf141;" FontFamily="FA" FontSize="28"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="更多功能" FontSize="{DynamicResource Font13}"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
+                    </VerticalStackLayout>
+
+                    <!-- 右列 (40%) -->
+                    <VerticalStackLayout Grid.Column="1" Spacing="20">
+
+                        <!-- 今日推荐标题 -->
+                        <Label Text="今日推荐"
+                               FontSize="{DynamicResource Font18}"
+                               FontAttributes="Bold"
+                               SemanticProperties.HeadingLevel="Level2"
+                               AutomationId="LblRecommended" />
+
+                        <!-- 推荐食谱纵向列表 -->
+                        <CollectionView ItemsSource="{Binding RecommendedRecipes}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Recipe">
+                                    <controls:RecipeCard Recipe="{Binding .}"
+                                        FavoriteCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=ShakeRecommendCommand}">
+                                        <controls:RecipeCard.GestureRecognizers>
+                                            <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=NavigateToRecipeDetailCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </controls:RecipeCard.GestureRecognizers>
+                                    </controls:RecipeCard>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+
+                </Grid>
+            </OnIdiom.Desktop>
+        </OnIdiom>
+    </ScrollView>
+    </RefreshView>
+</ContentPage>

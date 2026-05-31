@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ssk.Controls"
+             xmlns:converters="clr-namespace:ssk.Converters"
+             x:Class="ssk.Views.SettingsPage"
+             Title="我的">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+    </ContentPage.Resources>
+
+    <ScrollView Padding="16">
+        <OnIdiom x:TypeArguments="View">
+            <!-- 手机布局：保持原有单列 VerticalStackLayout -->
+            <OnIdiom.Phone>
+                <VerticalStackLayout Spacing="12">
+                    <!-- 用户信息区 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#15000000, Dark=#30000000}"
+                                    Offset="0,2" Radius="6" Opacity="0.15" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                            <!-- 用户图标 -->
+                            <Label Text="&#xf2bd;" FontFamily="FA" FontSize="56"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center" />
+
+                            <!-- 已登录：显示用户名 + 编辑按钮 -->
+                            <Grid ColumnDefinitions="*,Auto" HorizontalOptions="Center" ColumnSpacing="12"
+                                  IsVisible="{Binding ShowEditUserName}">
+                                <Label Grid.Column="0" Text="{Binding DisplayUserName}" FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Button Grid.Column="1"
+                                        AutomationId="EditUserNameButton"
+                                        Text="&#xf044;" FontFamily="FA" FontSize="14"
+                                        Command="{Binding ToggleEditUserNameCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        WidthRequest="36" HeightRequest="36"
+                                        Padding="0" />
+                            </Grid>
+
+                            <!-- 未登录：显示游客模式文字 -->
+                            <Label Text="{Binding DisplayUserName}"
+                                   FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding ShowLoginButton}" />
+
+                            <!-- 编辑用户名区 -->
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"
+                                  IsVisible="{Binding IsEditingUserName}">
+                                <controls:VoiceEntry Grid.Column="0"
+                                       AutomationId="UserNameEntry"
+                                       Text="{Binding UserName}"
+                                       FontSize="{DynamicResource Font15}"
+                                       Placeholder="输入用户名" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveUserNameButton"
+                                        Text="保存"
+                                        Command="{Binding SaveUserNameCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+
+                            <!-- 登录/登出按钮 -->
+                            <Button Text="{Binding LoginButtonText}"
+                                    Command="{Binding LoginLogoutCommand}"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="White"
+                                    CornerRadius="10"
+                                    FontSize="{DynamicResource Font14}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="40"
+                                    MinimumWidthRequest="160"
+                                    AutomationId="LoginLogoutButton" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 主题设置 -->
+                    <Border StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="主题设置" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="ThemeLightButton"
+                                        Text="浅色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Light"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeDarkButton"
+                                        Text="深色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Dark"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeSystemButton"
+                                        Text="跟随系统"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="System"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 字体大小 -->
+                    <Border StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="字体大小" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="FontSizeSmallButton"
+                                        Text="小"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Small"
+                                        FontSize="{DynamicResource Font12}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeMediumButton"
+                                        Text="中"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Medium"
+                                        FontSize="{DynamicResource Font14}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeLargeButton"
+                                        Text="大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Large"
+                                        FontSize="{DynamicResource Font16}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeExtraLargeButton"
+                                        Text="超大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="ExtraLarge"
+                                        FontSize="{DynamicResource Font18}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 每日热量目标 -->
+                    <Border StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="每日热量目标" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0"
+                                       AutomationId="CalorieTargetEntry"
+                                       Text="{Binding CaloriesGoal}"
+                                       Keyboard="Numeric"
+                                       Placeholder="每日热量目标(kcal)"
+                                       FontSize="{DynamicResource Font14}" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveCalorieTargetButton"
+                                        Text="保存"
+                                        Command="{Binding SaveCaloriesGoalCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 功能按钮列表 -->
+                    <!-- 关于应用 -->
+                    <Border StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AboutCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf05a;" FontFamily="FA" FontSize="18"
+                                   TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="关于应用" FontSize="{DynamicResource Font15}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- 重置数据 -->
+                    <Border StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetDataCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf1f8;" FontFamily="FA" FontSize="18"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="重置数据" FontSize="{DynamicResource Font15}"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+            </OnIdiom.Phone>
+
+            <!-- 平板/桌面布局：2列 Grid -->
+            <OnIdiom.Tablet>
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="*,*"
+                      RowSpacing="12" ColumnSpacing="12"
+                      MaximumWidthRequest="900"
+                      HorizontalOptions="Center">
+
+                    <!-- Row 0: 用户信息 (跨2列) -->
+                    <Border Grid.Row="0" Grid.ColumnSpan="2"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#15000000, Dark=#30000000}"
+                                    Offset="0,2" Radius="6" Opacity="0.15" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                            <Label Text="&#xf2bd;" FontFamily="FA" FontSize="56"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center" />
+                            <Grid ColumnDefinitions="*,Auto" HorizontalOptions="Center" ColumnSpacing="12"
+                                  IsVisible="{Binding ShowEditUserName}">
+                                <Label Grid.Column="0" Text="{Binding DisplayUserName}" FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Button Grid.Column="1"
+                                        AutomationId="EditUserNameButton"
+                                        Text="&#xf044;" FontFamily="FA" FontSize="14"
+                                        Command="{Binding ToggleEditUserNameCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        WidthRequest="36" HeightRequest="36"
+                                        Padding="0" />
+                            </Grid>
+                            <Label Text="{Binding DisplayUserName}"
+                                   FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding ShowLoginButton}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"
+                                  IsVisible="{Binding IsEditingUserName}">
+                                <controls:VoiceEntry Grid.Column="0"
+                                       AutomationId="UserNameEntry"
+                                       Text="{Binding UserName}"
+                                       FontSize="{DynamicResource Font15}"
+                                       Placeholder="输入用户名" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveUserNameButton"
+                                        Text="保存"
+                                        Command="{Binding SaveUserNameCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+                            <Button Text="{Binding LoginButtonText}"
+                                    Command="{Binding LoginLogoutCommand}"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="White"
+                                    CornerRadius="10"
+                                    FontSize="{DynamicResource Font14}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="40"
+                                    MinimumWidthRequest="160"
+                                    AutomationId="LoginLogoutButton" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 0: 主题设置 -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="主题设置" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="ThemeLightButton"
+                                        Text="浅色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Light"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeDarkButton"
+                                        Text="深色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Dark"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeSystemButton"
+                                        Text="跟随系统"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="System"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 1: 字体大小 -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="字体大小" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="FontSizeSmallButton"
+                                        Text="小"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Small"
+                                        FontSize="{DynamicResource Font12}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeMediumButton"
+                                        Text="中"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Medium"
+                                        FontSize="{DynamicResource Font14}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeLargeButton"
+                                        Text="大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Large"
+                                        FontSize="{DynamicResource Font16}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeExtraLargeButton"
+                                        Text="超大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="ExtraLarge"
+                                        FontSize="{DynamicResource Font18}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 Col 0: 每日热量目标 -->
+                    <Border Grid.Row="2" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="每日热量目标" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0"
+                                       AutomationId="CalorieTargetEntry"
+                                       Text="{Binding CaloriesGoal}"
+                                       Keyboard="Numeric"
+                                       Placeholder="每日热量目标(kcal)"
+                                       FontSize="{DynamicResource Font14}" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveCalorieTargetButton"
+                                        Text="保存"
+                                        Command="{Binding SaveCaloriesGoalCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 Col 1: 关于应用 -->
+                    <Border Grid.Row="2" Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AboutCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf05a;" FontFamily="FA" FontSize="18"
+                                   TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="关于应用" FontSize="{DynamicResource Font15}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Row 3 Col 0: 重置数据 (仅左列) -->
+                    <Border Grid.Row="3" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetDataCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf1f8;" FontFamily="FA" FontSize="18"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="重置数据" FontSize="{DynamicResource Font15}"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </OnIdiom.Tablet>
+
+            <!-- 桌面布局：与平板相同的2列 Grid -->
+            <OnIdiom.Desktop>
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                      ColumnDefinitions="*,*"
+                      RowSpacing="12" ColumnSpacing="12"
+                      MaximumWidthRequest="900"
+                      HorizontalOptions="Center">
+
+                    <!-- Row 0: 用户信息 (跨2列) -->
+                    <Border Grid.Row="0" Grid.ColumnSpan="2"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <Border.Shadow>
+                            <Shadow Brush="{AppThemeBinding Light=#15000000, Dark=#30000000}"
+                                    Offset="0,2" Radius="6" Opacity="0.15" />
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="12" HorizontalOptions="Center">
+                            <Label Text="&#xf2bd;" FontFamily="FA" FontSize="56"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center" />
+                            <Grid ColumnDefinitions="*,Auto" HorizontalOptions="Center" ColumnSpacing="12"
+                                  IsVisible="{Binding ShowEditUserName}">
+                                <Label Grid.Column="0" Text="{Binding DisplayUserName}" FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                <Button Grid.Column="1"
+                                        AutomationId="EditUserNameButton"
+                                        Text="&#xf044;" FontFamily="FA" FontSize="14"
+                                        Command="{Binding ToggleEditUserNameCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        WidthRequest="36" HeightRequest="36"
+                                        Padding="0" />
+                            </Grid>
+                            <Label Text="{Binding DisplayUserName}"
+                                   FontSize="{DynamicResource Font20}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   IsVisible="{Binding ShowLoginButton}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8"
+                                  IsVisible="{Binding IsEditingUserName}">
+                                <controls:VoiceEntry Grid.Column="0"
+                                       AutomationId="UserNameEntry"
+                                       Text="{Binding UserName}"
+                                       FontSize="{DynamicResource Font15}"
+                                       Placeholder="输入用户名" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveUserNameButton"
+                                        Text="保存"
+                                        Command="{Binding SaveUserNameCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+                            <Button Text="{Binding LoginButtonText}"
+                                    Command="{Binding LoginLogoutCommand}"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="White"
+                                    CornerRadius="10"
+                                    FontSize="{DynamicResource Font14}"
+                                    FontAttributes="Bold"
+                                    HeightRequest="40"
+                                    MinimumWidthRequest="160"
+                                    AutomationId="LoginLogoutButton" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 0: 主题设置 -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="主题设置" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="ThemeLightButton"
+                                        Text="浅色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Light"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeDarkButton"
+                                        Text="深色"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="Dark"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="ThemeSystemButton"
+                                        Text="跟随系统"
+                                        Command="{Binding SetThemeCommand}"
+                                        CommandParameter="System"
+                                        FontSize="{DynamicResource Font13}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 1: 字体大小 -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="字体大小" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <HorizontalStackLayout Spacing="8">
+                                <Button AutomationId="FontSizeSmallButton"
+                                        Text="小"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Small"
+                                        FontSize="{DynamicResource Font12}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeMediumButton"
+                                        Text="中"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Medium"
+                                        FontSize="{DynamicResource Font14}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeLargeButton"
+                                        Text="大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="Large"
+                                        FontSize="{DynamicResource Font16}" Padding="16,8" CornerRadius="8" />
+                                <Button AutomationId="FontSizeExtraLargeButton"
+                                        Text="超大"
+                                        Command="{Binding SetFontSizeCommand}"
+                                        CommandParameter="ExtraLarge"
+                                        FontSize="{DynamicResource Font18}" Padding="16,8" CornerRadius="8" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 Col 0: 每日热量目标 -->
+                    <Border Grid.Row="2" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="每日热量目标" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Entry Grid.Column="0"
+                                       AutomationId="CalorieTargetEntry"
+                                       Text="{Binding CaloriesGoal}"
+                                       Keyboard="Numeric"
+                                       Placeholder="每日热量目标(kcal)"
+                                       FontSize="{DynamicResource Font14}" />
+                                <Button Grid.Column="1"
+                                        AutomationId="SaveCalorieTargetButton"
+                                        Text="保存"
+                                        Command="{Binding SaveCaloriesGoalCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="White"
+                                        CornerRadius="8"
+                                        Padding="16,8"
+                                        FontSize="{DynamicResource Font13}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 Col 1: 关于应用 -->
+                    <Border Grid.Row="2" Grid.Column="1"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AboutCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf05a;" FontFamily="FA" FontSize="18"
+                                   TextColor="{StaticResource Primary}" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="关于应用" FontSize="{DynamicResource Font15}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Row 3 Col 0: 重置数据 (仅左列) -->
+                    <Border Grid.Row="3" Grid.Column="0"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16" Margin="0,4">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ResetDataCommand}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Label Grid.Column="0" Text="&#xf1f8;" FontFamily="FA" FontSize="18"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                            <Label Grid.Column="1" Text="重置数据" FontSize="{DynamicResource Font15}"
+                                   TextColor="#EF4444" VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </OnIdiom.Desktop>
+        </OnIdiom>
+    </ScrollView>
+
+</ContentPage>

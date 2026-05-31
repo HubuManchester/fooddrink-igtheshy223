@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ssk.ViewModels"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ssk.Views.OnboardingPage"
+             x:DataType="viewmodels:OnboardingViewModel"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- CarouselView -->
+        <CarouselView x:Name="Carousel"
+                      Grid.Row="0"
+                      ItemsSource="{Binding Items}"
+                      Loop="False"
+                      Position="{Binding CurrentStep}"
+                      PositionChanged="Carousel_PositionChanged"
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Fill">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodels:OnboardingItem">
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         Spacing="24"
+                                         Padding="32,0">
+                        <!-- 图标圆形区域 -->
+                        <Border StrokeShape="RoundRectangle 60"
+                                WidthRequest="120"
+                                HeightRequest="120"
+                                BackgroundColor="{StaticResource PrimaryLight}"
+                                HorizontalOptions="Center"
+                                StrokeThickness="0">
+                            <Label Text="{Binding Icon}"
+                                   FontFamily="FA"
+                                   FontSize="40"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+
+                        <!-- 标题 -->
+                        <Label Text="{Binding Title}"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               SemanticProperties.HeadingLevel="Level1"
+                               AutomationId="OnboardingTitle" />
+
+                        <!-- 描述 -->
+                        <Label Text="{Binding Description}"
+                               FontSize="{DynamicResource Font15}"
+                               TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               LineBreakMode="WordWrap"
+                               MaxLines="3"
+                               AutomationId="OnboardingDescription" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+
+        <!-- 底部固定区域 -->
+        <Grid Grid.Row="1"
+              RowDefinitions="Auto,Auto"
+              Padding="24,0,24,40"
+              RowSpacing="20">
+
+            <!-- 圆点指示器 -->
+            <HorizontalStackLayout Grid.Row="0"
+                                   HorizontalOptions="Center"
+                                   Spacing="8"
+                                   x:Name="IndicatorLayout"
+                                   AutomationId="StepIndicators">
+                <Border x:Name="Dot0"
+                        StrokeShape="RoundRectangle 5"
+                        WidthRequest="10" HeightRequest="10"
+                        BackgroundColor="{StaticResource Primary}"
+                        StrokeThickness="0" />
+                <Border x:Name="Dot1"
+                        StrokeShape="RoundRectangle 5"
+                        WidthRequest="10" HeightRequest="10"
+                        BackgroundColor="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}"
+                        StrokeThickness="0" />
+                <Border x:Name="Dot2"
+                        StrokeShape="RoundRectangle 5"
+                        WidthRequest="10" HeightRequest="10"
+                        BackgroundColor="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}"
+                        StrokeThickness="0" />
+            </HorizontalStackLayout>
+
+            <!-- 按钮区 -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*"
+                  ColumnSpacing="16">
+                <!-- 跳过按钮 -->
+                <Button Grid.Column="0"
+                        Text="跳过"
+                        Command="{Binding SkipCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                        BorderColor="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}"
+                        BorderWidth="1"
+                        CornerRadius="12"
+                        FontSize="{DynamicResource Font16}"
+                        SemanticProperties.Hint="跳过引导"
+                        AutomationId="BtnSkip" />
+
+                <!-- 下一步 / 开始使用 -->
+                <Button Grid.Column="1"
+                        Text="{Binding NextButtonText}"
+                        Command="{Binding NextCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        CornerRadius="12"
+                        FontSize="{DynamicResource Font16}"
+                        FontAttributes="Bold"
+                        SemanticProperties.Hint="下一步"
+                        AutomationId="BtnNext" />
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:ssk.ViewModels"
+             xmlns:controls="clr-namespace:ssk.Controls"
+             xmlns:converters="clr-namespace:ssk.Converters"
+             x:Class="ssk.Views.LoginPage"
+             x:DataType="viewmodels:LoginViewModel"
+             Title="{Binding ModeTitle}">
+
+    <ContentPage.Resources>
+        <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        <converters:StringNotNullConverter x:Key="StringNotNullConverter"/>
+    </ContentPage.Resources>
+
+    <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+        <ScrollView HorizontalOptions="Fill" VerticalOptions="Fill">
+            <VerticalStackLayout Padding="32,48" Spacing="20"
+                                  HorizontalOptions="Center" VerticalOptions="Center"
+                                  MaximumWidthRequest="400"
+                                  WidthRequest="400">
+
+                <!-- 用户图标 -->
+                <Label Text="&#xf2bd;" FontFamily="FA" FontSize="64"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center" Margin="0,0,0,16" />
+
+                <!-- 模式标题 -->
+                <Label Text="{Binding ModeTitle}"
+                       FontSize="{DynamicResource Font28}" FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,24" />
+
+                <!-- 用户名 -->
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
+                    <Label Text="用户名" FontSize="{DynamicResource Font13}"
+                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                    <controls:VoiceEntry Text="{Binding Username}"
+                           FontSize="{DynamicResource Font15}"
+                           Placeholder="请输入用户名"
+                           AutomationId="LoginUsernameEntry" />
+                </VerticalStackLayout>
+
+                <!-- 密码 -->
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
+                    <Label Text="密码" FontSize="{DynamicResource Font13}"
+                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                    <Entry Text="{Binding Password}"
+                           IsPassword="True"
+                           FontSize="{DynamicResource Font15}"
+                           Placeholder="请输入密码"
+                           AutomationId="LoginPasswordEntry" />
+                </VerticalStackLayout>
+
+                <!-- 确认密码（仅注册模式） -->
+                <VerticalStackLayout Spacing="6" HorizontalOptions="Fill"
+                                     IsVisible="{Binding ShowConfirmPassword}">
+                    <Label Text="确认密码" FontSize="{DynamicResource Font13}"
+                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                    <Entry Text="{Binding ConfirmPassword}"
+                           IsPassword="True"
+                           FontSize="{DynamicResource Font15}"
+                           Placeholder="请再次输入密码"
+                           AutomationId="LoginConfirmPasswordEntry" />
+                </VerticalStackLayout>
+
+                <!-- 错误消息 -->
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="#EF4444"
+                       FontSize="{DynamicResource Font13}"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource StringNotNullConverter}}"
+                       HorizontalOptions="Center"
+                       Margin="0,4" />
+
+                <!-- 登录按钮 -->
+                <Button Text="{Binding ModeTitle}"
+                        Command="{Binding LoginCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        FontSize="{DynamicResource Font16}"
+                        FontAttributes="Bold"
+                        CornerRadius="12"
+                        HeightRequest="50"
+                        Margin="0,8"
+                        IsVisible="{Binding IsRegisterMode, Converter={StaticResource InverseBoolConverter}}"
+                        AutomationId="LoginSubmitButton" />
+
+                <!-- 注册按钮 -->
+                <Button Text="{Binding ModeTitle}"
+                        Command="{Binding RegisterCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        FontSize="{DynamicResource Font16}"
+                        FontAttributes="Bold"
+                        CornerRadius="12"
+                        HeightRequest="50"
+                        Margin="0,8"
+                        IsVisible="{Binding IsRegisterMode}"
+                        AutomationId="RegisterSubmitButton" />
+
+                <!-- 切换模式链接 -->
+                <Label Text="{Binding ToggleText}"
+                       FontSize="{DynamicResource Font14}"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"
+                       Margin="0,8">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleModeCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

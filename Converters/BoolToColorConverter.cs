@@ -1,0 +1,18 @@
+using System.Globalization;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+
+namespace ssk.Converters;
+
+public class BoolToColorConverter : IValueConverter
+{
+    public Color TrueColor { get; set; } = Colors.Red;
+    public Color FalseColor { get; set; } = Colors.Gray;
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is true ? TrueColor : FalseColor;
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => null!;
+}

@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ssk.Views.NutritionDetailPage"
+             Title="营养详情">
+
+    <ScrollView Padding="16">
+        <OnIdiom x:TypeArguments="View">
+            <!-- 手机布局：原始单列垂直堆叠 -->
+            <OnIdiom.Phone>
+                <VerticalStackLayout Spacing="16">
+                    <!-- 今日营养摘要 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="今日营养摘要" FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+
+                            <!-- 营养素详情 Grid -->
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                  ColumnSpacing="8" RowSpacing="8">
+                                <!-- 表头 -->
+                                <Label Grid.Row="0" Grid.Column="0" Text="营养素" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="已摄入" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="2" Text="目标" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="3" Text="进度" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+
+                                <!-- 热量 -->
+                                <Label Grid.Row="1" Grid.Column="0" Text="热量" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding CaloriesIntake, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding CaloriesTarget, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="1" Grid.Column="3" Progress="{Binding CaloriesProgress}" Margin="4,0" />
+
+                                <!-- 蛋白质 -->
+                                <Label Grid.Row="2" Grid.Column="0" Text="蛋白质" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding ProteinIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#EF4444" />
+                                <Label Grid.Row="2" Grid.Column="2" Text="{Binding ProteinTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="2" Grid.Column="3" Progress="{Binding ProteinProgress}" Margin="4,0" />
+
+                                <!-- 碳水 -->
+                                <Label Grid.Row="3" Grid.Column="0" Text="碳水" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding CarbsIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#F59E0B" />
+                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding CarbsTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="3" Grid.Column="3" Progress="{Binding CarbsProgress}" Margin="4,0" />
+
+                                <!-- 脂肪 -->
+                                <Label Grid.Row="4" Grid.Column="0" Text="脂肪" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding FatIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#10B981" />
+                                <Label Grid.Row="4" Grid.Column="2" Text="{Binding FatTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="4" Grid.Column="3" Progress="{Binding FatProgress}" Margin="4,0" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 热量进度环 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="热量摄入" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <!-- 简单进度条替代进度环 -->
+                            <ProgressBar AutomationId="CaloriesProgressBar"
+                                         Progress="{Binding CaloriesProgress}"
+                                         WidthRequest="280"
+                                         HeightRequest="12"
+                                         HorizontalOptions="Center" />
+                            <Label Text="{Binding CaloriesSummary}"
+                                   FontSize="{DynamicResource Font13}"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 三大营养素柱状图 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="三大营养素占比" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" HeightRequest="160">
+                                <!-- 蛋白质柱 -->
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding ProteinPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#EF4444" />
+                                    <ProgressBar AutomationId="ProteinBar"
+                                                 Progress="{Binding ProteinProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="蛋白质" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <!-- 碳水柱 -->
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding CarbsPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#F59E0B" />
+                                    <ProgressBar AutomationId="CarbsBar"
+                                                 Progress="{Binding CarbsProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="碳水" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <!-- 脂肪柱 -->
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding FatPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#10B981" />
+                                    <ProgressBar AutomationId="FatBar"
+                                                 Progress="{Binding FatProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="脂肪" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 一周趋势 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="一周热量趋势" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <!-- 7天数据行 -->
+                            <Grid ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="100">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding MondayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="一" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding TuesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="二" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding WednesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="三" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding ThursdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="四" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding FridayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="五" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="5" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SaturdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="六" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="6" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SundayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="日" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 饮食建议 -->
+                    <Border StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="饮食建议" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <CollectionView AutomationId="SuggestionsList"
+                                            ItemsSource="{Binding Suggestions}"
+                                            SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Spacing="8" Margin="0,4">
+                                            <Label Text="&#xf0da;" FontFamily="FA" FontSize="12"
+                                                   TextColor="{StaticResource Primary}"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font13}"
+                                                   LineBreakMode="WordWrap"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </OnIdiom.Phone>
+
+            <!-- 平板/桌面布局：2列网格 -->
+            <OnIdiom.Tablet>
+                <Grid RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="*,*"
+                      RowSpacing="16" ColumnSpacing="16"
+                      MaximumWidthRequest="1200" HorizontalOptions="Center">
+
+                    <!-- Row 0 Col 0: 今日营养摘要 -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="今日营养摘要" FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                  ColumnSpacing="8" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0" Text="营养素" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="已摄入" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="2" Text="目标" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="3" Text="进度" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="1" Grid.Column="0" Text="热量" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding CaloriesIntake, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding CaloriesTarget, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="1" Grid.Column="3" Progress="{Binding CaloriesProgress}" Margin="4,0" />
+                                <Label Grid.Row="2" Grid.Column="0" Text="蛋白质" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding ProteinIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#EF4444" />
+                                <Label Grid.Row="2" Grid.Column="2" Text="{Binding ProteinTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="2" Grid.Column="3" Progress="{Binding ProteinProgress}" Margin="4,0" />
+                                <Label Grid.Row="3" Grid.Column="0" Text="碳水" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding CarbsIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#F59E0B" />
+                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding CarbsTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="3" Grid.Column="3" Progress="{Binding CarbsProgress}" Margin="4,0" />
+                                <Label Grid.Row="4" Grid.Column="0" Text="脂肪" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding FatIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#10B981" />
+                                <Label Grid.Row="4" Grid.Column="2" Text="{Binding FatTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="4" Grid.Column="3" Progress="{Binding FatProgress}" Margin="4,0" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 0 Col 1: 热量进度 -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="热量摄入" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <ProgressBar AutomationId="CaloriesProgressBar"
+                                         Progress="{Binding CaloriesProgress}"
+                                         WidthRequest="280"
+                                         HeightRequest="12"
+                                         HorizontalOptions="Center" />
+                            <Label Text="{Binding CaloriesSummary}"
+                                   FontSize="{DynamicResource Font13}"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 0: 三大营养素柱状图 -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="三大营养素占比" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" HeightRequest="160">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding ProteinPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#EF4444" />
+                                    <ProgressBar AutomationId="ProteinBar"
+                                                 Progress="{Binding ProteinProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="蛋白质" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding CarbsPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#F59E0B" />
+                                    <ProgressBar AutomationId="CarbsBar"
+                                                 Progress="{Binding CarbsProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="碳水" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding FatPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#10B981" />
+                                    <ProgressBar AutomationId="FatBar"
+                                                 Progress="{Binding FatProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="脂肪" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 1: 一周趋势 -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="一周热量趋势" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="100">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding MondayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="一" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding TuesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="二" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding WednesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="三" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding ThursdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="四" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding FridayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="五" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="5" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SaturdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="六" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="6" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SundayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="日" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 ColSpan 2: 饮食建议 -->
+                    <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="饮食建议" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <CollectionView AutomationId="SuggestionsList"
+                                            ItemsSource="{Binding Suggestions}"
+                                            SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Spacing="8" Margin="0,4">
+                                            <Label Text="&#xf0da;" FontFamily="FA" FontSize="12"
+                                                   TextColor="{StaticResource Primary}"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font13}"
+                                                   LineBreakMode="WordWrap"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </OnIdiom.Tablet>
+
+            <!-- 桌面布局：与平板相同的2列网格 -->
+            <OnIdiom.Desktop>
+                <Grid RowDefinitions="Auto,Auto,Auto"
+                      ColumnDefinitions="*,*"
+                      RowSpacing="16" ColumnSpacing="16"
+                      MaximumWidthRequest="1200" HorizontalOptions="Center">
+
+                    <!-- Row 0 Col 0: 今日营养摘要 -->
+                    <Border Grid.Row="0" Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="今日营养摘要" FontSize="17" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="Auto,Auto,Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                  ColumnSpacing="8" RowSpacing="8">
+                                <Label Grid.Row="0" Grid.Column="0" Text="营养素" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="1" Text="已摄入" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="2" Text="目标" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="0" Grid.Column="3" Text="进度" FontSize="{DynamicResource Font12}" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <Label Grid.Row="1" Grid.Column="0" Text="热量" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding CaloriesIntake, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding CaloriesTarget, StringFormat='{0}'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="1" Grid.Column="3" Progress="{Binding CaloriesProgress}" Margin="4,0" />
+                                <Label Grid.Row="2" Grid.Column="0" Text="蛋白质" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="2" Grid.Column="1" Text="{Binding ProteinIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#EF4444" />
+                                <Label Grid.Row="2" Grid.Column="2" Text="{Binding ProteinTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="2" Grid.Column="3" Progress="{Binding ProteinProgress}" Margin="4,0" />
+                                <Label Grid.Row="3" Grid.Column="0" Text="碳水" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="3" Grid.Column="1" Text="{Binding CarbsIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#F59E0B" />
+                                <Label Grid.Row="3" Grid.Column="2" Text="{Binding CarbsTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="3" Grid.Column="3" Progress="{Binding CarbsProgress}" Margin="4,0" />
+                                <Label Grid.Row="4" Grid.Column="0" Text="脂肪" FontSize="{DynamicResource Font13}" />
+                                <Label Grid.Row="4" Grid.Column="1" Text="{Binding FatIntake, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="#10B981" />
+                                <Label Grid.Row="4" Grid.Column="2" Text="{Binding FatTarget, StringFormat='{0}g'}" FontSize="{DynamicResource Font13}"
+                                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                <ProgressBar Grid.Row="4" Grid.Column="3" Progress="{Binding FatProgress}" Margin="4,0" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 0 Col 1: 热量进度 -->
+                    <Border Grid.Row="0" Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center">
+                            <Label Text="热量摄入" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{StaticResource Primary}" />
+                            <ProgressBar AutomationId="CaloriesProgressBar"
+                                         Progress="{Binding CaloriesProgress}"
+                                         WidthRequest="280"
+                                         HeightRequest="12"
+                                         HorizontalOptions="Center" />
+                            <Label Text="{Binding CaloriesSummary}"
+                                   FontSize="{DynamicResource Font13}"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 0: 三大营养素柱状图 -->
+                    <Border Grid.Row="1" Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="三大营养素占比" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="16" HeightRequest="160">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding ProteinPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#EF4444" />
+                                    <ProgressBar AutomationId="ProteinBar"
+                                                 Progress="{Binding ProteinProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="蛋白质" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding CarbsPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#F59E0B" />
+                                    <ProgressBar AutomationId="CarbsBar"
+                                                 Progress="{Binding CarbsProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="碳水" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <Label Text="{Binding FatPercent, StringFormat='{0:P0}'}"
+                                           FontSize="{DynamicResource Font12}" HorizontalOptions="Center" TextColor="#10B981" />
+                                    <ProgressBar AutomationId="FatBar"
+                                                 Progress="{Binding FatProgress}"
+                                                 WidthRequest="60"
+                                                 HeightRequest="100"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="脂肪" FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 1 Col 1: 一周趋势 -->
+                    <Border Grid.Row="1" Grid.Column="1"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="一周热量趋势" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <Grid ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="100">
+                                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding MondayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="一" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding TuesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="二" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding WednesdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="三" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding ThursdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="四" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding FridayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="五" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="5" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SaturdayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="六" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="6" HorizontalOptions="Center" Spacing="4">
+                                    <ProgressBar Progress="{Binding SundayProgress}" HeightRequest="60" WidthRequest="24"
+                                                 HorizontalOptions="Center" />
+                                    <Label Text="日" FontSize="{DynamicResource Font11}" HorizontalOptions="Center"
+                                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Row 2 ColSpan 2: 饮食建议 -->
+                    <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                            StrokeShape="RoundRectangle 12"
+                            StrokeThickness="1"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                            Padding="16">
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="饮食建议" FontSize="{DynamicResource Font15}" FontAttributes="Bold"
+                                   TextColor="{StaticResource Primary}" />
+                            <CollectionView AutomationId="SuggestionsList"
+                                            ItemsSource="{Binding Suggestions}"
+                                            SelectionMode="None">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <HorizontalStackLayout Spacing="8" Margin="0,4">
+                                            <Label Text="&#xf0da;" FontFamily="FA" FontSize="12"
+                                                   TextColor="{StaticResource Primary}"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="{Binding .}" FontSize="{DynamicResource Font13}"
+                                                   LineBreakMode="WordWrap"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </OnIdiom.Desktop>
+        </OnIdiom>
+    </ScrollView>
+
+</ContentPage>

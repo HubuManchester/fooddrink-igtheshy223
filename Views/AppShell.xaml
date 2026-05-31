@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:ssk.Views"
+       x:Class="ssk.Views.AppShell"
+       Title="SSK">
+
+    <Shell.Resources>
+    </Shell.Resources>
+
+    <!-- TabBar -->
+    <TabBar>
+        <Tab Title="发现" Icon="tab_home.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:HomePage}"/>
+        </Tab>
+        <Tab Title="食谱" Icon="tab_recipe.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:RecipeListPage}"/>
+        </Tab>
+        <Tab Title="计划" Icon="tab_mealplan.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:MealPlanPage}"/>
+        </Tab>
+        <Tab Title="我的" Icon="tab_profile.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}"/>
+        </Tab>
+    </TabBar>
+
+</Shell>
