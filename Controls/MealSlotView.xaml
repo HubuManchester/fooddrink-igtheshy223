@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ssk.Models"
+             x:Class="ssk.Controls.MealSlotView"
+             x:Name="This">
+    <Border StrokeShape="RoundRectangle 10" StrokeThickness="1"
+            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+            BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+            Padding="12" Margin="4,2">
+        <VerticalStackLayout BindingContext="{x:Reference This}" Spacing="8">
+            <!-- 餐段标题 -->
+            <Grid ColumnDefinitions="*,Auto">
+                <Label Grid.Column="0" Text="{Binding MealType}" FontSize="{DynamicResource Font16}" FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="{Binding PlanCount, StringFormat='{0}项'}" FontSize="{DynamicResource Font13}" TextColor="#6B7280"/>
+            </Grid>
+
+            <!-- 有数据 -->
+            <CollectionView ItemsSource="{Binding Plans}" IsVisible="{Binding HasPlans}" Margin="0,0,0,4">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:MealPlan">
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,4" ColumnSpacing="8">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsCompleted}"
+                                      CheckedChanged="OnCheckBoxCheckedChanged"/>
+                            <Label Grid.Column="1" Text="{Binding CustomFoodName}" VerticalOptions="Center"
+                                   FontSize="{DynamicResource Font14}" LineBreakMode="TailTruncation">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                        <Setter Property="TextColor" Value="#9CA3AF"/>
+                                        <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Grid.Column="2" Text="{Binding Calories, StringFormat='{0:F0}千卡'}"
+                                   FontSize="{DynamicResource Font12}" TextColor="#6B7280" VerticalOptions="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- 无数据 -->
+            <Label Text="暂无安排" IsVisible="{Binding NoPlans}" FontSize="{DynamicResource Font14}" TextColor="#9CA3AF"
+                   HorizontalOptions="Center" Margin="0,8"/>
+        </VerticalStackLayout>
+    </Border>
+</ContentView>

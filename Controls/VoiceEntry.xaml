@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ssk.Controls.VoiceEntry"
+             x:Name="This">
+    <Grid ColumnDefinitions="*,36" ColumnSpacing="4">
+        <Entry Grid.Column="0"
+               Text="{Binding Source={x:Reference This}, Path=Text, Mode=TwoWay}"
+               Placeholder="{Binding Source={x:Reference This}, Path=Placeholder}"
+               Keyboard="{Binding Source={x:Reference This}, Path=Keyboard}"
+               FontSize="{Binding Source={x:Reference This}, Path=FontSize}"
+               IsEnabled="{Binding Source={x:Reference This}, Path=IsEnabled}"
+               AutomationId="{Binding Source={x:Reference This}, Path=AutomationId}" />
+        <Border Grid.Column="1"
+                StrokeShape="RoundRectangle 8"
+                WidthRequest="36" HeightRequest="36"
+                BackgroundColor="{StaticResource Primary}"
+                StrokeThickness="0"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                SemanticProperties.Description="语音输入"
+                SemanticProperties.Hint="点击使用语音输入">
+            <Border.Triggers>
+                <DataTrigger TargetType="Border"
+                             Binding="{Binding Source={x:Reference This}, Path=IsListening}"
+                             Value="True">
+                    <Setter Property="BackgroundColor" Value="#EF4444"/>
+                </DataTrigger>
+            </Border.Triggers>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={x:Reference This}, Path=VoiceCommand}" />
+            </Border.GestureRecognizers>
+            <Label Text="&#xf130;" FontFamily="FA" FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+    </Grid>
+</ContentView>
