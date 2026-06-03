@@ -38,8 +38,8 @@ public partial class OnboardingPage : ContentPage
         for (int i = 0; i < dots.Length; i++)
         {
             dots[i].BackgroundColor = i == index
-                ? Application.Current.Resources.TryGetValue("Primary", out var primary) ? (Color)primary : Color.FromArgb("#6366F1")
-                : Application.Current.RequestedTheme == AppTheme.Light
+                ? Application.Current!.Resources.TryGetValue("Primary", out var primary) ? (Color)primary! : Color.FromArgb("#6366F1")
+                : Application.Current!.RequestedTheme == AppTheme.Light
                     ? Color.FromArgb("#D1D5DB")
                     : Color.FromArgb("#4B5563");
         }

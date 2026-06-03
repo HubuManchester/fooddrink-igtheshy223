@@ -20,51 +20,51 @@
                                   MaximumWidthRequest="400"
                                   WidthRequest="400">
 
-                <!-- 用户图标 -->
+                <!-- User icon -->
                 <Label Text="&#xf2bd;" FontFamily="FA" FontSize="64"
                        TextColor="{StaticResource Primary}"
                        HorizontalOptions="Center" Margin="0,0,0,16" />
 
-                <!-- 模式标题 -->
+                <!-- Mode title -->
                 <Label Text="{Binding ModeTitle}"
                        FontSize="{DynamicResource Font28}" FontAttributes="Bold"
                        HorizontalOptions="Center"
                        Margin="0,0,0,24" />
 
-                <!-- 用户名 -->
+                <!-- Username -->
                 <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
-                    <Label Text="用户名" FontSize="{DynamicResource Font13}"
+                    <Label Text="Username" FontSize="{DynamicResource Font13}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
                     <controls:VoiceEntry Text="{Binding Username}"
                            FontSize="{DynamicResource Font15}"
-                           Placeholder="请输入用户名"
+                           Placeholder="Please input username"
                            AutomationId="LoginUsernameEntry" />
                 </VerticalStackLayout>
 
-                <!-- 密码 -->
+                <!-- Password -->
                 <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
-                    <Label Text="密码" FontSize="{DynamicResource Font13}"
+                    <Label Text="Password" FontSize="{DynamicResource Font13}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
                     <Entry Text="{Binding Password}"
                            IsPassword="True"
                            FontSize="{DynamicResource Font15}"
-                           Placeholder="请输入密码"
+                           Placeholder="Please input password"
                            AutomationId="LoginPasswordEntry" />
                 </VerticalStackLayout>
 
-                <!-- 确认密码（仅注册模式） -->
+                <!-- Confirm password (register mode only) -->
                 <VerticalStackLayout Spacing="6" HorizontalOptions="Fill"
                                      IsVisible="{Binding ShowConfirmPassword}">
-                    <Label Text="确认密码" FontSize="{DynamicResource Font13}"
+                    <Label Text="Confirm Password" FontSize="{DynamicResource Font13}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
                     <Entry Text="{Binding ConfirmPassword}"
                            IsPassword="True"
                            FontSize="{DynamicResource Font15}"
-                           Placeholder="请再次输入密码"
+                           Placeholder="Please input password again"
                            AutomationId="LoginConfirmPasswordEntry" />
                 </VerticalStackLayout>
 
-                <!-- 错误消息 -->
+                <!-- Error message -->
                 <Label Text="{Binding ErrorMessage}"
                        TextColor="#EF4444"
                        FontSize="{DynamicResource Font13}"
@@ -72,7 +72,7 @@
                        HorizontalOptions="Center"
                        Margin="0,4" />
 
-                <!-- 登录按钮 -->
+                <!-- Login button -->
                 <Button Text="{Binding ModeTitle}"
                         Command="{Binding LoginCommand}"
                         BackgroundColor="{StaticResource Primary}"
@@ -85,7 +85,7 @@
                         IsVisible="{Binding IsRegisterMode, Converter={StaticResource InverseBoolConverter}}"
                         AutomationId="LoginSubmitButton" />
 
-                <!-- 注册按钮 -->
+                <!-- Register button -->
                 <Button Text="{Binding ModeTitle}"
                         Command="{Binding RegisterCommand}"
                         BackgroundColor="{StaticResource Primary}"
@@ -98,7 +98,7 @@
                         IsVisible="{Binding IsRegisterMode}"
                         AutomationId="RegisterSubmitButton" />
 
-                <!-- 切换模式链接 -->
+                <!-- Toggle mode link -->
                 <Label Text="{Binding ToggleText}"
                        FontSize="{DynamicResource Font14}"
                        TextColor="{StaticResource Primary}"

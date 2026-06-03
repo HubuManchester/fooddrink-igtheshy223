@@ -6,7 +6,7 @@ public static class NutritionCalculator
 {
     public static NutritionInfo CalculateForRecipe(Recipe recipe, double servings = 1)
     {
-        // 基础估算（基于份数缩放）
+        // Basic estimation (scaled by servings)
         var factor = servings / Math.Max(recipe.Servings, 1);
         return new NutritionInfo
         {
@@ -46,23 +46,23 @@ public static class NutritionCalculator
         var calPercent = summary.CalorieGoal > 0 ? summary.TotalCalories / summary.CalorieGoal * 100 : 0;
 
         if (calPercent < 50)
-            advice.Add("今日摄入热量偏低，建议适当补充营养");
+            advice.Add("Today calorie intake too low, suggest add more nutrition");
         else if (calPercent > 120)
-            advice.Add("今日摄入热量偏高，注意控制饮食");
+            advice.Add("Today calorie intake too high, please control diet");
         else
-            advice.Add("今日热量摄入良好，继续保持");
+            advice.Add("Today calorie intake is good, keep it up");
 
         if (summary.TotalProtein < summary.ProteinGoal * 0.8)
-            advice.Add("蛋白质摄入不足，建议增加肉类、蛋奶或豆制品");
+            advice.Add("Protein intake not enough, suggest add Meat, Dairy or Tofu");
         if (summary.TotalCarbs > summary.CarbsGoal * 1.2)
-            advice.Add("碳水摄入偏高，建议减少精制碳水化合物");
+            advice.Add("Carbs intake too high, suggest reduce refined carbohydrate");
         if (summary.TotalFat > summary.FatGoal * 1.2)
-            advice.Add("脂肪摄入偏高，建议选择低脂食物");
+            advice.Add("Fat intake too high, suggest choose low fat food");
         if (summary.TotalFiber < summary.FiberGoal * 0.6)
-            advice.Add("膳食纤维摄入不足，建议多吃蔬菜水果");
+            advice.Add("Dietary fiber not enough, suggest eat more Vegetable and Fruit");
 
         if (advice.Count == 1)
-            advice.Add("整体营养搭配合理，请继续保持");
+            advice.Add("Overall nutrition balanced well, please keep it up");
 
         return advice;
     }

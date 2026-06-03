@@ -40,7 +40,7 @@ public class OnboardingViewModel : BaseViewModel
 
     private int _totalSteps = 3;
 
-    public string NextButtonText => CurrentStep >= _totalSteps - 1 ? "开始使用" : "下一步";
+    public string NextButtonText => CurrentStep >= _totalSteps - 1 ? "Start Use" : "Next Step";
 
     public ICommand NextCommand { get; }
     public ICommand SkipCommand { get; }
@@ -57,9 +57,9 @@ public class OnboardingViewModel : BaseViewModel
 
     private void LoadItems()
     {
-        Items.Add(new OnboardingItem("", "欢迎使用SSK", "SSK智慧饮食管理助手，让每一餐都健康美味"));
-        Items.Add(new OnboardingItem("", "智能识别", "拍照即可识别食物，自动计算营养成分，轻松管理饮食计划"));
-        Items.Add(new OnboardingItem("", "开始使用", "让我们一起开启健康饮食之旅"));
+        Items.Add(new OnboardingItem("", "Welcome Use SSK", "SSK smart diet management assistant, make every meal healthy delicious"));
+        Items.Add(new OnboardingItem("", "Smart Recognize", "Take photo can recognize food, auto calculate nutrition, easy manage diet plan"));
+        Items.Add(new OnboardingItem("", "Start Use", "Let us together start healthy diet journey"));
     }
 
     private void ExecuteNext()

@@ -11,15 +11,15 @@ public class StringToUriConverter : IValueConverter
         if (value is not string path || string.IsNullOrEmpty(path))
             return null;
 
-        // 无网络 → 返回 null → 显示底层错误占位符
+        // no network return null show bottom error placeholder
         if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             return null;
 
-        // 有网络 → 显示图片
+        // have network show image
         if (path.StartsWith("http"))
             return ImageSource.FromUri(new Uri(path));
 
-        // 本地打包资源
+        /* local pack resource */
         return ImageSource.FromFile(path);
     }
 

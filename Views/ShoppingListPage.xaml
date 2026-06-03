@@ -4,29 +4,30 @@
              xmlns:viewmodels="clr-namespace:ssk.ViewModels"
              xmlns:controls="clr-namespace:ssk.Controls"
              xmlns:converters="clr-namespace:ssk.Converters"
+             xmlns:models="clr-namespace:ssk.Models"
              x:Class="ssk.Views.ShoppingListPage"
              x:DataType="viewmodels:ShoppingListViewModel"
-             Title="购物清单">
+             Title="Shopping List">
 
     <ContentPage.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
     </ContentPage.Resources>
 
     <Grid>
-        <!-- 原有内容 -->
+        <!-- Original content -->
         <Grid RowDefinitions="Auto,*,Auto" Padding="16,8" RowSpacing="12"
               MaximumWidthRequest="{OnIdiom Phone=0, Tablet=800, Desktop=800}"
               HorizontalOptions="{OnIdiom Phone=Fill, Tablet=Center, Desktop=Center}">
-        <!-- 输入区 -->
+        <!-- Input area -->
         <Grid Grid.Row="0" ColumnDefinitions="*,60,Auto" ColumnSpacing="8">
             <controls:VoiceEntry AutomationId="ItemNameEntry"
                    Grid.Column="0"
-                   Placeholder="物品名称"
+                   Placeholder="Item name"
                    Text="{Binding NewItemName}"
                    FontSize="{DynamicResource Font14}" />
             <Entry AutomationId="ItemQuantityEntry"
                    Grid.Column="1"
-                   Placeholder="数量"
+                   Placeholder="Qty"
                    Text="{Binding NewItemQuantity}"
                    Keyboard="Numeric"
                    FontSize="{DynamicResource Font14}" />
@@ -42,14 +43,14 @@
                     HeightRequest="44" />
         </Grid>
 
-        <!-- 购物列表 -->
+        <!-- Shopping list -->
         <CollectionView Grid.Row="1"
                         AutomationId="ShoppingListCollection"
                         ItemsSource="{Binding GroupedItems}"
                         IsGrouped="True"
                         SelectionMode="None">
             <CollectionView.GroupHeaderTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:ShoppingGroup">
                     <Label Text="{Binding Key}"
                            FontSize="{DynamicResource Font15}" FontAttributes="Bold"
                            TextColor="{StaticResource Primary}"
@@ -57,9 +58,9 @@
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:ShoppingItem">
                     <Grid ColumnDefinitions="*,Auto,Auto" Padding="8,6" ColumnSpacing="12">
-                        <!-- 名称 + 数量 -->
+                        <!-- Name + quantity -->
                         <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
                             <Label Text="{Binding Name}" FontSize="{DynamicResource Font15}"
                                    LineBreakMode="TailTruncation">
@@ -74,13 +75,13 @@
                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
                         </VerticalStackLayout>
 
-                        <!-- 已购买勾选 -->
+                        <!-- Purchased checkbox -->
                         <CheckBox Grid.Column="1"
                                   AutomationId="ItemPurchasedCheckBox"
                                   IsChecked="{Binding IsPurchased}"
                                   VerticalOptions="Center" />
 
-                        <!-- 删除按钮 -->
+                        <!-- Delete button -->
                         <Button Grid.Column="2"
                                 AutomationId="DeleteItemButton"
                                 Text="&#xf00d;"
@@ -98,11 +99,11 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 底部操作栏 -->
+        <!-- Bottom action bar -->
         <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
             <Button Grid.Column="0"
                     AutomationId="ClearPurchasedButton"
-                    Text="清空已购买"
+                    Text="Clear Purchased"
                     Command="{Binding ClearPurchasedCommand}"
                     BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
                     TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}"
@@ -116,29 +117,29 @@
                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}">
                 <Label.FormattedText>
                     <FormattedString>
-                        <Span Text="{Binding TotalCount, StringFormat='共{0}项'}"/>
+                        <Span Text="{Binding TotalCount, StringFormat='Total {0} item'}"/>
                         <Span Text=" "/>
-                        <Span Text="{Binding PurchasedCount, StringFormat='已购{0}项'}"/>
+                        <Span Text="{Binding PurchasedCount, StringFormat='Done {0} item'}"/>
                     </FormattedString>
                 </Label.FormattedText>
             </Label>
         </Grid>
     </Grid>
 
-        <!-- 游客登录提示覆盖层 -->
+        <!-- Guest login prompt overlay -->
         <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
                               Spacing="16" Padding="32"
                               IsVisible="{Binding IsLoggedIn, Converter={StaticResource InverseBoolConverter}}">
             <Label Text="&#xf023;" FontFamily="FA" FontSize="48"
                    TextColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}"
                    HorizontalOptions="Center" />
-            <Label Text="请登录查看购物清单" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
+            <Label Text="Please Login Check Shopping List" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
-            <Label Text="登录后可以管理您的购物清单" FontSize="{DynamicResource Font14}"
+            <Label Text="After Login Can Manage Your Shopping List" FontSize="{DynamicResource Font14}"
                    HorizontalOptions="Center"
                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
-            <Button Text="立即登录"
+            <Button Text="Login Now"
                     Command="{Binding LoginCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"

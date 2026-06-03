@@ -8,7 +8,7 @@ public class CameraService
         {
             var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions
             {
-                Title = "食物照片"
+                Title = "Food Photo"
             });
             return photo;
         }
@@ -27,7 +27,7 @@ public class CameraService
         {
             return await MediaPicker.PickPhotoAsync(new MediaPickerOptions
             {
-                Title = "选择食物照片"
+                Title = "Select Food Photo"
             });
         }
         catch (Exception ex)
@@ -61,12 +61,12 @@ public class CameraService
             var cameraIds = cameraManager.GetCameraIdList();
             if (cameraIds == null || cameraIds.Length == 0) return Task.FromResult(false);
 
-            // 使用后置摄像头（通常是第一个）
+            // Use rear camera (usually the first one)
             foreach (var id in cameraIds)
             {
                 var characteristics = cameraManager.GetCameraCharacteristics(id);
                 var facingObj = characteristics.Get(Android.Hardware.Camera2.CameraCharacteristics.LensFacing);
-                var facing = (Android.Hardware.Camera2.LensFacing)((Java.Lang.Integer)facingObj).IntValue();
+                var facing = (Android.Hardware.Camera2.LensFacing)((Java.Lang.Integer)facingObj!).IntValue();
                 if (facing == Android.Hardware.Camera2.LensFacing.Back)
                 {
                     cameraManager.SetTorchMode(id, on);
@@ -74,7 +74,7 @@ public class CameraService
                 }
             }
 
-            // 未找到后置摄像头，尝试第一个
+            // Rear camera not found, try first one
             cameraManager.SetTorchMode(cameraIds[0], on);
             return Task.FromResult(true);
         }

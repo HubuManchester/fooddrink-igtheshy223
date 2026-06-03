@@ -6,10 +6,10 @@ public class MealGroup
     public List<MealPlan> Plans { get; set; } = new();
     public string Icon => MealType switch
     {
-        "早餐" => "",    // fa-coffee
-        "午餐" => "",    // fa-cutlery
-        "晚餐" => "",    // fa-moon-o
-        "加餐" => "",    // fa-apple-alt
+        "Breakfast" => "",    // fa-coffee
+        "Lunch" => "",    // fa-cutlery
+        "Dinner" => "",    // fa-moon-o
+        "Snack" => "",    // fa-apple-alt
         _ => ""
     };
 

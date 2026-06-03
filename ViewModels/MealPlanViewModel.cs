@@ -52,7 +52,7 @@ public class MealPlanViewModel : BaseViewModel
         }
     }
 
-    // 调试属性
+    /* debug property */
     public int DatesWithPlansCount => DatesWithPlans?.Count ?? 0;
 
     private DailyNutritionSummary? _dayNutrition;
@@ -72,14 +72,14 @@ public class MealPlanViewModel : BaseViewModel
         }
     }
 
-    // XAML 绑定的营养属性
+    // XAML bind nutrition properties
     public double TotalCalories => DayNutrition?.TotalCalories ?? 0;
     public double TotalProtein => DayNutrition?.TotalProtein ?? 0;
     public double TotalCarbs => DayNutrition?.TotalCarbs ?? 0;
     public double TotalFat => DayNutrition?.TotalFat ?? 0;
     public double TotalFiber => DayNutrition?.TotalFiber ?? 0;
 
-    // XAML 绑定的各餐段计划
+    /* XAML bind each meal type plan list */
     public ObservableCollection<MealPlan> BreakfastPlans { get; } = new();
     public ObservableCollection<MealPlan> LunchPlans { get; } = new();
     public ObservableCollection<MealPlan> DinnerPlans { get; } = new();
@@ -96,14 +96,14 @@ public class MealPlanViewModel : BaseViewModel
 
     private volatile bool _isLoadingPlans;
 
-    // XAML 绑定的命令（名字必须和 MealPlanPage.xaml 中的绑定一致）
+    // XAML bind command name must match MealPlanPage.xaml binding
     public ICommand DateSelectedCommand { get; }
     public ICommand ToggleMealCommand { get; }
     public ICommand AddMealPlanCommand { get; }
     public ICommand RefreshCommand { get; }
     public ICommand LoginCommand { get; }
 
-    private static readonly List<string> MealTypes = new() { "早餐", "午餐", "晚餐", "加餐" };
+    private static readonly List<string> MealTypes = new() { "Breakfast", "Lunch", "Dinner", "Snack" };
 
     public bool IsLoggedIn => _authService.IsLoggedIn;
 
@@ -117,7 +117,7 @@ public class MealPlanViewModel : BaseViewModel
         _nutritionRepository = nutritionRepository;
         _serviceProvider = serviceProvider;
         _authService = authService;
-        Title = "饮食计划";
+        Title = "Diet Plan";
 
         _authService.LoginStateChanged += OnLoginStateChanged;
 
@@ -192,7 +192,7 @@ public class MealPlanViewModel : BaseViewModel
 
             System.Diagnostics.Debug.WriteLine($"[MealPlanVM] LoadDayPlans: date={dateStr}, plans.Count={plans.Count}");
 
-            // 按餐段分组
+            // group by meal type
             BreakfastPlans.Clear();
             LunchPlans.Clear();
             DinnerPlans.Clear();
@@ -203,16 +203,16 @@ public class MealPlanViewModel : BaseViewModel
                 System.Diagnostics.Debug.WriteLine($"[MealPlanVM] Plan: id={plan.Id}, type={plan.MealType}, name={plan.CustomFoodName}, cal={plan.Calories}");
                 switch (plan.MealType)
                 {
-                    case "早餐": BreakfastPlans.Add(plan); break;
-                    case "午餐": LunchPlans.Add(plan); break;
-                    case "晚餐": DinnerPlans.Add(plan); break;
-                    case "加餐": SnackPlans.Add(plan); break;
+                    case "Breakfast": BreakfastPlans.Add(plan); break;
+                    case "Lunch": LunchPlans.Add(plan); break;
+                    case "Dinner": DinnerPlans.Add(plan); break;
+                    case "Snack": SnackPlans.Add(plan); break;
                 }
             }
 
             System.Diagnostics.Debug.WriteLine($"[MealPlanVM] After split: BF={BreakfastPlans.Count}, Lunch={LunchPlans.Count}, Dinner={DinnerPlans.Count}, Snack={SnackPlans.Count}");
 
-            // 加载营养摘要
+            /* load nutrition summary */
             var target = await _nutritionRepository.GetOrCreateForDateAsync(dateStr);
             var summary = await _mealPlanRepository.GetDailySummaryAsync(dateStr);
             summary.CalorieGoal = target.CaloriesGoal;
@@ -222,7 +222,7 @@ public class MealPlanViewModel : BaseViewModel
             summary.FiberGoal = target.FiberGoal;
             DayNutrition = summary;
 
-            // 加载本周有计划的日期
+            // load this week dates that have plan
             await LoadDatesWithPlansAsync();
         }
         catch (Exception ex)
@@ -231,7 +231,7 @@ public class MealPlanViewModel : BaseViewModel
         }
         finally
         {
-            // 延迟解除加载标志，等 UI 绑定完成后再允许用户交互
+            /* delay clear loading flag wait UI bind finish then allow user interaction */
             MainThread.BeginInvokeOnMainThread(() => _isLoadingPlans = false);
         }
     }
@@ -263,7 +263,7 @@ public class MealPlanViewModel : BaseViewModel
     {
         try
         {
-            // 双向绑定已经将 plan.IsCompleted 更新为新值，直接保存
+            // two-way binding already update plan.IsCompleted to new value just save
             await _mealPlanRepository.MarkCompletedAsync(plan, plan.IsCompleted);
             await LoadDayPlansAsync();
         }
@@ -279,8 +279,8 @@ public class MealPlanViewModel : BaseViewModel
         {
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                var mealType = await Shell.Current.DisplayActionSheet("选择餐段", "取消", null, MealTypes.ToArray());
-                if (string.IsNullOrEmpty(mealType) || mealType == "取消") return;
+                var mealType = await Shell.Current.DisplayActionSheet("Select Meal Type", "Cancel", null, MealTypes.ToArray());
+                if (string.IsNullOrEmpty(mealType) || mealType == "Cancel") return;
                 await Shell.Current.GoToAsync($"RecipeListPage?mealType={mealType}&date={SelectedDate:yyyy-MM-dd}");
             });
         }

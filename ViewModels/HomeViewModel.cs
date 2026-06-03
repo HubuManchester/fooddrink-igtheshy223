@@ -93,7 +93,7 @@ public class HomeViewModel : BaseViewModel
         _hapticService = hapticService;
         _authService = authService;
 
-        Title = "首页";
+        Title = "Home";
 
         NavigateToCameraCommand = CreateCommand(() =>
             Shell.Current.GoToAsync(nameof(CameraPage)));
@@ -151,20 +151,20 @@ public class HomeViewModel : BaseViewModel
         var hour = DateTime.Now.Hour;
         Greeting = hour switch
         {
-            < 6 => "夜深了，注意休息",
-            < 9 => "早上好，来份营养早餐吧",
-            < 12 => "上午好，准备午餐了吗",
-            < 14 => "中午好，享用美食吧",
-            < 18 => "下午好，来点下午茶",
-            < 22 => "晚上好，准备晚餐了吗",
-            _ => "夜深了，注意休息"
+            < 6 => "Late night, please rest well",
+            < 9 => "Good morning, have a nutrition Breakfast",
+            < 12 => "Good morning, ready for Lunch?",
+            < 14 => "Good noon, enjoy delicious food",
+            < 18 => "Good afternoon, have some Snack",
+            < 22 => "Good evening, ready for Dinner?",
+            _ => "Late night, please rest well"
         };
     }
 
     private void UpdateDateDisplay()
     {
         var now = DateTime.Now;
-        DateDisplay = $"{now.Month}月{now.Day}日";
+        DateDisplay = $"{now.Month}/{now.Day}";
     }
 
     public async Task LoadDataAsync()

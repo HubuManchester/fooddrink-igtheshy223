@@ -16,26 +16,26 @@
         </Border.Shadow>
 
         <Grid RowDefinitions="120,Auto,Auto" BindingContext="{x:Reference This}">
-            <!-- 图片区域 -->
+            <!-- Image Area -->
             <Grid Grid.Row="0">
-                <!-- 底层错误占位 -->
+                <!-- Error Placeholder -->
                 <Border StrokeShape="RoundRectangle 12,12,0,0" BackgroundColor="#F3F4F6">
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Label Text="&#xf127;" FontFamily="FA" FontSize="24" TextColor="#9CA3AF" HorizontalOptions="Center"/>
-                        <Label Text="图片加载失败" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
-                        <Label Text="请检查网络" FontSize="9" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                        <Label Text="Image Load Fail" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                        <Label Text="Please Check Network" FontSize="9" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                     </VerticalStackLayout>
                 </Border>
-                <!-- 上层网络图片 -->
+                <!-- Network Image -->
                 <Image Source="{Binding Recipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
                        Aspect="AspectFill" HeightRequest="120"/>
-                <!-- 左上分类标签 -->
+                <!-- Category Tag -->
                 <Border HorizontalOptions="Start" VerticalOptions="Start" Margin="8,8"
                         StrokeShape="RoundRectangle 10" BackgroundColor="{StaticResource Primary}"
                         Padding="8,3">
                     <Label Text="{Binding Recipe.Category}" TextColor="White" FontSize="{DynamicResource Font11}"/>
                 </Border>
-                <!-- 右下收藏图标 -->
+                <!-- Favorite Icon -->
                 <Label FontFamily="FA" Text="&#xf004;" FontSize="16"
                        TextColor="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteColorConverter}}"
                        HorizontalOptions="End" VerticalOptions="End" Margin="0,0,8,8">
@@ -46,15 +46,15 @@
                 </Label>
             </Grid>
 
-            <!-- 标题 -->
+            <!-- Title -->
             <Label Grid.Row="1" Text="{Binding Recipe.Title}" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
                    LineBreakMode="TailTruncation" Margin="8,8,8,2"/>
 
-            <!-- 难度 + 时间 -->
+            <!-- Difficulty + Time -->
             <HorizontalStackLayout Grid.Row="2" Margin="8,0,8,8" Spacing="8">
                 <Label Text="{Binding Recipe.Difficulty}" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
                 <Label Text="·" FontSize="{DynamicResource Font12}" TextColor="#D1D5DB"/>
-                <Label Text="{Binding Recipe.CookTimeMin, StringFormat='{0}分钟'}" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Text="{Binding Recipe.CookTimeMin, StringFormat='{0} min'}" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
             </HorizontalStackLayout>
         </Grid>
     </Border>

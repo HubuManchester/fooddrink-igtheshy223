@@ -23,10 +23,10 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        // 注册数据库服务（单例）
+        // database service register as singleton
         builder.Services.AddSingleton<DatabaseService>();
 
-        // 注册仓储服务（单例）
+        /* repository service register as singleton */
         builder.Services.AddSingleton<RecipeRepository>();
         builder.Services.AddSingleton<IngredientRepository>();
         builder.Services.AddSingleton<MealPlanRepository>();
@@ -34,7 +34,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<NutritionRepository>();
         builder.Services.AddSingleton<UserProfileRepository>();
 
-        // 注册功能服务（单例）
+        // function service register as singleton
         builder.Services.AddSingleton<SeedDataService>();
         builder.Services.AddSingleton<TextToSpeechService>();
         builder.Services.AddSingleton<CameraService>();
@@ -48,7 +48,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SpeechRecognitionService>();
         builder.Services.AddSingleton<AuthService>();
 
-        // 注册 ViewModels
+        // here we register ViewModel for use
         builder.Services.AddTransient<HomeViewModel>();
         builder.Services.AddTransient<RecipeListViewModel>();
         builder.Services.AddTransient<RecipeDetailViewModel>();
@@ -62,7 +62,7 @@ public static class MauiProgram
         builder.Services.AddTransient<OnboardingViewModel>();
         builder.Services.AddTransient<LoginViewModel>();
 
-        // 注册 Pages
+        /* register Pages */
         builder.Services.AddTransient<HomePage>();
         builder.Services.AddTransient<RecipeListPage>();
         builder.Services.AddTransient<RecipeDetailPage>();
@@ -76,7 +76,7 @@ public static class MauiProgram
         builder.Services.AddTransient<OnboardingPage>();
         builder.Services.AddTransient<LoginPage>();
 
-        // 注册 Shell（单例）
+        // Shell register as singleton
         builder.Services.AddSingleton<AppShell>();
 
         return builder.Build();

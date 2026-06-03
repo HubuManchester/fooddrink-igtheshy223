@@ -47,7 +47,7 @@ public class RecipeDetailViewModel : BaseViewModel
         }
     }
 
-    public string SpeakButtonText => IsSpeaking ? "停止朗读" : "朗读步骤";
+    public string SpeakButtonText => IsSpeaking ? "Stop Read" : "Read Steps";
 
     public ICommand ToggleFavoriteCommand { get; }
     public ICommand ToggleSpeakingCommand { get; }
@@ -63,7 +63,7 @@ public class RecipeDetailViewModel : BaseViewModel
         _mealPlanRepository = mealPlanRepository;
         _ttsService = ttsService;
 
-        Title = "食谱详情";
+        Title = "Recipe Detail";
 
         ToggleFavoriteCommand = CreateAsyncCommand(ExecuteToggleFavorite);
         ToggleSpeakingCommand = new Command(async () => await ExecuteToggleSpeaking(), () => !IsBusy);
@@ -88,13 +88,13 @@ public class RecipeDetailViewModel : BaseViewModel
 
             Title = CurrentRecipe.Title;
 
-            // 解析 Instructions JSON
+            // parse Instructions JSON
             ParseSteps(CurrentRecipe.Instructions);
 
-            // 解析 Tags JSON
+            /* parse Tags JSON */
             ParseTags(CurrentRecipe.Tags);
 
-            // 营养估算
+            // nutrition estimate calculate
             Nutrition = NutritionCalculator.CalculateForRecipe(CurrentRecipe);
         }
         catch (Exception ex)
@@ -108,11 +108,29 @@ public class RecipeDetailViewModel : BaseViewModel
         Steps.Clear();
         try
         {
-            var steps = System.Text.Json.JsonSerializer.Deserialize<List<string>>(instructionsJson);
-            if (steps != null)
+            using var doc = System.Text.Json.JsonDocument.Parse(instructionsJson);
+            var root = doc.RootElement;
+            if (root.ValueKind == System.Text.Json.JsonValueKind.Array)
             {
-                for (int i = 0; i < steps.Count; i++)
-                    Steps.Add(new StepModel(i, steps[i]));
+                int i = 0;
+                foreach (var element in root.EnumerateArray())
+                {
+                    string text;
+                    if (element.ValueKind == System.Text.Json.JsonValueKind.String)
+                    {
+                        text = element.GetString() ?? "";
+                    }
+                    else if (element.TryGetProperty("Text", out var textProp))
+                    {
+                        text = textProp.GetString() ?? "";
+                    }
+                    else
+                    {
+                        text = element.GetRawText();
+                    }
+                    Steps.Add(new StepModel(i, text));
+                    i++;
+                }
             }
         }
         catch (Exception ex)

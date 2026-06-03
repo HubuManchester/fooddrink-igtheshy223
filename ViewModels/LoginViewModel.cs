@@ -50,8 +50,8 @@ public class LoginViewModel : BaseViewModel
         set => SetProperty(ref _errorMessage, value);
     }
 
-    public string ModeTitle => IsRegisterMode ? "注册" : "登录";
-    public string ToggleText => IsRegisterMode ? "已有账号？去登录" : "没有账号？去注册";
+    public string ModeTitle => IsRegisterMode ? "Register" : "Login";
+    public string ToggleText => IsRegisterMode ? "Already have account? Go Login" : "No account? Go Register";
     public bool ShowConfirmPassword => IsRegisterMode;
 
     public ICommand LoginCommand { get; }
@@ -61,7 +61,7 @@ public class LoginViewModel : BaseViewModel
     public LoginViewModel(AuthService authService)
     {
         _authService = authService;
-        Title = "登录";
+        Title = "Login";
 
         LoginCommand = CreateAsyncCommand(ExecuteLogin);
         RegisterCommand = CreateAsyncCommand(ExecuteRegister);
@@ -74,7 +74,7 @@ public class LoginViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
-            ErrorMessage = "请输入用户名和密码";
+            ErrorMessage = "Please input username and password";
             return;
         }
 
@@ -95,25 +95,25 @@ public class LoginViewModel : BaseViewModel
 
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
-            ErrorMessage = "请输入用户名和密码";
+            ErrorMessage = "Please input username and password";
             return;
         }
 
         if (Username.Length < 2)
         {
-            ErrorMessage = "用户名至少2个字符";
+            ErrorMessage = "Username at least 2 character";
             return;
         }
 
         if (Password.Length < 4)
         {
-            ErrorMessage = "密码至少4个字符";
+            ErrorMessage = "Password at least 4 character";
             return;
         }
 
         if (Password != ConfirmPassword)
         {
-            ErrorMessage = "两次密码输入不一致";
+            ErrorMessage = "Two password input not match";
             return;
         }
 

@@ -13,12 +13,12 @@ public class Ingredient
     public string Name { get; set; } = string.Empty;
 
     [MaxLength(20)]
-    public string Category { get; set; } = "蔬菜";
+    public string Category { get; set; } = "Vegetable";
 
     public string? ImagePath { get; set; }
 
     [MaxLength(20)]
-    public string DefaultUnit { get; set; } = "克";
+    public string DefaultUnit { get; set; } = "gram";
 
     public double Quantity { get; set; }
 
@@ -30,7 +30,7 @@ public class Ingredient
     public DateTime? ExpiryDate { get; set; }
 
     [MaxLength(10)]
-    public string StorageLocation { get; set; } = "冰箱";
+    public string StorageLocation { get; set; } = "Fridge";
 
     public string? NutritionPer100g { get; set; }
 

@@ -25,7 +25,7 @@ public class ShoppingListViewModel : BaseViewModel
         set => SetProperty(ref _newItemQuantity, value);
     }
 
-    private string _newItemUnit = "克";
+    private string _newItemUnit = "gram";
     public string NewItemUnit
     {
         get => _newItemUnit;
@@ -67,7 +67,7 @@ public class ShoppingListViewModel : BaseViewModel
     {
         _shoppingItemRepository = shoppingItemRepository;
         _authService = authService;
-        Title = "购物清单";
+        Title = "Shopping List";
 
         _authService.LoginStateChanged += OnLoginStateChanged;
 
@@ -84,7 +84,7 @@ public class ShoppingListViewModel : BaseViewModel
         {
             var items = await _shoppingItemRepository.GetAllAsync();
 
-            // 按分类分组
+            // group by category
             var groups = items
                 .GroupBy(i => i.Category)
                 .Select(g => new ShoppingGroup(g.Key, g.ToList()))
@@ -95,7 +95,7 @@ public class ShoppingListViewModel : BaseViewModel
             foreach (var group in groups)
                 GroupedItems.Add(group);
 
-            // 更新计数
+            /* update count */
             TotalCount = items.Count;
             PurchasedCount = items.Count(i => i.IsPurchased);
             UnpurchasedCount = items.Count(i => !i.IsPurchased);
@@ -112,14 +112,14 @@ public class ShoppingListViewModel : BaseViewModel
         {
             if (string.IsNullOrWhiteSpace(NewItemName))
             {
-                await Shell.Current.DisplayAlert("提示", "请输入商品名称", "确定");
+                await Shell.Current.DisplayAlert("Hint", "Please input item name", "OK");
                 return;
             }
 
             var item = new ShoppingItem
             {
                 Name = NewItemName,
-                Category = "蔬菜",
+                Category = "Vegetable",
                 Quantity = NewItemQuantity > 0 ? NewItemQuantity : 1,
                 Unit = NewItemUnit,
                 IsPurchased = false
@@ -127,7 +127,7 @@ public class ShoppingListViewModel : BaseViewModel
 
             await _shoppingItemRepository.SaveAsync(item);
 
-            // 清空输入
+            // clear input field
             NewItemName = string.Empty;
             NewItemQuantity = 0;
 
@@ -171,7 +171,7 @@ public class ShoppingListViewModel : BaseViewModel
         {
             if (PurchasedCount == 0) return;
 
-            var confirm = await Shell.Current.DisplayAlert("确认", $"确定要清除{PurchasedCount}个已购商品吗？", "清除", "取消");
+            var confirm = await Shell.Current.DisplayAlert("Confirm", $"Are you sure clear {PurchasedCount} purchased items?", "Clear", "Cancel");
             if (!confirm) return;
 
             await _shoppingItemRepository.ClearPurchasedAsync();

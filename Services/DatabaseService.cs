@@ -46,7 +46,7 @@ public class DatabaseService
                 typeof(UserAccount)
             );
 
-            // 迁移：为已有表添加 UserId 列
+            // Migration: add UserId column to existing tables
             await MigrateAddUserIdColumnAsync("ingredients");
             await MigrateAddUserIdColumnAsync("meal_plans");
             await MigrateAddUserIdColumnAsync("shopping_items");
@@ -65,7 +65,7 @@ public class DatabaseService
     }
 
     /// <summary>
-    /// 检查表中是否存在 UserId 列，不存在则添加
+    /// Check if UserId column exists in table, add if not
     /// </summary>
     private async Task MigrateAddUserIdColumnAsync(string tableName)
     {

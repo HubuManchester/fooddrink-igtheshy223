@@ -10,7 +10,7 @@ public static class SkiaImagePreprocessor
         {
             using var originalBitmap = SKBitmap.Decode(imagePath);
             if (originalBitmap == null)
-                throw new InvalidOperationException($"无法解码图片: {imagePath}");
+                throw new InvalidOperationException($"Cannot decode image: {imagePath}");
 
             var (scale, padX, padY) =
                 ComputeLetterbox(originalBitmap.Width, originalBitmap.Height, targetSize);
@@ -20,7 +20,7 @@ public static class SkiaImagePreprocessor
 
             using var resizedBitmap = new SKBitmap(targetSize, targetSize);
             using var canvas = new SKCanvas(resizedBitmap);
-            canvas.Clear(new SKColor(128, 128, 128)); // 灰色填充
+            canvas.Clear(new SKColor(128, 128, 128)); // Gray fill
 
             canvas.Save();
             canvas.Translate(padX, padY);
@@ -30,7 +30,7 @@ public static class SkiaImagePreprocessor
             canvas.DrawBitmap(originalBitmap, 0, 0);
             canvas.Restore();
 
-            // 提取像素，转为 NCHW float tensor [1, 3, H, W]
+            // Extract pixels, convert to NCHW float tensor [1, 3, H, W]
             var result = new float[3 * targetSize * targetSize];
             var pixels = resizedBitmap.Pixels;
             var planeSize = targetSize * targetSize;
@@ -48,7 +48,7 @@ public static class SkiaImagePreprocessor
     }
 
     /// <summary>
-    /// 计算 letterbox 变换参数，供 YoloPostProcessor 反算坐标时复用。
+    /// Calculate letterbox transform parameters, reused by YoloPostProcessor for coordinate reverse transform.
     /// </summary>
     public static (float scale, int offsetX, int offsetY) ComputeLetterbox(
         int originalWidth, int originalHeight, int targetSize)

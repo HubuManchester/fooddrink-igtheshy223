@@ -96,7 +96,7 @@ public class CameraViewModel : BaseViewModel
         _yoloService = yoloService;
         _ingredientRepository = ingredientRepository;
         _mealPlanRepository = mealPlanRepository;
-        Title = "拍照识别";
+        Title = "Photo Recognize";
 
         CaptureCommand = CreateAsyncCommand(ExecuteCapture);
         PickPhotoCommand = CreateAsyncCommand(ExecutePickPhoto);
@@ -118,7 +118,7 @@ public class CameraViewModel : BaseViewModel
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[CameraViewModel] Capture error: {ex.Message}");
-            await Shell.Current.DisplayAlert("错误", "拍照失败，请重试", "确定");
+            await Shell.Current.DisplayAlert("Error", "Photo capture fail, please retry", "OK");
         }
     }
 
@@ -135,7 +135,7 @@ public class CameraViewModel : BaseViewModel
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[CameraViewModel] PickPhoto error: {ex.Message}");
-            await Shell.Current.DisplayAlert("错误", "选择照片失败，请重试", "确定");
+            await Shell.Current.DisplayAlert("Error", "Select photo fail, please retry", "OK");
         }
     }
 
@@ -149,20 +149,20 @@ public class CameraViewModel : BaseViewModel
             PhotoPath = imagePath;
             PhotoImage = ImageSource.FromFile(imagePath);
 
-            // YOLO 识别
+            /* yolo model do recognize */
             var predictions = await _yoloService.PredictAsync(imagePath);
 
             if (predictions.Count > 0)
             {
-                // 取最高置信度结果
+                // pick highest confidence result
                 TopPrediction = predictions.OrderByDescending(p => p.Confidence).First();
                 Confidence = TopPrediction.Confidence;
 
-                // 映射为中文名
+                // map to chinese food name
                 RecognizedFoodName = YoloInferenceService.MapLabelToChinese(TopPrediction.Label)
                     ?? TopPrediction.Label;
 
-                // 尝试从食材库获取营养信息
+                /* try get nutrition info from ingredient library */
                 var ingredients = await _ingredientRepository.GetByYoloLabelAsync(TopPrediction.Label);
                 if (ingredients.Count > 0 && !string.IsNullOrEmpty(ingredients[0].NutritionPer100g))
                 {
@@ -182,18 +182,18 @@ public class CameraViewModel : BaseViewModel
                 Confidence = 0;
                 Nutrition = NutritionInfo.Empty;
                 HasResult = false;
-                await Shell.Current.DisplayAlert("提示", "未能识别食物，请重新拍照", "确定");
+                await Shell.Current.DisplayAlert("Hint", "Cannot recognize food, please take photo again", "OK");
             }
         }
         catch (InvalidOperationException ex)
         {
             System.Diagnostics.Debug.WriteLine($"[CameraViewModel] Model error: {ex.Message}");
-            await Shell.Current.DisplayAlert("模型未就绪", ex.Message, "确定");
+            await Shell.Current.DisplayAlert("Model Not Ready", ex.Message, "OK");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[CameraViewModel] ProcessImage error: {ex.Message}");
-            await Shell.Current.DisplayAlert("错误", "识别失败，请重试", "确定");
+            await Shell.Current.DisplayAlert("Error", "Recognize fail, please retry", "OK");
         }
         finally
         {
@@ -221,7 +221,7 @@ public class CameraViewModel : BaseViewModel
         {
             if (!HasResult || string.IsNullOrEmpty(RecognizedFoodName)) return;
 
-            var mealType = "加餐";
+            var mealType = "Snack";
             var dateStr = DateTime.Today.ToString("yyyy-MM-dd");
 
             var plan = new MealPlan
@@ -238,7 +238,7 @@ public class CameraViewModel : BaseViewModel
             };
 
             await _mealPlanRepository.SaveAsync(plan);
-            await Shell.Current.DisplayAlert("成功", $"已将\"{RecognizedFoodName}\"添加到今日饮食计划", "确定");
+            await Shell.Current.DisplayAlert("Success", $"Already add \"{RecognizedFoodName}\" to today diet plan", "OK");
         }
         catch (Exception ex)
         {

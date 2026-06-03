@@ -13,27 +13,27 @@ public static class YoloPostProcessor
         if (output == null || output.Length == 0)
             return predictions;
 
-        // YOLOv8 输出 shape: [1, 4+numClasses, numDetections]
-        // 按前两个维度的乘积反推 numDetections 和 numClasses
+        // YOLOv8 output shape: [1, 4+numClasses, numDetections]
+        // Infer numDetections and numClasses from first two dimensions product
         int numClasses = (output.Length / 8400) - 4;
         if (numClasses <= 0)
             return predictions;
 
         int numDetections = output.Length / (4 + numClasses);
 
-        // 获取 letterbox 反算参数
+        // Get letterbox reverse transform parameters
         var (scale, offsetX, offsetY) =
             SkiaImagePreprocessor.ComputeLetterbox(originalWidth, originalHeight, 640);
 
         for (int p = 0; p < numDetections; p++)
         {
-            // 中心坐标和宽高（letterbox 空间）
+            // Center coordinates and width/height (letterbox space)
             float cx = output[0 * numDetections + p];
             float cy = output[1 * numDetections + p];
             float w  = output[2 * numDetections + p];
             float h  = output[3 * numDetections + p];
 
-            // 找最高类别分数
+            // Find best class score
             int bestClass = 0;
             float bestScore = 0;
             for (int c = 0; c < numClasses; c++)
@@ -49,7 +49,7 @@ public static class YoloPostProcessor
             if (bestScore < confidenceThreshold)
                 continue;
 
-            // 从 letterbox 空间还原到原图像素坐标
+            // Restore from letterbox space to original pixel coordinates
             float x1 = Math.Clamp(((cx - w / 2) - offsetX) / scale, 0, originalWidth);
             float y1 = Math.Clamp(((cy - h / 2) - offsetY) / scale, 0, originalHeight);
             float x2 = Math.Clamp(((cx + w / 2) - offsetX) / scale, 0, originalWidth);
@@ -65,8 +65,8 @@ public static class YoloPostProcessor
     }
 
     /// <summary>
-    /// COCO 80 类数据集的类别 ID → 标签名映射。
-    /// 如果使用自定义训练模型，需要更新此映射。
+    /// COCO 80 class dataset class ID to label name mapping.
+    /// If using custom trained model, need to update this mapping.
     /// </summary>
     private static string GetLabelForClass(int classId) => classId switch
     {

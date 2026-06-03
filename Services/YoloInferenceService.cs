@@ -19,14 +19,14 @@ public class YoloInferenceService
 
     private static readonly Dictionary<string, string> LabelMap = new()
     {
-        ["banana"] = "香蕉", ["apple"] = "苹果", ["orange"] = "橙子",
-        ["pizza"] = "披萨", ["cake"] = "蛋糕", ["hot dog"] = "热狗",
-        ["sandwich"] = "三明治", ["broccoli"] = "西兰花", ["carrot"] = "胡萝卜",
-        ["bowl"] = "碗装食物", ["dining table"] = "餐桌", ["refrigerator"] = "冰箱",
-        ["cup"] = "杯子", ["bottle"] = "瓶子", ["wine glass"] = "酒杯",
-        ["fork"] = "叉子", ["knife"] = "刀", ["spoon"] = "勺子",
-        ["microwave"] = "微波炉", ["oven"] = "烤箱", ["toaster"] = "烤面包机",
-        ["sink"] = "水槽"
+        ["banana"] = "Banana", ["apple"] = "Apple", ["orange"] = "Orange",
+        ["pizza"] = "Pizza", ["cake"] = "Cake", ["hot dog"] = "Hot Dog",
+        ["sandwich"] = "Sandwich", ["broccoli"] = "Broccoli", ["carrot"] = "Carrot",
+        ["bowl"] = "Bowl Food", ["dining table"] = "Dining Table", ["refrigerator"] = "Refrigerator",
+        ["cup"] = "Cup", ["bottle"] = "Bottle", ["wine glass"] = "Wine Glass",
+        ["fork"] = "Fork", ["knife"] = "Knife", ["spoon"] = "Spoon",
+        ["microwave"] = "Microwave", ["oven"] = "Oven", ["toaster"] = "Toaster",
+        ["sink"] = "Sink"
     };
 
     public async Task InitializeAsync()
@@ -40,13 +40,13 @@ public class YoloInferenceService
             if (modelPath == null)
             {
                 _modelLoaded = false;
-                _modelError = "YOLO模型文件未找到，请将 yolov8n.onnx 放入应用数据目录";
+                _modelError = "YOLO model file not found, please put yolov8n.onnx in app data directory";
                 return;
             }
 
             _session = new InferenceSession(modelPath);
 
-            // 从模型元数据读取输入尺寸
+            // Read input size from model metadata
             var inputMeta = _session.InputMetadata;
             var inputName = _session.InputNames.First();
             var shape = inputMeta[inputName].Dimensions;
@@ -58,38 +58,38 @@ public class YoloInferenceService
         }
         catch (Exception ex)
         {
-            _modelError = $"模型加载失败: {ex.Message}";
+            _modelError = $"Model load fail: {ex.Message}";
             _modelLoaded = false;
         }
     }
 
     public async Task<List<YoloPrediction>> PredictAsync(string imagePath)
     {
-        // 惰性初始化：首次调用时自动加载模型
+        // Lazy init: auto load model on first call
         if (!_modelLoaded && _session == null)
             await InitializeAsync();
 
         if (!_modelLoaded || _session == null)
-            throw new InvalidOperationException(_modelError ?? "模型未加载");
+            throw new InvalidOperationException(_modelError ?? "Model not loaded");
 
         return await Task.Run(() =>
         {
-            // 1. 预处理图像
+            // 1. Preprocess image
             var inputData = SkiaImagePreprocessor.PreprocessAsync(
                 imagePath, _inputWidth).GetAwaiter().GetResult();
 
-            // 2. 构造输入 tensor
+            // 2. Build input tensor
             var inputTensor = new DenseTensor<float>(inputData, [1, 3, _inputHeight, _inputWidth]);
             var inputName = _session.InputNames.First();
             var inputNamedValue = NamedOnnxValue.CreateFromTensor(inputName, inputTensor);
 
-            // 3. 执行推理
+            // 3. Run inference
             using var results = _session.Run([inputNamedValue]);
 
-            // 4. 提取输出张量
+            // 4. Extract output tensor
             var outputTensor = results.First().AsTensor<float>()?.ToArray() ?? [];
 
-            // 5. 获取原图尺寸用于坐标还原
+            // 5. Get original image size for coordinate restoration
             int originalWidth, originalHeight;
             using (var bitmap = SKBitmap.Decode(imagePath))
             {
@@ -97,23 +97,23 @@ public class YoloInferenceService
                 originalHeight = bitmap?.Height ?? _inputHeight;
             }
 
-            // 6. 后处理
+            // 6. Post process
             return YoloPostProcessor.ProcessOutput(
                 outputTensor, originalWidth, originalHeight);
         });
     }
 
     /// <summary>
-    /// 查找模型文件：优先从应用数据目录，回退到包内 Raw 资源并拷贝。
+    /// Find model file: prefer app data directory, fallback to package Raw resource and copy.
     /// </summary>
     private async Task<string?> ResolveModelPathAsync(string modelName)
     {
-        // 优先：应用数据目录（侧载或之前拷贝的）
+        // Prefer: app data directory (sideloaded or previously copied)
         var localPath = Path.Combine(FileSystem.AppDataDirectory, modelName);
         if (File.Exists(localPath))
             return localPath;
 
-        // 回退：从包内 Raw 资源拷贝到应用数据目录
+        // Fallback: copy from package Raw resource to app data directory
         try
         {
             using var stream = await FileSystem.OpenAppPackageFileAsync(modelName);
@@ -129,6 +129,6 @@ public class YoloInferenceService
 
     public static string? MapLabelToChinese(string label)
     {
-        return LabelMap.TryGetValue(label.ToLowerInvariant(), out var chinese) ? chinese : null;
+        return LabelMap.TryGetValue(label.ToLowerInvariant(), out var english) ? english : null;
     }
 }

@@ -10,7 +10,7 @@ public class NutritionDetailViewModel : BaseViewModel
     private readonly MealPlanRepository _mealPlanRepository;
     private readonly NutritionRepository _nutritionRepository;
 
-    // 已摄入
+    // already intake
     private double _caloriesIntake;
     public double CaloriesIntake { get => _caloriesIntake; set => SetProperty(ref _caloriesIntake, value); }
 
@@ -23,7 +23,7 @@ public class NutritionDetailViewModel : BaseViewModel
     private double _fatIntake;
     public double FatIntake { get => _fatIntake; set => SetProperty(ref _fatIntake, value); }
 
-    // 目标
+    /* target value */
     private double _caloriesTarget;
     public double CaloriesTarget { get => _caloriesTarget; set => SetProperty(ref _caloriesTarget, value); }
 
@@ -36,7 +36,7 @@ public class NutritionDetailViewModel : BaseViewModel
     private double _fatTarget;
     public double FatTarget { get => _fatTarget; set => SetProperty(ref _fatTarget, value); }
 
-    // 进度 (0-1)
+    // progress value 0 to 1
     private double _caloriesProgress;
     public double CaloriesProgress { get => _caloriesProgress; set => SetProperty(ref _caloriesProgress, value); }
 
@@ -52,7 +52,7 @@ public class NutritionDetailViewModel : BaseViewModel
     private double _fiberProgress;
     public double FiberProgress { get => _fiberProgress; set => SetProperty(ref _fiberProgress, value); }
 
-    // 百分比
+    /* percentage */
     private double _proteinPercent;
     public double ProteinPercent { get => _proteinPercent; set => SetProperty(ref _proteinPercent, value); }
 
@@ -62,11 +62,11 @@ public class NutritionDetailViewModel : BaseViewModel
     private double _fatPercent;
     public double FatPercent { get => _fatPercent; set => SetProperty(ref _fatPercent, value); }
 
-    // 热量摘要文本
+    // calories summary text
     private string _caloriesSummary = string.Empty;
     public string CaloriesSummary { get => _caloriesSummary; set => SetProperty(ref _caloriesSummary, value); }
 
-    // 一周趋势
+    // weekly trend
     private double _mondayProgress;
     public double MondayProgress { get => _mondayProgress; set => SetProperty(ref _mondayProgress, value); }
 
@@ -88,7 +88,7 @@ public class NutritionDetailViewModel : BaseViewModel
     private double _sundayProgress;
     public double SundayProgress { get => _sundayProgress; set => SetProperty(ref _sundayProgress, value); }
 
-    // 饮食建议
+    /* diet suggestion list */
     public ObservableCollection<string> Suggestions { get; } = new();
 
     public ICommand RefreshCommand { get; }
@@ -99,7 +99,7 @@ public class NutritionDetailViewModel : BaseViewModel
     {
         _mealPlanRepository = mealPlanRepository;
         _nutritionRepository = nutritionRepository;
-        Title = "营养详情";
+        Title = "Nutrition Detail";
 
         RefreshCommand = CreateAsyncCommand(LoadDataAsync);
     }
@@ -118,38 +118,38 @@ public class NutritionDetailViewModel : BaseViewModel
             summary.FatGoal = target.FatGoal;
             summary.FiberGoal = target.FiberGoal;
 
-            // 已摄入
+            // already eat only count IsCompleted equal true
             CaloriesIntake = summary.TotalCalories;
             ProteinIntake = summary.TotalProtein;
             CarbsIntake = summary.TotalCarbs;
             FatIntake = summary.TotalFat;
 
-            // 目标
+            // target value
             CaloriesTarget = summary.CalorieGoal;
             ProteinTarget = summary.ProteinGoal;
             CarbsTarget = summary.CarbsGoal;
             FatTarget = summary.FatGoal;
 
-            // 进度
+            // progress calculate
             CaloriesProgress = CaloriesTarget > 0 ? Math.Min(CaloriesIntake / CaloriesTarget, 1.0) : 0;
             ProteinProgress = ProteinTarget > 0 ? Math.Min(ProteinIntake / ProteinTarget, 1.0) : 0;
             CarbsProgress = CarbsTarget > 0 ? Math.Min(CarbsIntake / CarbsTarget, 1.0) : 0;
             FatProgress = FatTarget > 0 ? Math.Min(FatIntake / FatTarget, 1.0) : 0;
             FiberProgress = summary.FiberGoal > 0 ? Math.Min(summary.TotalFiber / summary.FiberGoal, 1.0) : 0;
 
-            // 三大营养素占比（按热量：蛋白质4kcal/g, 碳水4kcal/g, 脂肪9kcal/g）
+            /* three big macro nutrient ratio by calorie protein 4kcal/g carb 4kcal/g fat 9kcal/g */
             var totalMacroCal = ProteinIntake * 4 + CarbsIntake * 4 + FatIntake * 9;
             ProteinPercent = totalMacroCal > 0 ? ProteinIntake * 4 / totalMacroCal : 0;
             CarbsPercent = totalMacroCal > 0 ? CarbsIntake * 4 / totalMacroCal : 0;
             FatPercent = totalMacroCal > 0 ? FatIntake * 9 / totalMacroCal : 0;
 
-            // 热量摘要
-            CaloriesSummary = $"已摄入 {CaloriesIntake:F0} / {CaloriesTarget:F0} 千卡";
+            // calories summary text
+            CaloriesSummary = $"Already intake {CaloriesIntake:F0} / {CaloriesTarget:F0} kcal";
 
-            // 一周趋势
+            // weekly trend load
             await LoadWeeklyTrendAsync();
 
-            // 饮食建议
+            /* diet suggestion generate */
             Suggestions.Clear();
             var advice = NutritionCalculator.GenerateAdvice(summary);
             foreach (var item in advice)
@@ -178,7 +178,7 @@ public class NutritionDetailViewModel : BaseViewModel
                 dailyGoals.Add(target.CaloriesGoal);
             }
 
-            // 设置每天的热量进度
+            // set each day calorie progress
             var progresses = new[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
             for (int i = 0; i < 7; i++)
             {

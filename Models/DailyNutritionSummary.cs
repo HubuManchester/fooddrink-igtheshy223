@@ -4,21 +4,21 @@ public class DailyNutritionSummary
 {
     public string Date { get; set; } = string.Empty;
 
-    // 已摄入 (IsCompleted=true)
+    // already eat only count IsCompleted equal true
     public double TotalCalories { get; set; }
     public double TotalProtein { get; set; }
     public double TotalCarbs { get; set; }
     public double TotalFat { get; set; }
     public double TotalFiber { get; set; }
 
-    // 计划中 (全部)
+    /* plan count all of them */
     public double PlannedCalories { get; set; }
     public double PlannedProtein { get; set; }
     public double PlannedCarbs { get; set; }
     public double PlannedFat { get; set; }
     public double PlannedFiber { get; set; }
 
-    // 目标
+    // target value
     public double CalorieGoal { get; set; } = 2000;
     public double ProteinGoal { get; set; } = 60;
     public double CarbsGoal { get; set; } = 250;

@@ -4,114 +4,114 @@
              xmlns:controls="clr-namespace:ssk.Controls"
              xmlns:converters="clr-namespace:ssk.Converters"
              x:Class="ssk.Views.MealPlanPage"
-             Title="饮食计划">
+             Title="Diet Plan">
 
     <ContentPage.Resources>
         <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
     </ContentPage.Resources>
 
     <Grid>
-        <!-- 原有内容 -->
+        <!-- Original content -->
         <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}"
                      IsVisible="{Binding IsLoggedIn}">
     <ScrollView>
         <OnIdiom x:TypeArguments="View">
-            <!-- 手机布局：保持原始垂直布局 -->
+            <!-- Phone layout: original vertical layout -->
             <OnIdiom.Phone>
     <VerticalStackLayout Padding="16,8" Spacing="12">
-        <!-- 周日历 -->
+        <!-- Weekly calendar -->
         <controls:WeeklyCalendar
             AutomationId="WeeklyCalendar"
             SelectedDate="{Binding SelectedDate}"
             DatesWithPlans="{Binding DatesWithPlans}"
             DateSelectedCommand="{Binding DateSelectedCommand}" />
 
-        <!-- 早餐 -->
+        <!-- Breakfast -->
         <controls:MealSlotView
             AutomationId="MealSlotBreakfast"
-            MealType="早餐"
+            MealType="Breakfast"
             Plans="{Binding BreakfastPlans}"
             ToggleCommand="{Binding ToggleMealCommand}" />
 
-        <!-- 午餐 -->
+        <!-- Lunch -->
         <controls:MealSlotView
             AutomationId="MealSlotLunch"
-            MealType="午餐"
+            MealType="Lunch"
             Plans="{Binding LunchPlans}"
             ToggleCommand="{Binding ToggleMealCommand}" />
 
-        <!-- 晚餐 -->
+        <!-- Dinner -->
         <controls:MealSlotView
             AutomationId="MealSlotDinner"
-            MealType="晚餐"
+            MealType="Dinner"
             Plans="{Binding DinnerPlans}"
             ToggleCommand="{Binding ToggleMealCommand}" />
 
-        <!-- 加餐 -->
+        <!-- Snack -->
         <controls:MealSlotView
             AutomationId="MealSlotSnack"
-            MealType="加餐"
+            MealType="Snack"
             Plans="{Binding SnackPlans}"
             ToggleCommand="{Binding ToggleMealCommand}" />
 
-        <!-- 营养摘要条 -->
+        <!-- Nutrition summary bar -->
         <Border StrokeShape="RoundRectangle 10"
                 StrokeThickness="1"
                 Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                 BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
                 Padding="12,8" Margin="0,4">
             <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="Fill">
-                <!-- 热量 -->
+                <!-- Calorie -->
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="{Binding TotalCalories, StringFormat='{0}'}"
                            FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                            TextColor="{StaticResource Primary}"
                            HorizontalOptions="Center" />
-                    <Label Text="热量"
+                    <Label Text="Calorie"
                            FontSize="{DynamicResource Font11}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
-                <!-- 蛋白质 -->
+                <!-- Protein -->
                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="{Binding TotalProtein, StringFormat='{0}g'}"
                            FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                            TextColor="#EF4444"
                            HorizontalOptions="Center" />
-                    <Label Text="蛋白质"
+                    <Label Text="Protein"
                            FontSize="{DynamicResource Font11}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
-                <!-- 碳水 -->
+                <!-- Carb -->
                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                     <Label Text="{Binding TotalCarbs, StringFormat='{0}g'}"
                            FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                            TextColor="#F59E0B"
                            HorizontalOptions="Center" />
-                    <Label Text="碳水"
+                    <Label Text="Carb"
                            FontSize="{DynamicResource Font11}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
-                <!-- 脂肪 -->
+                <!-- Fat -->
                 <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                     <Label Text="{Binding TotalFat, StringFormat='{0}g'}"
                            FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                            TextColor="#10B981"
                            HorizontalOptions="Center" />
-                    <Label Text="脂肪"
+                    <Label Text="Fat"
                            FontSize="{DynamicResource Font11}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
-                <!-- 纤维 -->
+                <!-- Fiber -->
                 <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center">
                     <Label Text="{Binding TotalFiber, StringFormat='{0}g'}"
                            FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                            TextColor="#8B5CF6"
                            HorizontalOptions="Center" />
-                    <Label Text="纤维"
+                    <Label Text="Fiber"
                            FontSize="{DynamicResource Font11}"
                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                            HorizontalOptions="Center" />
@@ -119,9 +119,9 @@
             </Grid>
         </Border>
 
-        <!-- 添加饮食计划按钮 -->
+        <!-- Add diet plan button -->
         <Button AutomationId="AddMealPlanButton"
-                Text="+ 添加饮食计划"
+                Text="+ Add Diet Plan"
                 FontAttributes="Bold"
                 Command="{Binding AddMealPlanCommand}"
                 BackgroundColor="{StaticResource Primary}"
@@ -132,77 +132,77 @@
     </VerticalStackLayout>
             </OnIdiom.Phone>
 
-            <!-- 平板/桌面布局：双列布局 -->
+            <!-- Tablet/Desktop layout: two-column layout -->
             <OnIdiom.Tablet>
     <Grid MaximumWidthRequest="1200" HorizontalOptions="Center"
           ColumnDefinitions="55*,45*" ColumnSpacing="16" Padding="16,8">
-        <!-- 左列：周日历 + 营养摘要 + 添加按钮 -->
+        <!-- Left column: Weekly calendar + Nutrition summary + Add button -->
         <VerticalStackLayout Grid.Column="0" Spacing="12">
-            <!-- 周日历 -->
+            <!-- Weekly calendar -->
             <controls:WeeklyCalendar
                 AutomationId="WeeklyCalendar"
                 SelectedDate="{Binding SelectedDate}"
                 DatesWithPlans="{Binding DatesWithPlans}"
                 DateSelectedCommand="{Binding DateSelectedCommand}" />
 
-            <!-- 营养摘要条 -->
+            <!-- Nutrition summary bar -->
             <Border StrokeShape="RoundRectangle 10"
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                     BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
                     Padding="12,8" Margin="0,4">
                 <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="Fill">
-                    <!-- 热量 -->
+                    <!-- Calorie -->
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label Text="{Binding TotalCalories, StringFormat='{0}'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="{StaticResource Primary}"
                                HorizontalOptions="Center" />
-                        <Label Text="热量"
+                        <Label Text="Calorie"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 蛋白质 -->
+                    <!-- Protein -->
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                         <Label Text="{Binding TotalProtein, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#EF4444"
                                HorizontalOptions="Center" />
-                        <Label Text="蛋白质"
+                        <Label Text="Protein"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 碳水 -->
+                    <!-- Carb -->
                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label Text="{Binding TotalCarbs, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#F59E0B"
                                HorizontalOptions="Center" />
-                        <Label Text="碳水"
+                        <Label Text="Carb"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 脂肪 -->
+                    <!-- Fat -->
                     <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                         <Label Text="{Binding TotalFat, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#10B981"
                                HorizontalOptions="Center" />
-                        <Label Text="脂肪"
+                        <Label Text="Fat"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 纤维 -->
+                    <!-- Fiber -->
                     <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center">
                         <Label Text="{Binding TotalFiber, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#8B5CF6"
                                HorizontalOptions="Center" />
-                        <Label Text="纤维"
+                        <Label Text="Fiber"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
@@ -210,9 +210,9 @@
                 </Grid>
             </Border>
 
-            <!-- 添加饮食计划按钮 -->
+            <!-- Add diet plan button -->
             <Button AutomationId="AddMealPlanButton"
-                    Text="+ 添加饮食计划"
+                    Text="+ Add Diet Plan"
                     FontAttributes="Bold"
                     Command="{Binding AddMealPlanCommand}"
                     BackgroundColor="{StaticResource Primary}"
@@ -222,114 +222,114 @@
                     HeightRequest="48" />
         </VerticalStackLayout>
 
-        <!-- 右列：2x2 餐次网格 -->
+        <!-- Right column: 2x2 meal grid -->
         <Grid Grid.Column="1" RowDefinitions="*,*" ColumnDefinitions="*,*" RowSpacing="12" ColumnSpacing="12">
-            <!-- 早餐 - 左上 -->
+            <!-- Breakfast - top left -->
             <controls:MealSlotView
                 Grid.Row="0" Grid.Column="0"
                 AutomationId="MealSlotBreakfast"
-                MealType="早餐"
+                MealType="Breakfast"
                 Plans="{Binding BreakfastPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 午餐 - 右上 -->
+            <!-- Lunch - top right -->
             <controls:MealSlotView
                 Grid.Row="0" Grid.Column="1"
                 AutomationId="MealSlotLunch"
-                MealType="午餐"
+                MealType="Lunch"
                 Plans="{Binding LunchPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 晚餐 - 左下 -->
+            <!-- Dinner - bottom left -->
             <controls:MealSlotView
                 Grid.Row="1" Grid.Column="0"
                 AutomationId="MealSlotDinner"
-                MealType="晚餐"
+                MealType="Dinner"
                 Plans="{Binding DinnerPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 加餐 - 右下 -->
+            <!-- Snack - bottom right -->
             <controls:MealSlotView
                 Grid.Row="1" Grid.Column="1"
                 AutomationId="MealSlotSnack"
-                MealType="加餐"
+                MealType="Snack"
                 Plans="{Binding SnackPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
         </Grid>
     </Grid>
             </OnIdiom.Tablet>
 
-            <!-- 桌面布局：与平板相同 -->
+            <!-- Desktop layout: same as tablet -->
             <OnIdiom.Desktop>
     <Grid MaximumWidthRequest="1200" HorizontalOptions="Center"
           ColumnDefinitions="55*,45*" ColumnSpacing="16" Padding="16,8">
-        <!-- 左列：周日历 + 营养摘要 + 添加按钮 -->
+        <!-- Left column: Weekly calendar + Nutrition summary + Add button -->
         <VerticalStackLayout Grid.Column="0" Spacing="12">
-            <!-- 周日历 -->
+            <!-- Weekly calendar -->
             <controls:WeeklyCalendar
                 AutomationId="WeeklyCalendar"
                 SelectedDate="{Binding SelectedDate}"
                 DatesWithPlans="{Binding DatesWithPlans}"
                 DateSelectedCommand="{Binding DateSelectedCommand}" />
 
-            <!-- 营养摘要条 -->
+            <!-- Nutrition summary bar -->
             <Border StrokeShape="RoundRectangle 10"
                     StrokeThickness="1"
                     Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                     BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
                     Padding="12,8" Margin="0,4">
                 <Grid ColumnDefinitions="*,*,*,*,*" HorizontalOptions="Fill">
-                    <!-- 热量 -->
+                    <!-- Calorie -->
                     <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label Text="{Binding TotalCalories, StringFormat='{0}'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="{StaticResource Primary}"
                                HorizontalOptions="Center" />
-                        <Label Text="热量"
+                        <Label Text="Calorie"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 蛋白质 -->
+                    <!-- Protein -->
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                         <Label Text="{Binding TotalProtein, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#EF4444"
                                HorizontalOptions="Center" />
-                        <Label Text="蛋白质"
+                        <Label Text="Protein"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 碳水 -->
+                    <!-- Carb -->
                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label Text="{Binding TotalCarbs, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#F59E0B"
                                HorizontalOptions="Center" />
-                        <Label Text="碳水"
+                        <Label Text="Carb"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 脂肪 -->
+                    <!-- Fat -->
                     <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                         <Label Text="{Binding TotalFat, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#10B981"
                                HorizontalOptions="Center" />
-                        <Label Text="脂肪"
+                        <Label Text="Fat"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
                     </VerticalStackLayout>
-                    <!-- 纤维 -->
+                    <!-- Fiber -->
                     <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center">
                         <Label Text="{Binding TotalFiber, StringFormat='{0}g'}"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                TextColor="#8B5CF6"
                                HorizontalOptions="Center" />
-                        <Label Text="纤维"
+                        <Label Text="Fiber"
                                FontSize="{DynamicResource Font11}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                HorizontalOptions="Center" />
@@ -337,9 +337,9 @@
                 </Grid>
             </Border>
 
-            <!-- 添加饮食计划按钮 -->
+            <!-- Add diet plan button -->
             <Button AutomationId="AddMealPlanButton"
-                    Text="+ 添加饮食计划"
+                    Text="+ Add Diet Plan"
                     FontAttributes="Bold"
                     Command="{Binding AddMealPlanCommand}"
                     BackgroundColor="{StaticResource Primary}"
@@ -349,37 +349,37 @@
                     HeightRequest="48" />
         </VerticalStackLayout>
 
-        <!-- 右列：2x2 餐次网格 -->
+        <!-- Right column: 2x2 meal grid -->
         <Grid Grid.Column="1" RowDefinitions="*,*" ColumnDefinitions="*,*" RowSpacing="12" ColumnSpacing="12">
-            <!-- 早餐 - 左上 -->
+            <!-- Breakfast - top left -->
             <controls:MealSlotView
                 Grid.Row="0" Grid.Column="0"
                 AutomationId="MealSlotBreakfast"
-                MealType="早餐"
+                MealType="Breakfast"
                 Plans="{Binding BreakfastPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 午餐 - 右上 -->
+            <!-- Lunch - top right -->
             <controls:MealSlotView
                 Grid.Row="0" Grid.Column="1"
                 AutomationId="MealSlotLunch"
-                MealType="午餐"
+                MealType="Lunch"
                 Plans="{Binding LunchPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 晚餐 - 左下 -->
+            <!-- Dinner - bottom left -->
             <controls:MealSlotView
                 Grid.Row="1" Grid.Column="0"
                 AutomationId="MealSlotDinner"
-                MealType="晚餐"
+                MealType="Dinner"
                 Plans="{Binding DinnerPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
 
-            <!-- 加餐 - 右下 -->
+            <!-- Snack - bottom right -->
             <controls:MealSlotView
                 Grid.Row="1" Grid.Column="1"
                 AutomationId="MealSlotSnack"
-                MealType="加餐"
+                MealType="Snack"
                 Plans="{Binding SnackPlans}"
                 ToggleCommand="{Binding ToggleMealCommand}" />
         </Grid>
@@ -389,20 +389,20 @@
     </ScrollView>
     </RefreshView>
 
-        <!-- 游客登录提示覆盖层 -->
+        <!-- Guest login prompt overlay -->
         <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center"
                               Spacing="16" Padding="32"
                               IsVisible="{Binding IsLoggedIn, Converter={StaticResource InverseBoolConverter}}">
             <Label Text="&#xf023;" FontFamily="FA" FontSize="48"
                    TextColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}"
                    HorizontalOptions="Center" />
-            <Label Text="请登录查看饮食计划" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
+            <Label Text="Please Login Check Diet Plan" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                    HorizontalOptions="Center"
                    TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
-            <Label Text="登录后可以制定和管理您的饮食计划" FontSize="{DynamicResource Font14}"
+            <Label Text="After Login Can Manage Your Diet Plan" FontSize="{DynamicResource Font14}"
                    HorizontalOptions="Center"
                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
-            <Button Text="立即登录"
+            <Button Text="Login Now"
                     Command="{Binding LoginCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"

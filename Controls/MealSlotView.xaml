@@ -9,13 +9,13 @@
             BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
             Padding="12" Margin="4,2">
         <VerticalStackLayout BindingContext="{x:Reference This}" Spacing="8">
-            <!-- 餐段标题 -->
+            <!-- Meal Type Title -->
             <Grid ColumnDefinitions="*,Auto">
                 <Label Grid.Column="0" Text="{Binding MealType}" FontSize="{DynamicResource Font16}" FontAttributes="Bold"/>
-                <Label Grid.Column="1" Text="{Binding PlanCount, StringFormat='{0}项'}" FontSize="{DynamicResource Font13}" TextColor="#6B7280"/>
+                <Label Grid.Column="1" Text="{Binding PlanCount, StringFormat='{0} item'}" FontSize="{DynamicResource Font13}" TextColor="#6B7280"/>
             </Grid>
 
-            <!-- 有数据 -->
+            <!-- Has Data -->
             <CollectionView ItemsSource="{Binding Plans}" IsVisible="{Binding HasPlans}" Margin="0,0,0,4">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:MealPlan">
@@ -31,15 +31,15 @@
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
-                            <Label Grid.Column="2" Text="{Binding Calories, StringFormat='{0:F0}千卡'}"
+                            <Label Grid.Column="2" Text="{Binding Calories, StringFormat='{0:F0} kcal'}"
                                    FontSize="{DynamicResource Font12}" TextColor="#6B7280" VerticalOptions="Center"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- 无数据 -->
-            <Label Text="暂无安排" IsVisible="{Binding NoPlans}" FontSize="{DynamicResource Font14}" TextColor="#9CA3AF"
+            <!-- No Data -->
+            <Label Text="No Plan Yet" IsVisible="{Binding NoPlans}" FontSize="{DynamicResource Font14}" TextColor="#9CA3AF"
                    HorizontalOptions="Center" Margin="0,8"/>
         </VerticalStackLayout>
     </Border>

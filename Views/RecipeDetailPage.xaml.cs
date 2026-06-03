@@ -29,7 +29,7 @@ public partial class RecipeDetailPage : ContentPage
     protected override void OnNavigatedFrom(NavigatedFromEventArgs args)
     {
         base.OnNavigatedFrom(args);
-        // 页面离开时停止朗读
+        // when page leave stop reading aloud
         if (_viewModel.IsSpeaking)
         {
             _viewModel.ToggleSpeakingCommand.Execute(null);

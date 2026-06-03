@@ -58,7 +58,7 @@ public class MealPlanRepository
                 .Where(p => p.PlanDate == date)
                 .ToListAsync();
 
-            // 已摄入：仅统计 IsCompleted=true
+            // Intake: only count IsCompleted=true
             var completed = plans.Where(p => p.IsCompleted).ToList();
             summary.TotalCalories = completed.Sum(p => p.Calories);
             summary.TotalProtein = completed.Sum(p => p.Protein);
@@ -66,7 +66,7 @@ public class MealPlanRepository
             summary.TotalFat = completed.Sum(p => p.Fat);
             summary.TotalFiber = completed.Sum(p => p.Fiber);
 
-            // 计划中：统计全部
+            // Planned: count all
             summary.PlannedCalories = plans.Sum(p => p.Calories);
             summary.PlannedProtein = plans.Sum(p => p.Protein);
             summary.PlannedCarbs = plans.Sum(p => p.Carbs);

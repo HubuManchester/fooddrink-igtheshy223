@@ -31,14 +31,14 @@ public class RecipeEditViewModel : BaseViewModel
         set => SetProperty(ref _description, value);
     }
 
-    private string _selectedCategory = "中式";
+    private string _selectedCategory = "Chinese";
     public string SelectedCategory
     {
         get => _selectedCategory;
         set => SetProperty(ref _selectedCategory, value);
     }
 
-    private string _selectedDifficulty = "简单";
+    private string _selectedDifficulty = "Easy";
     public string SelectedDifficulty
     {
         get => _selectedDifficulty;
@@ -75,8 +75,8 @@ public class RecipeEditViewModel : BaseViewModel
         set => SetProperty(ref _tagsInput, value);
     }
 
-    public List<string> Categories { get; } = new() { "中式", "西式", "日韩", "甜品", "饮品" };
-    public List<string> Difficulties { get; } = new() { "简单", "中等", "困难" };
+    public List<string> Categories { get; } = new() { "Chinese", "Western", "Asian", "Dessert", "Drink" };
+    public List<string> Difficulties { get; } = new() { "Easy", "Medium", "Hard" };
 
     public ICommand AddStepCommand { get; }
     public ICommand RemoveStepCommand { get; }
@@ -86,7 +86,7 @@ public class RecipeEditViewModel : BaseViewModel
     public RecipeEditViewModel(RecipeRepository recipeRepository)
     {
         _recipeRepository = recipeRepository;
-        base.Title = "编辑食谱";
+        base.Title = "Edit Recipe";
 
         AddStepCommand = CreateCommand(ExecuteAddStep);
         RemoveStepCommand = CreateCommand<StepModel>(ExecuteRemoveStep);
@@ -101,14 +101,14 @@ public class RecipeEditViewModel : BaseViewModel
         {
             if (RecipeId <= 0)
             {
-                base.Title = "新建食谱";
+                base.Title = "New Recipe";
                 return;
             }
 
             var recipe = await _recipeRepository.GetByIdAsync(RecipeId);
             if (recipe == null) return;
 
-            base.Title = "编辑食谱";
+            base.Title = "Edit Recipe";
             Title = recipe.Title;
             Description = recipe.Description ?? string.Empty;
             SelectedCategory = recipe.Category;
@@ -117,7 +117,7 @@ public class RecipeEditViewModel : BaseViewModel
             CookTime = recipe.CookTimeMin;
             Servings = recipe.Servings;
 
-            // 解析 Instructions
+            // parse Instructions JSON
             Steps.Clear();
             try
             {
@@ -130,7 +130,7 @@ public class RecipeEditViewModel : BaseViewModel
             }
             catch { }
 
-            // 解析 Tags
+            /* parse Tags */
             try
             {
                 if (!string.IsNullOrWhiteSpace(recipe.Tags))
@@ -170,11 +170,11 @@ public class RecipeEditViewModel : BaseViewModel
     {
         try
         {
-            // 序列化 Steps
+            // serialize Steps to JSON
             var stepsList = Steps.Select(s => s.Text).ToList();
             var instructionsJson = System.Text.Json.JsonSerializer.Serialize(stepsList);
 
-            // 序列化 Tags
+            /* serialize Tags */
             var tags = TagsInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .ToList();
             var tagsJson = System.Text.Json.JsonSerializer.Serialize(tags);

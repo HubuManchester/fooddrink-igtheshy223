@@ -16,34 +16,34 @@
 
     <Grid RowDefinitions="*,Auto">
 
-        <!-- Row 0: 根据设备类型切换布局 -->
+        <!-- Row 0: Layout switch by device type -->
         <OnIdiom x:TypeArguments="View" Grid.Row="0">
 
-            <!-- ==================== 手机布局：保持原样 ==================== -->
+            <!-- ==================== Phone layout: keep original ==================== -->
             <OnIdiom.Phone>
                 <ScrollView>
                     <VerticalStackLayout Spacing="0">
 
-                        <!-- 顶部大图区域 250高度 -->
+                        <!-- Top image area 250 height -->
                         <Grid HeightRequest="250">
-                            <!-- 底层错误占位 -->
+                            <!-- Bottom error placeholder -->
                             <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
                                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                     <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
                                            TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                    <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                    <Label Text="Image Load Fail" FontSize="{DynamicResource Font12}"
                                            TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                    <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                    <Label Text="Please Check Network" FontSize="{DynamicResource Font11}"
                                            TextColor="#9CA3AF" HorizontalOptions="Center" />
                                 </VerticalStackLayout>
                             </Border>
-                            <!-- 上层图片 -->
+                            <!-- Top image -->
                             <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
                                    Aspect="AspectFill"
                                    HeightRequest="250"
                                    HorizontalOptions="Fill" />
 
-                            <!-- 左上角返回按钮 -->
+                            <!-- Top-left back button -->
                             <Border HorizontalOptions="Start" VerticalOptions="Start"
                                     Margin="16,40"
                                     StrokeShape="RoundRectangle 20"
@@ -59,7 +59,7 @@
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
 
-                            <!-- 右上角收藏按钮 -->
+                            <!-- Top-right favorite button -->
                             <Border HorizontalOptions="End" VerticalOptions="Start"
                                     Margin="16,40"
                                     StrokeShape="RoundRectangle 20"
@@ -76,10 +76,10 @@
                             </Border>
                         </Grid>
 
-                        <!-- 信息区 -->
+                        <!-- Info area -->
                         <VerticalStackLayout Padding="20" Spacing="16">
 
-                            <!-- 标题 + 描述 -->
+                            <!-- Title + Description -->
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding CurrentRecipe.Title}"
                                        FontSize="{DynamicResource Font22}" FontAttributes="Bold"
@@ -92,7 +92,7 @@
                                        AutomationId="LblRecipeDesc" />
                             </VerticalStackLayout>
 
-                            <!-- 标签 -->
+                            <!-- Tags -->
                             <HorizontalStackLayout Spacing="8"
                                                    BindableLayout.ItemsSource="{Binding TagList}"
                                                    AutomationId="TagsLayout">
@@ -109,47 +109,47 @@
                                 </BindableLayout.ItemTemplate>
                             </HorizontalStackLayout>
 
-                            <!-- 3个信息项横排 -->
+                            <!-- 3 info items in a row -->
                             <Grid ColumnDefinitions="*,*,*"
                                   RowDefinitions="Auto,Auto"
                                   ColumnSpacing="8"
                                   Margin="0,4">
-                                <!-- 准备时间 -->
+                                <!-- Prep time -->
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='Prep {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 烹饪时间 -->
+                                <!-- Cook time -->
                                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='Cook {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 份数 -->
+                                <!-- Servings -->
                                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0} serving'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
                             </Grid>
 
-                            <!-- 分隔线 -->
+                            <!-- Divider -->
                             <BoxView HeightRequest="1"
                                      BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                                      Margin="0,4" />
 
-                            <!-- 烹饪步骤区 -->
-                            <Label Text="烹饪步骤"
+                            <!-- Cooking Step section -->
+                            <Label Text="Cooking Step"
                                    FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                                    SemanticProperties.HeadingLevel="Level2"
                                    AutomationId="LblSteps" />
@@ -162,7 +162,7 @@
                                             <Grid ColumnDefinitions="36,*"
                                                   ColumnSpacing="12"
                                                   Padding="0,8">
-                                                <!-- 序号圆圈 -->
+                                                <!-- Step number circle -->
                                                 <Border Grid.Column="0"
                                                         StrokeShape="RoundRectangle 16"
                                                         WidthRequest="32" HeightRequest="32"
@@ -176,14 +176,14 @@
                                                            HorizontalOptions="Center"
                                                            VerticalOptions="Center" />
                                                 </Border>
-                                                <!-- 步骤文字 -->
+                                                <!-- Step text -->
                                                 <Label Grid.Column="1"
                                                        Text="{Binding Text}"
                                                        FontSize="{DynamicResource Font14}"
                                                        LineBreakMode="WordWrap"
                                                        VerticalOptions="Center" />
                                             </Grid>
-                                            <!-- 分隔线（非最后一项） -->
+                                            <!-- Divider (not last item) -->
                                             <BoxView HeightRequest="1"
                                                      BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
                                                      Margin="48,4,0,4" />
@@ -192,12 +192,12 @@
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>
 
-                            <!-- 分隔线 -->
+                            <!-- Divider -->
                             <BoxView HeightRequest="1"
                                      BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                                      Margin="0,8" />
 
-                            <!-- 营养信息卡片 -->
+                            <!-- Nutrition Info card -->
                             <Border StrokeShape="RoundRectangle 16"
                                     StrokeThickness="0"
                                     BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
@@ -208,10 +208,10 @@
                                 </Border.Shadow>
 
                                 <VerticalStackLayout Spacing="12">
-                                    <Label Text="营养信息"
+                                    <Label Text="Nutrition Info"
                                            FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
                                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
-                                        <!-- 热量 -->
+                                        <!-- Calorie -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCalories}"
@@ -219,11 +219,11 @@
                                             <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                            <Label Text="kcal" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 蛋白质 -->
+                                        <!-- Protein -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionProtein}"
@@ -231,11 +231,11 @@
                                             <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Protein" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 碳水 -->
+                                        <!-- Carb -->
                                         <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCarbs}"
@@ -243,13 +243,13 @@
                                             <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Carb" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
                                     </Grid>
                                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
-                                        <!-- 脂肪 -->
+                                        <!-- Fat -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFat}"
@@ -257,11 +257,11 @@
                                             <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fat" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 纤维 -->
+                                        <!-- Fiber -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFiber}"
@@ -269,7 +269,7 @@
                                             <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fiber" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
@@ -277,44 +277,44 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- 底部留白给固定操作栏 -->
+                            <!-- Bottom space for fixed action bar -->
                             <BoxView HeightRequest="80" BackgroundColor="Transparent" />
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </ScrollView>
             </OnIdiom.Phone>
 
-            <!-- ==================== 平板/桌面布局：双列分栏 ==================== -->
+            <!-- ==================== Tablet/Desktop layout: two-column split ==================== -->
             <OnIdiom.Tablet>
                 <Grid ColumnDefinitions="55*,45*"
                       ColumnSpacing="0"
                       MaximumWidthRequest="1200"
                       HorizontalOptions="Center">
 
-                    <!-- 左列：大图 + 烹饪步骤 -->
+                    <!-- Left column: Large image + Cooking steps -->
                     <ScrollView Grid.Column="0">
                         <VerticalStackLayout Spacing="0">
 
-                            <!-- 顶部大图区域 300高度 -->
+                            <!-- Top image area 300 height -->
                             <Grid HeightRequest="300">
-                                <!-- 底层错误占位 -->
+                                <!-- Bottom error placeholder -->
                                 <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
                                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                         <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                        <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                        <Label Text="Image Load Fail" FontSize="{DynamicResource Font12}"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                        <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                        <Label Text="Please Check Network" FontSize="{DynamicResource Font11}"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
                                     </VerticalStackLayout>
                                 </Border>
-                                <!-- 上层图片 -->
+                                <!-- Top image -->
                                 <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
                                        Aspect="AspectFill"
                                        HeightRequest="300"
                                        HorizontalOptions="Fill" />
 
-                                <!-- 左上角返回按钮 -->
+                                <!-- Top-left back button -->
                                 <Border HorizontalOptions="Start" VerticalOptions="Start"
                                         Margin="16,40"
                                         StrokeShape="RoundRectangle 20"
@@ -330,7 +330,7 @@
                                            HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
 
-                                <!-- 右上角收藏按钮 -->
+                                <!-- Top-right favorite button -->
                                 <Border HorizontalOptions="End" VerticalOptions="Start"
                                         Margin="16,40"
                                         StrokeShape="RoundRectangle 20"
@@ -347,9 +347,9 @@
                                 </Border>
                             </Grid>
 
-                            <!-- 烹饪步骤区 -->
+                            <!-- Cooking Step section -->
                             <VerticalStackLayout Padding="20" Spacing="16">
-                                <Label Text="烹饪步骤"
+                                <Label Text="Cooking Step"
                                        FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                                        SemanticProperties.HeadingLevel="Level2"
                                        AutomationId="LblSteps" />
@@ -362,7 +362,7 @@
                                                 <Grid ColumnDefinitions="36,*"
                                                       ColumnSpacing="12"
                                                       Padding="0,8">
-                                                    <!-- 序号圆圈 -->
+                                                    <!-- Step number circle -->
                                                     <Border Grid.Column="0"
                                                             StrokeShape="RoundRectangle 16"
                                                             WidthRequest="32" HeightRequest="32"
@@ -376,14 +376,14 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center" />
                                                     </Border>
-                                                    <!-- 步骤文字 -->
+                                                    <!-- Step text -->
                                                     <Label Grid.Column="1"
                                                            Text="{Binding Text}"
                                                            FontSize="{DynamicResource Font14}"
                                                            LineBreakMode="WordWrap"
                                                            VerticalOptions="Center" />
                                                 </Grid>
-                                                <!-- 分隔线（非最后一项） -->
+                                                <!-- Divider (not last item) -->
                                                 <BoxView HeightRequest="1"
                                                          BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
                                                          Margin="48,4,0,4" />
@@ -392,17 +392,17 @@
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
 
-                                <!-- 底部留白给固定操作栏 -->
+                                <!-- Bottom space for fixed action bar -->
                                 <BoxView HeightRequest="80" BackgroundColor="Transparent" />
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </ScrollView>
 
-                    <!-- 右列：标题、描述、标签、时间信息、营养卡片 -->
+                    <!-- Right column: Title, description, tags, time info, nutrition card -->
                     <ScrollView Grid.Column="1">
                         <VerticalStackLayout Padding="20" Spacing="16">
 
-                            <!-- 标题 + 描述 -->
+                            <!-- Title + Description -->
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding CurrentRecipe.Title}"
                                        FontSize="{DynamicResource Font22}" FontAttributes="Bold"
@@ -415,7 +415,7 @@
                                        AutomationId="LblRecipeDesc" />
                             </VerticalStackLayout>
 
-                            <!-- 标签 -->
+                            <!-- Tags -->
                             <HorizontalStackLayout Spacing="8"
                                                    BindableLayout.ItemsSource="{Binding TagList}"
                                                    AutomationId="TagsLayout">
@@ -432,46 +432,46 @@
                                 </BindableLayout.ItemTemplate>
                             </HorizontalStackLayout>
 
-                            <!-- 3个信息项横排 -->
+                            <!-- 3 info items in a row -->
                             <Grid ColumnDefinitions="*,*,*"
                                   RowDefinitions="Auto,Auto"
                                   ColumnSpacing="8"
                                   Margin="0,4">
-                                <!-- 准备时间 -->
+                                <!-- Prep time -->
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='Prep {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 烹饪时间 -->
+                                <!-- Cook time -->
                                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='Cook {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 份数 -->
+                                <!-- Servings -->
                                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0} serving'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
                             </Grid>
 
-                            <!-- 分隔线 -->
+                            <!-- Divider -->
                             <BoxView HeightRequest="1"
                                      BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                                      Margin="0,4" />
 
-                            <!-- 营养信息卡片 -->
+                            <!-- Nutrition Info card -->
                             <Border StrokeShape="RoundRectangle 16"
                                     StrokeThickness="0"
                                     BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
@@ -482,10 +482,10 @@
                                 </Border.Shadow>
 
                                 <VerticalStackLayout Spacing="12">
-                                    <Label Text="营养信息"
+                                    <Label Text="Nutrition Info"
                                            FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
                                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
-                                        <!-- 热量 -->
+                                        <!-- Calorie -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCalories}"
@@ -493,11 +493,11 @@
                                             <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                            <Label Text="kcal" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 蛋白质 -->
+                                        <!-- Protein -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionProtein}"
@@ -505,11 +505,11 @@
                                             <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Protein" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 碳水 -->
+                                        <!-- Carb -->
                                         <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCarbs}"
@@ -517,13 +517,13 @@
                                             <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Carb" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
                                     </Grid>
                                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
-                                        <!-- 脂肪 -->
+                                        <!-- Fat -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFat}"
@@ -531,11 +531,11 @@
                                             <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fat" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 纤维 -->
+                                        <!-- Fiber -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFiber}"
@@ -543,7 +543,7 @@
                                             <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fiber" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
@@ -551,44 +551,44 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- 底部留白给固定操作栏 -->
+                            <!-- Bottom space for fixed action bar -->
                             <BoxView HeightRequest="80" BackgroundColor="Transparent" />
                         </VerticalStackLayout>
                     </ScrollView>
                 </Grid>
             </OnIdiom.Tablet>
 
-            <!-- ==================== 桌面布局：与平板相同 ==================== -->
+            <!-- ==================== Desktop layout: same as tablet ==================== -->
             <OnIdiom.Desktop>
                 <Grid ColumnDefinitions="55*,45*"
                       ColumnSpacing="0"
                       MaximumWidthRequest="1200"
                       HorizontalOptions="Center">
 
-                    <!-- 左列：大图 + 烹饪步骤 -->
+                    <!-- Left column: Large image + Cooking steps -->
                     <ScrollView Grid.Column="0">
                         <VerticalStackLayout Spacing="0">
 
-                            <!-- 顶部大图区域 300高度 -->
+                            <!-- Top image area 300 height -->
                             <Grid HeightRequest="300">
-                                <!-- 底层错误占位 -->
+                                <!-- Bottom error placeholder -->
                                 <Border BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}">
                                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
                                         <Label Text="&#xf127;" FontFamily="FA" FontSize="36"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                        <Label Text="图片加载失败" FontSize="{DynamicResource Font12}"
+                                        <Label Text="Image Load Fail" FontSize="{DynamicResource Font12}"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
-                                        <Label Text="请检查网络" FontSize="{DynamicResource Font11}"
+                                        <Label Text="Please Check Network" FontSize="{DynamicResource Font11}"
                                                TextColor="#9CA3AF" HorizontalOptions="Center" />
                                     </VerticalStackLayout>
                                 </Border>
-                                <!-- 上层图片 -->
+                                <!-- Top image -->
                                 <Image Source="{Binding CurrentRecipe.ImagePath, Converter={StaticResource StringToUriConverter}}"
                                        Aspect="AspectFill"
                                        HeightRequest="300"
                                        HorizontalOptions="Fill" />
 
-                                <!-- 左上角返回按钮 -->
+                                <!-- Top-left back button -->
                                 <Border HorizontalOptions="Start" VerticalOptions="Start"
                                         Margin="16,40"
                                         StrokeShape="RoundRectangle 20"
@@ -604,7 +604,7 @@
                                            HorizontalOptions="Center" VerticalOptions="Center" />
                                 </Border>
 
-                                <!-- 右上角收藏按钮 -->
+                                <!-- Top-right favorite button -->
                                 <Border HorizontalOptions="End" VerticalOptions="Start"
                                         Margin="16,40"
                                         StrokeShape="RoundRectangle 20"
@@ -621,9 +621,9 @@
                                 </Border>
                             </Grid>
 
-                            <!-- 烹饪步骤区 -->
+                            <!-- Cooking Step section -->
                             <VerticalStackLayout Padding="20" Spacing="16">
-                                <Label Text="烹饪步骤"
+                                <Label Text="Cooking Step"
                                        FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                                        SemanticProperties.HeadingLevel="Level2"
                                        AutomationId="LblSteps" />
@@ -636,7 +636,7 @@
                                                 <Grid ColumnDefinitions="36,*"
                                                       ColumnSpacing="12"
                                                       Padding="0,8">
-                                                    <!-- 序号圆圈 -->
+                                                    <!-- Step number circle -->
                                                     <Border Grid.Column="0"
                                                             StrokeShape="RoundRectangle 16"
                                                             WidthRequest="32" HeightRequest="32"
@@ -650,14 +650,14 @@
                                                                HorizontalOptions="Center"
                                                                VerticalOptions="Center" />
                                                     </Border>
-                                                    <!-- 步骤文字 -->
+                                                    <!-- Step text -->
                                                     <Label Grid.Column="1"
                                                            Text="{Binding Text}"
                                                            FontSize="{DynamicResource Font14}"
                                                            LineBreakMode="WordWrap"
                                                            VerticalOptions="Center" />
                                                 </Grid>
-                                                <!-- 分隔线（非最后一项） -->
+                                                <!-- Divider (not last item) -->
                                                 <BoxView HeightRequest="1"
                                                          BackgroundColor="{AppThemeBinding Light=#F3F4F6, Dark=#374151}"
                                                          Margin="48,4,0,4" />
@@ -666,17 +666,17 @@
                                     </BindableLayout.ItemTemplate>
                                 </VerticalStackLayout>
 
-                                <!-- 底部留白给固定操作栏 -->
+                                <!-- Bottom space for fixed action bar -->
                                 <BoxView HeightRequest="80" BackgroundColor="Transparent" />
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </ScrollView>
 
-                    <!-- 右列：标题、描述、标签、时间信息、营养卡片 -->
+                    <!-- Right column: Title, description, tags, time info, nutrition card -->
                     <ScrollView Grid.Column="1">
                         <VerticalStackLayout Padding="20" Spacing="16">
 
-                            <!-- 标题 + 描述 -->
+                            <!-- Title + Description -->
                             <VerticalStackLayout Spacing="4">
                                 <Label Text="{Binding CurrentRecipe.Title}"
                                        FontSize="{DynamicResource Font22}" FontAttributes="Bold"
@@ -689,7 +689,7 @@
                                        AutomationId="LblRecipeDesc" />
                             </VerticalStackLayout>
 
-                            <!-- 标签 -->
+                            <!-- Tags -->
                             <HorizontalStackLayout Spacing="8"
                                                    BindableLayout.ItemsSource="{Binding TagList}"
                                                    AutomationId="TagsLayout">
@@ -706,46 +706,46 @@
                                 </BindableLayout.ItemTemplate>
                             </HorizontalStackLayout>
 
-                            <!-- 3个信息项横排 -->
+                            <!-- 3 info items in a row -->
                             <Grid ColumnDefinitions="*,*,*"
                                   RowDefinitions="Auto,Auto"
                                   ColumnSpacing="8"
                                   Margin="0,4">
-                                <!-- 准备时间 -->
+                                <!-- Prep time -->
                                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf017;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='准备 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.PrepTimeMin, StringFormat='Prep {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 烹饪时间 -->
+                                <!-- Cook time -->
                                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf2dc;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='烹饪 {0}分钟'}"
+                                    <Label Text="{Binding CurrentRecipe.CookTimeMin, StringFormat='Cook {0} min'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
-                                <!-- 份数 -->
+                                <!-- Servings -->
                                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
                                     <Label Text="&#xf0c0;" FontFamily="FA" FontSize="18"
                                            TextColor="{StaticResource Primary}"
                                            HorizontalOptions="Center" />
-                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0}人份'}"
+                                    <Label Text="{Binding CurrentRecipe.Servings, StringFormat='{0} serving'}"
                                            FontSize="{DynamicResource Font12}" HorizontalOptions="Center"
                                            TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"/>
                                 </VerticalStackLayout>
                             </Grid>
 
-                            <!-- 分隔线 -->
+                            <!-- Divider -->
                             <BoxView HeightRequest="1"
                                      BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
                                      Margin="0,4" />
 
-                            <!-- 营养信息卡片 -->
+                            <!-- Nutrition Info card -->
                             <Border StrokeShape="RoundRectangle 16"
                                     StrokeThickness="0"
                                     BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
@@ -756,10 +756,10 @@
                                 </Border.Shadow>
 
                                 <VerticalStackLayout Spacing="12">
-                                    <Label Text="营养信息"
+                                    <Label Text="Nutrition Info"
                                            FontSize="{DynamicResource Font16}" FontAttributes="Bold" />
                                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="8">
-                                        <!-- 热量 -->
+                                        <!-- Calorie -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06d;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCalories}"
@@ -767,11 +767,11 @@
                                             <Label Text="{Binding Nutrition.Calories, StringFormat='{}{0:F0}'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="千卡" FontSize="{DynamicResource Font11}"
+                                            <Label Text="kcal" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 蛋白质 -->
+                                        <!-- Protein -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0c0;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionProtein}"
@@ -779,11 +779,11 @@
                                             <Label Text="{Binding Nutrition.Protein, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="蛋白质" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Protein" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 碳水 -->
+                                        <!-- Carb -->
                                         <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf0e7;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionCarbs}"
@@ -791,13 +791,13 @@
                                             <Label Text="{Binding Nutrition.Carbs, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="碳水" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Carb" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
                                     </Grid>
                                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="16">
-                                        <!-- 脂肪 -->
+                                        <!-- Fat -->
                                         <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf043;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFat}"
@@ -805,11 +805,11 @@
                                             <Label Text="{Binding Nutrition.Fat, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="脂肪" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fat" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
-                                        <!-- 纤维 -->
+                                        <!-- Fiber -->
                                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="2">
                                             <Label Text="&#xf06c;" FontFamily="FA" FontSize="16"
                                                    TextColor="{StaticResource NutritionFiber}"
@@ -817,7 +817,7 @@
                                             <Label Text="{Binding Nutrition.Fiber, StringFormat='{}{0:F1}g'}"
                                                    FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                                    HorizontalOptions="Center" />
-                                            <Label Text="纤维" FontSize="{DynamicResource Font11}"
+                                            <Label Text="Fiber" FontSize="{DynamicResource Font11}"
                                                    TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
                                                    HorizontalOptions="Center" />
                                         </VerticalStackLayout>
@@ -825,7 +825,7 @@
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- 底部留白给固定操作栏 -->
+                            <!-- Bottom space for fixed action bar -->
                             <BoxView HeightRequest="80" BackgroundColor="Transparent" />
                         </VerticalStackLayout>
                     </ScrollView>
@@ -834,7 +834,7 @@
 
         </OnIdiom>
 
-        <!-- 底部固定操作栏（所有设备共享） -->
+        <!-- Bottom fixed action bar (shared by all devices) -->
         <Grid Grid.Row="1"
               ColumnDefinitions="*,*"
               ColumnSpacing="12"
@@ -845,7 +845,7 @@
                         Offset="0,-2" Radius="8" Opacity="0.3"/>
             </Grid.Shadow>
 
-            <!-- 朗读/停止朗读 -->
+            <!-- Read aloud/Stop reading -->
             <Button Grid.Column="0"
                     Text="{Binding SpeakButtonText}"
                     Command="{Binding ToggleSpeakingCommand}"
@@ -856,12 +856,12 @@
                     BorderWidth="1"
                     CornerRadius="12"
                     FontSize="14"
-                    SemanticProperties.Hint="朗读烹饪步骤"
+                    SemanticProperties.Hint="Read cooking step aloud"
                     AutomationId="BtnSpeak" />
 
-            <!-- 加入饮食计划 -->
+            <!-- Add to diet plan -->
             <Button Grid.Column="1"
-                    Text="&#xf067; 加入饮食计划"
+                    Text="&#xf067; Add To Diet Plan"
                     Command="{Binding AddToPlanCommand}"
                     FontFamily="FA"
                     BackgroundColor="{StaticResource Primary}"
@@ -869,7 +869,7 @@
                     CornerRadius="12"
                     FontSize="14"
                     FontAttributes="Bold"
-                    SemanticProperties.Hint="加入饮食计划"
+                    SemanticProperties.Hint="Add to diet plan"
                     AutomationId="BtnAddToPlan" />
         </Grid>
     </Grid>

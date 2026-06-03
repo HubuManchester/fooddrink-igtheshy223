@@ -39,9 +39,9 @@ public class HapticService
             try
             {
                 var context = Platform.CurrentActivity ?? global::Android.App.Application.Context;
+#pragma warning disable CA1416, CA1422
                 var vibrator = (global::Android.OS.Vibrator?)context.GetSystemService(global::Android.Content.Context.VibratorService);
                 if (vibrator == null) return;
-#pragma warning disable CA1416
                 if (global::Android.OS.Build.VERSION.SdkInt >= global::Android.OS.BuildVersionCodes.O)
                 {
                     vibrator.Vibrate(global::Android.OS.VibrationEffect.CreateOneShot(duration, global::Android.OS.VibrationEffect.DefaultAmplitude));
@@ -50,7 +50,7 @@ public class HapticService
                 {
                     vibrator.Vibrate(duration);
                 }
-#pragma warning restore CA1416
+#pragma warning restore CA1416, CA1422
             }
             catch { }
         });

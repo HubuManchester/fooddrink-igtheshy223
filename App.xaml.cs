@@ -23,7 +23,7 @@ public partial class App : Application
     {
         var window = new Window(_shell);
 
-        // 在窗口创建后立即等待种子数据初始化完成
+        // when window created wait seed data init finish
         _ = InitializeAsync();
 
         return window;

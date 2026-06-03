@@ -9,12 +9,12 @@ public class StoreInfo
     public string DistanceText => $"{Distance:F1}km";
     public string TypeAbbr => Type switch
     {
-        "超市" => "超", "便利" => "便", "菜场" => "菜", "水果" => "果",
-        "生鲜" => "鲜", "仓储" => "仓", _ => "店"
+        "Supermarket" => "Sup", "Convenience" => "Con", "Market" => "Mkt", "Fruit" => "Fru",
+        "Fresh" => "Fre", "Warehouse" => "Wh", _ => "Store"
     };
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string CoordinatesText => $"纬度{Latitude:F6} 经度{Longitude:F6}";
+    public string CoordinatesText => $"Lat{Latitude:F6} Lon{Longitude:F6}";
     public string CoordinatesDisplay => CoordinatesText;
 
     public StoreInfo() { }

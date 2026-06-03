@@ -16,7 +16,7 @@ public class RecipeListViewModel : BaseViewModel
         set => SetProperty(ref _searchText, value);
     }
 
-    private string _selectedCategory = "全部";
+    private string _selectedCategory = "All";
     public string SelectedCategory
     {
         get => _selectedCategory;
@@ -25,7 +25,7 @@ public class RecipeListViewModel : BaseViewModel
 
     public ObservableCollection<Recipe> Recipes { get; } = new();
 
-    public List<string> Categories { get; } = new() { "全部", "中式", "西式", "日韩", "甜品", "饮品" };
+    public List<string> Categories { get; } = new() { "All", "Chinese", "Western", "Asian", "Dessert", "Drink" };
 
     public ICommand SearchCommand { get; }
     public ICommand SelectCategoryCommand { get; }
@@ -45,7 +45,7 @@ public class RecipeListViewModel : BaseViewModel
     public RecipeListViewModel(RecipeRepository recipeRepository)
     {
         _recipeRepository = recipeRepository;
-        Title = "食谱列表";
+        Title = "Recipe List";
 
         SearchCommand = CreateAsyncCommand(ExecuteSearch);
         SelectCategoryCommand = CreateAsyncCommand<string>(ExecuteSelectCategory);
@@ -73,7 +73,7 @@ public class RecipeListViewModel : BaseViewModel
         {
             List<Recipe> recipes;
 
-            if (SelectedCategory == "全部")
+            if (SelectedCategory == "All")
             {
                 if (!string.IsNullOrWhiteSpace(SearchText))
                     recipes = await _recipeRepository.SearchAsync(SearchText);

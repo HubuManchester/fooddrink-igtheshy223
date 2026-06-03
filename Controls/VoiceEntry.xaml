@@ -18,8 +18,8 @@
                 StrokeThickness="0"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
-                SemanticProperties.Description="语音输入"
-                SemanticProperties.Hint="点击使用语音输入">
+                SemanticProperties.Description="Voice Input"
+                SemanticProperties.Hint="Tap Use Voice Input">
             <Border.Triggers>
                 <DataTrigger TargetType="Border"
                              Binding="{Binding Source={x:Reference This}, Path=IsListening}"

@@ -43,7 +43,7 @@ public class TextToSpeechService
             foreach (var step in steps)
             {
                 if (_cts.Token.IsCancellationRequested) break;
-                var text = $"{step.DisplayIndex}，{step.Text}";
+                var text = $"{step.DisplayIndex}, {step.Text}";
                 var settings = new SpeechOptions { Pitch = 1.0f, Volume = 1.0f };
                 await TextToSpeech.SpeakAsync(text, settings, _cts.Token);
                 if (!_cts.Token.IsCancellationRequested && step != steps.Last())

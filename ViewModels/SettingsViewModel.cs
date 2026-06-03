@@ -77,7 +77,7 @@ public class SettingsViewModel : BaseViewModel
         set => SetProperty(ref _displayUserName, value);
     }
 
-    public string LoginButtonText => IsLoggedIn ? "退出登录" : "登录/注册";
+    public string LoginButtonText => IsLoggedIn ? "Logout" : "Login / Register";
     public bool ShowLoginButton => !IsLoggedIn;
     public bool ShowLogoutButton => IsLoggedIn;
     public bool ShowEditUserName => IsLoggedIn;
@@ -110,7 +110,7 @@ public class SettingsViewModel : BaseViewModel
         _databaseService = databaseService;
         _serviceProvider = serviceProvider;
         _authService = authService;
-        Title = "设置";
+        Title = "Settings";
 
         SaveUserNameCommand = CreateAsyncCommand(ExecuteSaveUserName);
         ToggleEditUserNameCommand = CreateCommand(() => IsEditingUserName = !IsEditingUserName);
@@ -136,11 +136,11 @@ public class SettingsViewModel : BaseViewModel
             SelectedTheme = await _userProfileRepository.GetThemeAsync();
             SelectedFontSize = await _userProfileRepository.GetFontSizeAsync();
 
-            // 登录状态
+            // login state
             IsLoggedIn = _authService.IsLoggedIn;
-            DisplayUserName = _authService.CurrentUser?.Username ?? "游客模式";
+            DisplayUserName = _authService.CurrentUser?.Username ?? "Guest Mode";
 
-            // 获取当前卡路里目标
+            /* get current calorie goal */
             var today = DateTime.Today.ToString("yyyy-MM-dd");
             var nutritionRepo = _serviceProvider.GetService<NutritionRepository>();
             if (nutritionRepo != null)
@@ -161,7 +161,7 @@ public class SettingsViewModel : BaseViewModel
         {
             await _userProfileRepository.SetUserNameAsync(UserName);
             IsEditingUserName = false;
-            await Shell.Current.DisplayAlert("成功", "用户名已保存", "确定");
+            await Shell.Current.DisplayAlert("Success", "Username save success", "OK");
         }
         catch (Exception ex)
         {
@@ -207,7 +207,7 @@ public class SettingsViewModel : BaseViewModel
                 target.CaloriesGoal = CaloriesGoal;
                 await nutritionRepo.SaveAsync(target);
             }
-            await Shell.Current.DisplayAlert("成功", "卡路里目标已保存", "确定");
+            await Shell.Current.DisplayAlert("Success", "Calorie goal save success", "OK");
         }
         catch (Exception ex)
         {
@@ -219,12 +219,12 @@ public class SettingsViewModel : BaseViewModel
     {
         try
         {
-            await _ttsService.SpeakAsync("语音测试成功，欢迎使用美食助手");
+            await _ttsService.SpeakAsync("Speech test success, welcome use Food Assistant");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[SettingsViewModel] TestSpeech error: {ex.Message}");
-            await Shell.Current.DisplayAlert("提示", "语音功能不可用", "确定");
+            await Shell.Current.DisplayAlert("Hint", "Speech function not available", "OK");
         }
     }
 
@@ -244,17 +244,17 @@ public class SettingsViewModel : BaseViewModel
     {
         try
         {
-            Shell.Current.DisplayAlert("关于",
-                "美食助手 v1.0\n\n" +
-                "一款智能饮食管理应用\n\n" +
-                "功能特色：\n" +
-                "- 食谱管理与推荐\n" +
-                "- 饮食计划制定\n" +
-                "- 营养摄入追踪\n" +
-                "- 拍照识别食物\n" +
-                "- 购物清单管理\n" +
-                "- 附近商店查找",
-                "确定");
+            Shell.Current.DisplayAlert("About",
+                "Food Assistant v1.0\n\n" +
+                "A smart diet management application\n\n" +
+                "Features:\n" +
+                "- Recipe management and recommend\n" +
+                "- Diet plan making\n" +
+                "- Nutrition intake tracking\n" +
+                "- Photo recognize food\n" +
+                "- Shopping list management\n" +
+                "- Nearby store finding",
+                "OK");
         }
         catch (Exception ex)
         {
@@ -266,14 +266,14 @@ public class SettingsViewModel : BaseViewModel
     {
         try
         {
-            var confirm = await Shell.Current.DisplayAlert("警告",
-                "确定要清空所有数据吗？此操作不可恢复！",
-                "清空数据", "取消");
+            var confirm = await Shell.Current.DisplayAlert("Warning",
+                "Are you sure clear all data? This operation cannot undo!",
+                "Clear Data", "Cancel");
             if (!confirm) return;
 
-            var secondConfirm = await Shell.Current.DisplayAlert("二次确认",
-                "真的要删除所有数据吗？包括所有食谱、计划、食材等。",
-                "确认清空", "再想想");
+            var secondConfirm = await Shell.Current.DisplayAlert("Second Confirm",
+                "Really delete all data? Include all recipe, plan, ingredient etc.",
+                "Confirm Clear", "Let me think");
             if (!secondConfirm) return;
 
             await _databaseService.Init();
@@ -284,14 +284,14 @@ public class SettingsViewModel : BaseViewModel
             await _databaseService.Database.DropTableAsync<ssk.Models.NutritionTarget>();
             await _databaseService.Database.DropTableAsync<ssk.Models.UserPreference>();
             await _databaseService.Database.DropTableAsync<ssk.Models.FoodRecognitionLog>();
-            await _databaseService.Init(); // 重新创建表
+            await _databaseService.Init(); // rebuild table
 
-            await Shell.Current.DisplayAlert("完成", "所有数据已清空", "确定");
+            await Shell.Current.DisplayAlert("Done", "All data already clear", "OK");
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[SettingsViewModel] ResetData error: {ex.Message}");
-            await Shell.Current.DisplayAlert("错误", "清空数据失败", "确定");
+            await Shell.Current.DisplayAlert("Error", "Clear data fail", "OK");
         }
     }
 
@@ -301,8 +301,8 @@ public class SettingsViewModel : BaseViewModel
         {
             if (_authService.IsLoggedIn)
             {
-                var confirm = await Shell.Current.DisplayAlert("提示",
-                    "确定要退出登录吗？", "退出登录", "取消");
+                var confirm = await Shell.Current.DisplayAlert("Hint",
+                    "Are you sure logout?", "Logout", "Cancel");
                 if (!confirm) return;
 
                 await _authService.LogoutAsync();
@@ -323,7 +323,7 @@ public class SettingsViewModel : BaseViewModel
         MainThread.BeginInvokeOnMainThread(() =>
         {
             IsLoggedIn = _authService.IsLoggedIn;
-            DisplayUserName = _authService.CurrentUser?.Username ?? "游客模式";
+            DisplayUserName = _authService.CurrentUser?.Username ?? "Guest Mode";
             if (IsLoggedIn)
             {
                 UserName = DisplayUserName;

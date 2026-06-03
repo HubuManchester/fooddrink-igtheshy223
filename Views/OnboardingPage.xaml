@@ -24,7 +24,7 @@
                                          VerticalOptions="Center"
                                          Spacing="24"
                                          Padding="32,0">
-                        <!-- 图标圆形区域 -->
+                        <!-- Icon circle area -->
                         <Border StrokeShape="RoundRectangle 60"
                                 WidthRequest="120"
                                 HeightRequest="120"
@@ -39,7 +39,7 @@
                                    VerticalOptions="Center" />
                         </Border>
 
-                        <!-- 标题 -->
+                        <!-- Title -->
                         <Label Text="{Binding Title}"
                                FontSize="24"
                                FontAttributes="Bold"
@@ -48,7 +48,7 @@
                                SemanticProperties.HeadingLevel="Level1"
                                AutomationId="OnboardingTitle" />
 
-                        <!-- 描述 -->
+                        <!-- Description -->
                         <Label Text="{Binding Description}"
                                FontSize="{DynamicResource Font15}"
                                TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
@@ -62,13 +62,13 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
 
-        <!-- 底部固定区域 -->
+        <!-- Bottom fixed area -->
         <Grid Grid.Row="1"
               RowDefinitions="Auto,Auto"
               Padding="24,0,24,40"
               RowSpacing="20">
 
-            <!-- 圆点指示器 -->
+            <!-- Dot indicators -->
             <HorizontalStackLayout Grid.Row="0"
                                    HorizontalOptions="Center"
                                    Spacing="8"
@@ -91,12 +91,12 @@
                         StrokeThickness="0" />
             </HorizontalStackLayout>
 
-            <!-- 按钮区 -->
+            <!-- Button area -->
             <Grid Grid.Row="1" ColumnDefinitions="*,*"
                   ColumnSpacing="16">
-                <!-- 跳过按钮 -->
+                <!-- Skip button -->
                 <Button Grid.Column="0"
-                        Text="跳过"
+                        Text="Skip"
                         Command="{Binding SkipCommand}"
                         BackgroundColor="Transparent"
                         TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
@@ -104,10 +104,10 @@
                         BorderWidth="1"
                         CornerRadius="12"
                         FontSize="{DynamicResource Font16}"
-                        SemanticProperties.Hint="跳过引导"
+                        SemanticProperties.Hint="Skip onboarding"
                         AutomationId="BtnSkip" />
 
-                <!-- 下一步 / 开始使用 -->
+                <!-- Next / Get Started -->
                 <Button Grid.Column="1"
                         Text="{Binding NextButtonText}"
                         Command="{Binding NextCommand}"
@@ -116,7 +116,7 @@
                         CornerRadius="12"
                         FontSize="{DynamicResource Font16}"
                         FontAttributes="Bold"
-                        SemanticProperties.Hint="下一步"
+                        SemanticProperties.Hint="Next step"
                         AutomationId="BtnNext" />
             </Grid>
         </Grid>

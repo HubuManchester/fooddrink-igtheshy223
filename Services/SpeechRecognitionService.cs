@@ -13,7 +13,7 @@ public class SpeechRecognitionService
             var status = await Permissions.RequestAsync<Permissions.Microphone>();
             if (status != PermissionStatus.Granted)
             {
-                await Shell.Current.DisplayAlert("权限不足", "需要麦克风权限才能使用语音输入", "确定");
+                await Shell.Current.DisplayAlert("Permission Not Enough", "Need microphone permission for voice input", "OK");
                 return null;
             }
 
@@ -22,7 +22,7 @@ public class SpeechRecognitionService
 
             if (!Android.Speech.SpeechRecognizer.IsRecognitionAvailable(activity))
             {
-                await Shell.Current.DisplayAlert("不支持", "当前设备不支持语音识别", "确定");
+                await Shell.Current.DisplayAlert("Not Support", "Current device not support speech recognition", "OK");
                 return null;
             }
 
@@ -30,7 +30,7 @@ public class SpeechRecognitionService
 
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                _speechRecognizer = Android.Speech.SpeechRecognizer.CreateSpeechRecognizer(activity);
+                _speechRecognizer = Android.Speech.SpeechRecognizer.CreateSpeechRecognizer(activity)!;
                 _speechRecognizer.SetRecognitionListener(new SpeechListener(this));
                 var intent = new Android.Content.Intent(Android.Speech.RecognizerIntent.ActionRecognizeSpeech);
                 intent.PutExtra(Android.Speech.RecognizerIntent.ExtraLanguageModel,
@@ -77,8 +77,9 @@ public class SpeechRecognitionService
         private readonly SpeechRecognitionService _service;
         public SpeechListener(SpeechRecognitionService service) => _service = service;
 
-        public void OnResults(Android.OS.Bundle results)
+        public void OnResults(Android.OS.Bundle? results)
         {
+            if (results == null) { _service.OnResult(null); return; }
             var matches = results.GetStringArrayList(Android.Speech.SpeechRecognizer.ResultsRecognition);
             _service.OnResult(matches?.Count > 0 ? matches[0] : null);
         }
@@ -100,7 +101,7 @@ public class SpeechRecognitionService
 #else
     public async Task<string?> RecognizeAsync(string language = "zh-CN")
     {
-        await Shell.Current.DisplayAlert("提示", "语音输入仅在 Android 设备上可用", "确定");
+        await Shell.Current.DisplayAlert("Tips", "Voice input only available on Android device", "OK");
         return null;
     }
 #endif

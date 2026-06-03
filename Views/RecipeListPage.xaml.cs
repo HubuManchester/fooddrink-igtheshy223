@@ -43,17 +43,17 @@ public partial class RecipeListPage : ContentPage
     {
         if (isSelected)
         {
-            btn.BackgroundColor = (Color)Application.Current.Resources["Primary"];
+            btn.BackgroundColor = (Color)Application.Current!.Resources["Primary"]!;
             btn.TextColor = Colors.White;
             btn.BorderWidth = 0;
         }
         else
         {
             btn.BackgroundColor = Colors.Transparent;
-            btn.TextColor = Application.Current.RequestedTheme == AppTheme.Light
+            btn.TextColor = Application.Current!.RequestedTheme == AppTheme.Light
                 ? Color.FromArgb("#374151")
                 : Color.FromArgb("#D1D5DB");
-            btn.BorderColor = Application.Current.RequestedTheme == AppTheme.Light
+            btn.BorderColor = Application.Current!.RequestedTheme == AppTheme.Light
                 ? Color.FromArgb("#D1D5DB")
                 : Color.FromArgb("#4B5563");
             btn.BorderWidth = 1;

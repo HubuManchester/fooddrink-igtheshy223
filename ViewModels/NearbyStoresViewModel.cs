@@ -9,14 +9,14 @@ public class NearbyStoresViewModel : BaseViewModel
 {
     private readonly GeolocationService _geolocationService;
 
-    private string _locationCoordinates = "正在获取位置...";
+    private string _locationCoordinates = "Getting location...";
     public string LocationCoordinates
     {
         get => _locationCoordinates;
         set => SetProperty(ref _locationCoordinates, value);
     }
 
-    private string _locationStatus = "正在获取位置...";
+    private string _locationStatus = "Getting location...";
     public string LocationStatus
     {
         get => _locationStatus;
@@ -55,7 +55,7 @@ public class NearbyStoresViewModel : BaseViewModel
     public NearbyStoresViewModel(GeolocationService geolocationService)
     {
         _geolocationService = geolocationService;
-        Title = "附近商店";
+        Title = "Nearby Stores";
 
         RefreshLocationCommand = CreateAsyncCommand(ExecuteRefreshLocation);
         OpenStoreCommand = CreateAsyncCommand<StoreInfo>(ExecuteOpenStore);
@@ -79,7 +79,7 @@ public class NearbyStoresViewModel : BaseViewModel
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[NearbyStoresViewModel] RefreshLocation error: {ex.Message}");
-            LocationStatus = "定位失败";
+            LocationStatus = "Location fail";
         }
     }
 
@@ -90,11 +90,11 @@ public class NearbyStoresViewModel : BaseViewModel
         if (_geolocationService.CurrentLocation != null)
         {
             var loc = _geolocationService.CurrentLocation;
-            LocationCoordinates = $"纬度 {loc.Latitude:F6} 经度 {loc.Longitude:F6}";
+            LocationCoordinates = $"Latitude {loc.Latitude:F6} Longitude {loc.Longitude:F6}";
         }
         else
         {
-            LocationCoordinates = "无法获取位置信息";
+            LocationCoordinates = "Cannot get location info";
         }
 
         CompassHeading = _geolocationService.GetCompassHeading();
@@ -108,7 +108,7 @@ public class NearbyStoresViewModel : BaseViewModel
         {
             var stores = _geolocationService.GetNearbyStores();
 
-            // 根据当前位置重新排序距离（如果有位置信息）
+            // re-sort distance by current location if have location info
             if (_geolocationService.CurrentLocation != null)
             {
                 var loc = _geolocationService.CurrentLocation;
@@ -123,7 +123,7 @@ public class NearbyStoresViewModel : BaseViewModel
             foreach (var store in stores)
                 Stores.Add(store);
 
-            StoreCountText = $"附近共 {stores.Count} 家商店（模拟数据）";
+            StoreCountText = $"Nearby total {stores.Count} stores";
         }
         catch (Exception ex)
         {
@@ -139,7 +139,7 @@ public class NearbyStoresViewModel : BaseViewModel
                 Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
                 Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
         var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        return Math.Round(6371 * c, 1); // 地球半径 km
+        return Math.Round(6371 * c, 1); // earth radius km
     }
 
     private async Task ExecuteOpenStore(StoreInfo store)
@@ -153,7 +153,7 @@ public class NearbyStoresViewModel : BaseViewModel
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[NearbyStoresViewModel] OpenStore error: {ex.Message}");
-            await Shell.Current.DisplayAlert("提示", "无法打开地图应用", "确定");
+            await Shell.Current.DisplayAlert("Hint", "Cannot open map application", "OK");
         }
     }
 

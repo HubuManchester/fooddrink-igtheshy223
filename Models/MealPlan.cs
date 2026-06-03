@@ -13,7 +13,7 @@ public class MealPlan
     public string PlanDate { get; set; } = DateTime.Today.ToString("yyyy-MM-dd");
 
     [MaxLength(10)]
-    public string MealType { get; set; } = "早餐";
+    public string MealType { get; set; } = "Breakfast";
 
     public int? RecipeId { get; set; }
 

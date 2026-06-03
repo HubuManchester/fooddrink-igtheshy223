@@ -10,7 +10,7 @@ public class ThemeService
     public event Action? ThemeChanged;
     public event Action? FontScaleChanged;
 
-    /// <summary>字号资源名和对应基础值的映射</summary>
+    /// <summary>Font size resource name and base value mapping</summary>
     private static readonly Dictionary<string, double> FontResources = new()
     {
         ["Font11"] = 11, ["Font12"] = 12, ["Font13"] = 13,
@@ -70,7 +70,7 @@ public class ThemeService
         UpdateFontSizeResources();
     }
 
-    /// <summary>根据 FontScale 更新全局字号资源，所有 DynamicResource 引用会自动刷新</summary>
+    /// <summary>Update global font size resources based on FontScale, all DynamicResource references will auto refresh</summary>
     private void UpdateFontSizeResources()
     {
         if (Application.Current == null) return;

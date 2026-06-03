@@ -11,13 +11,13 @@ public class NutritionScoreConverter : IValueConverter
         {
             return score switch
             {
-                >= 80 => "优秀",
-                >= 60 => "良好",
-                >= 40 => "一般",
-                _ => "需改善"
+                >= 80 => "Excellent",
+                >= 60 => "Good",
+                >= 40 => "Average",
+                _ => "Need Improve"
             };
         }
-        return "未知";
+        return "Unknown";
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => 0.0;

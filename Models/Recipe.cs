@@ -15,7 +15,7 @@ public class Recipe
     public string? ImagePath { get; set; }
 
     [MaxLength(20)]
-    public string Category { get; set; } = "中式";
+    public string Category { get; set; } = "Chinese";
 
     public int PrepTimeMin { get; set; }
 
@@ -24,7 +24,7 @@ public class Recipe
     public int Servings { get; set; } = 1;
 
     [MaxLength(10)]
-    public string Difficulty { get; set; } = "简单";
+    public string Difficulty { get; set; } = "Easy";
 
     public string Instructions { get; set; } = "[]";
 

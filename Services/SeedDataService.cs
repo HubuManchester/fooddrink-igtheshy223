@@ -30,7 +30,7 @@ public class SeedDataService
         _userProfileRepo = userProfileRepo;
     }
 
-    private const int CurrentSeedVersion = 8;
+    private const int CurrentSeedVersion = 9;
 
     public async Task InitializeAsync()
     {
@@ -45,7 +45,7 @@ public class SeedDataService
                 return;
             }
 
-            // 版本升级或首次填充：先清除所有旧数据
+            // Version upgrade or first fill: clear all old data first
             System.Diagnostics.Debug.WriteLine($"[SeedDataService] Seed version {version} -> {CurrentSeedVersion}, clearing old data...");
             await _db.Database.ExecuteAsync("DELETE FROM recipes");
             await _db.Database.ExecuteAsync("DELETE FROM ingredients");
@@ -75,100 +75,100 @@ public class SeedDataService
     {
         var recipes = new List<Recipe>
         {
-            // 中式
-            new Recipe("宫保鸡丁", "经典川菜，鸡肉鲜嫩配花生米，麻辣鲜香",
+            // Chinese
+            new Recipe("Kung Pao Chicken", "Classic Sichuan dish, tender chicken with peanuts, spicy and savory",
                 "gongbao.jpg",
-                "中式", 15, 20, 4, "简单",
-                "[{\"Index\":0,\"Text\":\"鸡胸肉切丁，加料酒、淀粉腌制15分钟\"},{\"Index\":1,\"Text\":\"调碗汁：醋、酱油、糖、盐、淀粉水混合\"},{\"Index\":2,\"Text\":\"热锅冷油，爆香干辣椒和花椒\"},{\"Index\":3,\"Text\":\"下鸡丁滑炒至变色\"},{\"Index\":4,\"Text\":\"加入葱段和油炸花生米\"},{\"Index\":5,\"Text\":\"倒入碗汁快速翻炒均匀即可\"}]",
-                "[\"川菜\",\"下饭\",\"鸡肉\",\"辣\"]", true, false),
+                "Chinese", 15, 20, 4, "Easy",
+                "[{\"Index\":0,\"Text\":\"Dice chicken breast, marinate with cooking wine and starch for 15 minutes\"},{\"Index\":1,\"Text\":\"Mix sauce: vinegar, soy sauce, sugar, salt, starch water\"},{\"Index\":2,\"Text\":\"Heat wok with cold oil, fry dried chili and Sichuan pepper\"},{\"Index\":3,\"Text\":\"Add chicken dice, stir-fry until color changes\"},{\"Index\":4,\"Text\":\"Add scallion segments and fried peanuts\"},{\"Index\":5,\"Text\":\"Pour in sauce, stir-fry quickly until evenly mixed\"}]",
+                "[\"Sichuan\",\"Rice Pairing\",\"Chicken\",\"Spicy\"]", true, false),
 
-            new Recipe("红烧肉", "肥而不腻的经典家常菜，入口即化",
+            new Recipe("Braised Pork Belly", "Rich but not greasy classic home dish, melts in mouth",
                 "hongshaorou.jpg",
-                "中式", 10, 90, 6, "中等",
-                "[{\"Index\":0,\"Text\":\"五花肉切块焯水去血沫\"},{\"Index\":1,\"Text\":\"锅中放少量油，加冰糖炒糖色\"},{\"Index\":2,\"Text\":\"放入五花肉翻炒上色\"},{\"Index\":3,\"Text\":\"加入葱段、姜片、八角、桂皮\"},{\"Index\":4,\"Text\":\"加入料酒、酱油、开水没过肉\"},{\"Index\":5,\"Text\":\"大火烧开后转小火炖60-90分钟\"},{\"Index\":6,\"Text\":\"最后大火收汁至浓稠\"}]",
-                "[\"家常\",\"猪肉\",\"下饭\"]", false, false),
+                "Chinese", 10, 90, 6, "Medium",
+                "[{\"Index\":0,\"Text\":\"Cut pork belly into chunks, blanch to remove blood foam\"},{\"Index\":1,\"Text\":\"Add a little oil in wok, fry rock sugar for caramel color\"},{\"Index\":2,\"Text\":\"Add pork belly, stir-fry to coat with color\"},{\"Index\":3,\"Text\":\"Add scallion segments, ginger slices, star anise, cinnamon\"},{\"Index\":4,\"Text\":\"Add cooking wine, soy sauce, boiling water to cover meat\"},{\"Index\":5,\"Text\":\"Bring to boil on high heat, then simmer on low heat for 60-90 minutes\"},{\"Index\":6,\"Text\":\"Finally reduce sauce on high heat until thick\"}]",
+                "[\"Home Style\",\"Pork\",\"Rice Pairing\"]", false, false),
 
-            new Recipe("番茄炒蛋", "最经典的家常菜，酸甜开胃",
+            new Recipe("Tomato Scrambled Egg", "Most classic home dish, sweet and sour appetizing",
                 "fanqiechaodan.jpg",
-                "中式", 5, 10, 3, "简单",
-                "[{\"Index\":0,\"Text\":\"鸡蛋打散加少许盐搅匀\"},{\"Index\":1,\"Text\":\"番茄切块备用\"},{\"Index\":2,\"Text\":\"热锅下油炒鸡蛋至凝固盛出\"},{\"Index\":3,\"Text\":\"锅中再加油炒番茄出汁\"},{\"Index\":4,\"Text\":\"倒入鸡蛋翻炒均匀，加盐和糖调味\"}]",
-                "[\"家常\",\"快手\",\"鸡蛋\",\"番茄\"]", true, false),
+                "Chinese", 5, 10, 3, "Easy",
+                "[{\"Index\":0,\"Text\":\"Beat eggs with a little salt\"},{\"Index\":1,\"Text\":\"Cut tomato into chunks and set aside\"},{\"Index\":2,\"Text\":\"Heat wok with oil, scramble eggs until set, remove\"},{\"Index\":3,\"Text\":\"Add more oil in wok, stir-fry tomato until juicy\"},{\"Index\":4,\"Text\":\"Pour in eggs, stir-fry evenly, season with salt and sugar\"}]",
+                "[\"Home Style\",\"Quick\",\"Egg\",\"Tomato\"]", true, false),
 
-            new Recipe("麻婆豆腐", "麻辣鲜香的经典川菜，豆腐嫩滑入味",
+            new Recipe("Mapo Tofu", "Spicy and savory classic Sichuan dish, silky tofu with rich flavor",
                 "mapodoufu.jpg",
-                "中式", 10, 15, 3, "简单",
-                "[{\"Index\":0,\"Text\":\"豆腐切小块，开水焯烫后捞出\"},{\"Index\":1,\"Text\":\"热锅下油，炒香豆瓣酱和蒜末\"},{\"Index\":2,\"Text\":\"加入肉末炒散变色\"},{\"Index\":3,\"Text\":\"加水烧开，放入豆腐小火炖5分钟\"},{\"Index\":4,\"Text\":\"水淀粉勾芡，撒花椒粉和葱花\"}]",
-                "[\"川菜\",\"豆腐\",\"辣\"]", false, false),
+                "Chinese", 10, 15, 3, "Easy",
+                "[{\"Index\":0,\"Text\":\"Cut tofu into small cubes, blanch in boiling water then remove\"},{\"Index\":1,\"Text\":\"Heat wok with oil, fry doubanjiang and minced garlic until fragrant\"},{\"Index\":2,\"Text\":\"Add minced meat, stir-fry until scattered and colored\"},{\"Index\":3,\"Text\":\"Add water and bring to boil, add tofu and simmer on low for 5 minutes\"},{\"Index\":4,\"Text\":\"Thicken with starch water, sprinkle Sichuan pepper powder and scallion\"}]",
+                "[\"Sichuan\",\"Tofu\",\"Spicy\"]", false, false),
 
-            // 西式
-            new Recipe("意大利肉酱面", "浓郁的肉酱搭配意面，经典西式主食",
+            // Western
+            new Recipe("Spaghetti Bolognese", "Rich meat sauce paired with pasta, classic Western staple",
                 "yijiangmian.jpg",
-                "西式", 10, 30, 3, "简单",
-                "[{\"Index\":0,\"Text\":\"洋葱、胡萝卜、芹菜切碎\"},{\"Index\":1,\"Text\":\"热锅下油炒香蔬菜碎\"},{\"Index\":2,\"Text\":\"加入牛肉末炒散\"},{\"Index\":3,\"Text\":\"倒入番茄酱、水，加百里香和月桂叶\"},{\"Index\":4,\"Text\":\"小火炖煮20分钟，盐胡椒调味\"},{\"Index\":5,\"Text\":\"意面煮熟捞出，浇上肉酱即可\"}]",
-                "[\"意面\",\"西式\",\"牛肉\"]", false, false),
+                "Western", 10, 30, 3, "Easy",
+                "[{\"Index\":0,\"Text\":\"Finely chop onion, carrot and celery\"},{\"Index\":1,\"Text\":\"Heat oil in pan, sauté chopped vegetables\"},{\"Index\":2,\"Text\":\"Add ground beef, stir-fry until scattered\"},{\"Index\":3,\"Text\":\"Pour in tomato sauce and water, add thyme and bay leaf\"},{\"Index\":4,\"Text\":\"Simmer on low heat for 20 minutes, season with salt and pepper\"},{\"Index\":5,\"Text\":\"Cook spaghetti until done, drain, top with meat sauce\"}]",
+                "[\"Pasta\",\"Western\",\"Beef\"]", false, false),
 
-            new Recipe("凯撒沙拉", "清爽的经典沙拉，配自制凯撒酱",
+            new Recipe("Caesar Salad", "Refreshing classic salad with homemade Caesar dressing",
                 "kaishaoshala.jpg",
-                "西式", 15, 0, 2, "简单",
-                "[{\"Index\":0,\"Text\":\"罗马生菜洗净撕成大块\"},{\"Index\":1,\"Text\":\"制作凯撒酱：蛋黄、柠檬汁、蒜泥、橄榄油搅匀\"},{\"Index\":2,\"Text\":\"加入帕玛森芝士碎和鳀鱼酱\"},{\"Index\":3,\"Text\":\"面包切丁烤至金黄做面包丁\"},{\"Index\":4,\"Text\":\"生菜淋上酱汁，撒面包丁和芝士粉\"}]",
-                "[\"沙拉\",\"轻食\",\"健康\"]", false, false),
+                "Western", 15, 0, 2, "Easy",
+                "[{\"Index\":0,\"Text\":\"Wash romaine lettuce, tear into large pieces\"},{\"Index\":1,\"Text\":\"Make Caesar dressing: mix egg yolk, lemon juice, garlic paste, olive oil\"},{\"Index\":2,\"Text\":\"Add Parmesan cheese and anchovy paste\"},{\"Index\":3,\"Text\":\"Cut bread into cubes, toast until golden for croutons\"},{\"Index\":4,\"Text\":\"Drizzle dressing over lettuce, scatter croutons and cheese powder\"}]",
+                "[\"Salad\",\"Light Meal\",\"Healthy\"]", false, false),
 
-            new Recipe("法式洋葱汤", "浓郁醇厚的经典法式汤品",
+            new Recipe("French Onion Soup", "Rich and mellow classic French soup",
                 "yangcongtang.jpg",
-                "西式", 15, 45, 4, "中等",
-                "[{\"Index\":0,\"Text\":\"洋葱切丝，小火慢炒30分钟至焦糖色\"},{\"Index\":1,\"Text\":\"加入白葡萄酒煮至收干\"},{\"Index\":2,\"Text\":\"倒入牛肉高汤，加百里香和月桂叶\"},{\"Index\":3,\"Text\":\"小火炖煮15分钟，盐胡椒调味\"},{\"Index\":4,\"Text\":\"盛入烤碗，放上面包片和芝士\"},{\"Index\":5,\"Text\":\"入烤箱烤至芝士融化呈金黄\"}]",
-                "[\"汤\",\"法式\",\"洋葱\"]", false, false),
+                "Western", 15, 45, 4, "Medium",
+                "[{\"Index\":0,\"Text\":\"Slice onion, slowly caramelize on low heat for 30 minutes\"},{\"Index\":1,\"Text\":\"Add white wine and cook until reduced\"},{\"Index\":2,\"Text\":\"Pour in beef broth, add thyme and bay leaf\"},{\"Index\":3,\"Text\":\"Simmer for 15 minutes, season with salt and pepper\"},{\"Index\":4,\"Text\":\"Pour into oven-safe bowl, place bread slice and cheese on top\"},{\"Index\":5,\"Text\":\"Bake in oven until cheese melts and turns golden\"}]",
+                "[\"Soup\",\"French\",\"Onion\"]", false, false),
 
-            // 日韩
-            new Recipe("日式味噌拉面", "浓郁味噌汤底配上劲道面条",
+            // Asian
+            new Recipe("Japanese Miso Ramen", "Rich miso broth with chewy noodles",
                 "lamian.jpg",
-                "日韩", 15, 20, 2, "中等",
-                "[{\"Index\":0,\"Text\":\"猪骨汤煮沸，加入味噌搅匀\"},{\"Index\":1,\"Text\":\"加入酱油、味醂调味\"},{\"Index\":2,\"Text\":\"煮面条至劲道，捞出放入碗中\"},{\"Index\":3,\"Text\":\"铺上叉烧肉、溏心蛋、玉米粒\"},{\"Index\":4,\"Text\":\"注入味噌汤，撒葱花和海苔\"}]",
-                "[\"拉面\",\"日式\",\"面食\"]", false, false),
+                "Asian", 15, 20, 2, "Medium",
+                "[{\"Index\":0,\"Text\":\"Bring pork bone broth to boil, add miso and stir well\"},{\"Index\":1,\"Text\":\"Add soy sauce and mirin for seasoning\"},{\"Index\":2,\"Text\":\"Cook noodles until chewy, drain and place in bowl\"},{\"Index\":3,\"Text\":\"Top with chashu pork, soft-boiled egg, corn kernels\"},{\"Index\":4,\"Text\":\"Pour in miso broth, sprinkle scallion and nori\"}]",
+                "[\"Ramen\",\"Japanese\",\"Noodles\"]", false, false),
 
-            new Recipe("韩式石锅拌饭", "蔬菜丰富，锅巴香脆的经典韩料",
+            new Recipe("Korean Stone Pot Bibimbap", "Rich vegetables, crispy rice crust classic Korean dish",
                 "banfan.jpg",
-                "日韩", 20, 10, 2, "简单",
-                "[{\"Index\":0,\"Text\":\"各种蔬菜分别炒熟：胡萝卜丝、菠菜、豆芽、蘑菇\"},{\"Index\":1,\"Text\":\"石锅内壁刷香油\"},{\"Index\":2,\"Text\":\"放入米饭，铺上各种蔬菜和煎蛋\"},{\"Index\":3,\"Text\":\"石锅加热至底部米饭形成锅巴\"},{\"Index\":4,\"Text\":\"加入韩式辣酱，搅拌均匀食用\"}]",
-                "[\"拌饭\",\"韩式\",\"米饭\"]", false, false),
+                "Asian", 20, 10, 2, "Easy",
+                "[{\"Index\":0,\"Text\":\"Stir-fry various vegetables separately: carrot strips, spinach, bean sprouts, mushroom\"},{\"Index\":1,\"Text\":\"Brush sesame oil on inner wall of stone pot\"},{\"Index\":2,\"Text\":\"Put in rice, arrange vegetables and fried egg on top\"},{\"Index\":3,\"Text\":\"Heat stone pot until bottom rice forms crispy crust\"},{\"Index\":4,\"Text\":\"Add Korean chili sauce, mix well and eat\"}]",
+                "[\"Bibimbap\",\"Korean\",\"Rice\"]", false, false),
 
-            new Recipe("日式照烧鸡腿", "甜咸适口的照烧酱搭配嫩滑鸡腿",
+            new Recipe("Japanese Teriyaki Chicken Thigh", "Sweet and savory teriyaki sauce with tender chicken thigh",
                 "zhaoshaoji.jpg",
-                "日韩", 10, 20, 2, "简单",
-                "[{\"Index\":0,\"Text\":\"鸡腿去骨，划几刀方便入味\"},{\"Index\":1,\"Text\":\"用盐和胡椒腌制10分钟\"},{\"Index\":2,\"Text\":\"调照烧汁：酱油、味醂、清酒、糖混合\"},{\"Index\":3,\"Text\":\"鸡皮朝下煎至金黄，翻面继续煎\"},{\"Index\":4,\"Text\":\"倒入照烧汁，小火收汁至浓稠\"}]",
-                "[\"照烧\",\"日式\",\"鸡肉\"]", false, false),
+                "Asian", 10, 20, 2, "Easy",
+                "[{\"Index\":0,\"Text\":\"Debone chicken thigh, make a few cuts for flavor\"},{\"Index\":1,\"Text\":\"Marinate with salt and pepper for 10 minutes\"},{\"Index\":2,\"Text\":\"Mix teriyaki sauce: soy sauce, mirin, sake, sugar\"},{\"Index\":3,\"Text\":\"Pan-fry skin side down until golden, flip and continue cooking\"},{\"Index\":4,\"Text\":\"Pour in teriyaki sauce, reduce on low heat until thick\"}]",
+                "[\"Teriyaki\",\"Japanese\",\"Chicken\"]", false, false),
 
-            // 甜品
-            new Recipe("提拉米苏", "经典意式甜品，咖啡与芝士的完美结合",
+            // Dessert
+            new Recipe("Tiramisu", "Classic Italian dessert, perfect combination of coffee and cheese",
                 "tilamisu.jpg",
-                "甜品", 30, 240, 6, "中等",
-                "[{\"Index\":0,\"Text\":\"蛋黄加糖打至发白，加入马斯卡彭芝士拌匀\"},{\"Index\":1,\"Text\":\"淡奶油打至六分发，轻柔拌入芝士糊\"},{\"Index\":2,\"Text\":\"浓缩咖啡加朗姆酒混合\"},{\"Index\":3,\"Text\":\"手指饼干快速蘸咖啡液，铺一层在容器底\"},{\"Index\":4,\"Text\":\"铺一层芝士糊，重复铺层\"},{\"Index\":5,\"Text\":\"冷藏至少4小时，食用前撒可可粉\"}]",
-                "[\"甜品\",\"芝士\",\"咖啡\",\"意式\"]", false, false),
+                "Dessert", 30, 240, 6, "Medium",
+                "[{\"Index\":0,\"Text\":\"Beat egg yolk with sugar until pale, add mascarpone cheese and mix\"},{\"Index\":1,\"Text\":\"Whip cream to 60%, gently fold into cheese mixture\"},{\"Index\":2,\"Text\":\"Mix espresso with rum\"},{\"Index\":3,\"Text\":\"Quickly dip ladyfinger biscuits in coffee, layer at container bottom\"},{\"Index\":4,\"Text\":\"Spread a layer of cheese mixture, repeat layers\"},{\"Index\":5,\"Text\":\"Refrigerate at least 4 hours, dust cocoa powder before serving\"}]",
+                "[\"Dessert\",\"Cheese\",\"Coffee\",\"Italian\"]", false, false),
 
-            new Recipe("双皮奶", "顺滑细腻的广式经典甜品",
+            new Recipe("Double Skin Milk", "Silky smooth Cantonese classic dessert",
                 "shuangpinai.jpg",
-                "甜品", 10, 20, 4, "简单",
-                "[{\"Index\":0,\"Text\":\"牛奶倒入锅中加热至边缘冒泡，倒入碗中\"},{\"Index\":1,\"Text\":\"待牛奶冷却形成奶皮，沿碗边倒出牛奶，奶皮留碗中\"},{\"Index\":2,\"Text\":\"蛋清加糖搅匀，倒入牛奶中混合过滤\"},{\"Index\":3,\"Text\":\"沿碗边慢慢倒回，让奶皮浮起\"},{\"Index\":4,\"Text\":\"盖上保鲜膜，上锅蒸15分钟\"}]",
-                "[\"甜品\",\"广式\",\"牛奶\"]", false, false),
+                "Dessert", 10, 20, 4, "Easy",
+                "[{\"Index\":0,\"Text\":\"Heat milk in pot until edges bubble, pour into bowl\"},{\"Index\":1,\"Text\":\"Let milk cool to form skin, pour out milk along bowl edge, keep skin in bowl\"},{\"Index\":2,\"Text\":\"Beat egg white with sugar, mix into milk and strain\"},{\"Index\":3,\"Text\":\"Slowly pour back along bowl edge, let milk skin float up\"},{\"Index\":4,\"Text\":\"Cover with plastic wrap, steam for 15 minutes\"}]",
+                "[\"Dessert\",\"Cantonese\",\"Milk\"]", false, false),
 
-            new Recipe("抹茶蛋糕卷", "清香抹茶与柔软蛋糕的完美组合",
+            new Recipe("Matcha Cake Roll", "Fresh matcha and soft cake perfect combination",
                 "mochagaojuan.jpg",
-                "甜品", 20, 15, 6, "中等",
-                "[{\"Index\":0,\"Text\":\"蛋黄加糖打发，加入牛奶和植物油搅匀\"},{\"Index\":1,\"Text\":\"筛入低筋面粉和抹茶粉拌匀\"},{\"Index\":2,\"Text\":\"蛋白打至湿性发泡，分次拌入面糊\"},{\"Index\":3,\"Text\":\"倒入烤盘抹平，180度烤15分钟\"},{\"Index\":4,\"Text\":\"出炉后倒扣，抹上奶油馅，卷起冷藏\"}]",
-                "[\"甜品\",\"抹茶\",\"蛋糕\"]", false, false),
+                "Dessert", 20, 15, 6, "Medium",
+                "[{\"Index\":0,\"Text\":\"Beat egg yolk with sugar, add milk and vegetable oil, mix well\"},{\"Index\":1,\"Text\":\"Sift in cake flour and matcha powder, mix well\"},{\"Index\":2,\"Text\":\"Whip egg white to soft peaks, fold into batter in batches\"},{\"Index\":3,\"Text\":\"Pour into baking pan, smooth surface, bake at 180C for 15 minutes\"},{\"Index\":4,\"Text\":\"Flip out after baking, spread cream filling, roll up and refrigerate\"}]",
+                "[\"Dessert\",\"Matcha\",\"Cake\"]", false, false),
 
-            // 饮品
-            new Recipe("杨枝甘露", "清爽香甜的经典港式甜品饮品",
+            // Drink
+            new Recipe("Mango Pomelo Sago", "Refreshing and sweet classic Hong Kong style dessert drink",
                 "yangzhiganlu.jpg",
-                "饮品", 10, 0, 4, "简单",
-                "[{\"Index\":0,\"Text\":\"芒果去皮切块，留几粒装饰\"},{\"Index\":1,\"Text\":\"西米煮至透明，过冷水沥干\"},{\"Index\":2,\"Text\":\"芒果肉加椰浆用搅拌机打成泥\"},{\"Index\":3,\"Text\":\"杯中放入西米和芒果泥\"},{\"Index\":4,\"Text\":\"倒入椰浆和牛奶，放入柚子粒装饰\"}]",
-                "[\"饮品\",\"港式\",\"芒果\"]", false, false),
+                "Drink", 10, 0, 4, "Easy",
+                "[{\"Index\":0,\"Text\":\"Peel and dice mango, save a few pieces for garnish\"},{\"Index\":1,\"Text\":\"Cook sago until transparent, drain with cold water\"},{\"Index\":2,\"Text\":\"Blend mango flesh with coconut milk in blender\"},{\"Index\":3,\"Text\":\"Place sago and mango puree in glass\"},{\"Index\":4,\"Text\":\"Pour in coconut milk and milk, add pomelo segments for garnish\"}]",
+                "[\"Drink\",\"Hong Kong Style\",\"Mango\"]", false, false),
 
-            new Recipe("桂花酸梅汤", "消暑解渴的传统中式饮品",
+            new Recipe("Osmanthus Sour Plum Drink", "Heat-relieving traditional Chinese drink",
                 "suanmeitang.jpg",
-                "饮品", 10, 30, 8, "简单",
-                "[{\"Index\":0,\"Text\":\"乌梅、山楂、甘草、陈皮洗净\"},{\"Index\":1,\"Text\":\"放入锅中加水大火煮沸\"},{\"Index\":2,\"Text\":\"转小火煮30分钟\"},{\"Index\":3,\"Text\":\"加入冰糖搅拌至融化\"},{\"Index\":4,\"Text\":\"过滤后撒上干桂花，冷藏后饮用更佳\"}]",
-                "[\"饮品\",\"中式\",\"解暑\"]", false, false),
+                "Drink", 10, 30, 8, "Easy",
+                "[{\"Index\":0,\"Text\":\"Wash dried plum, hawthorn, licorice, dried tangerine peel\"},{\"Index\":1,\"Text\":\"Put in pot, add water and bring to boil on high heat\"},{\"Index\":2,\"Text\":\"Turn to low heat and simmer for 30 minutes\"},{\"Index\":3,\"Text\":\"Add rock sugar, stir until dissolved\"},{\"Index\":4,\"Text\":\"Strain and sprinkle dried osmanthus, better chilled\"}]",
+                "[\"Drink\",\"Chinese\",\"Cooling\"]", false, false),
         };
 
         foreach (var recipe in recipes)
@@ -181,41 +181,41 @@ public class SeedDataService
     {
         var ingredients = new List<Ingredient>
         {
-            new Ingredient("番茄", "蔬菜", null, "克", 500,
-                DateTime.Today, DateTime.Today.AddDays(7), "冰箱",
+            new Ingredient("Tomato", "Vegetable", null, "gram", 500,
+                DateTime.Today, DateTime.Today.AddDays(7), "Fridge",
                 "{\"Calories\":18,\"Protein\":0.9,\"Carbs\":3.9,\"Fat\":0.2,\"Fiber\":1.2}", "tomato"),
-            new Ingredient("黄瓜", "蔬菜", null, "根", 3,
-                DateTime.Today, DateTime.Today.AddDays(5), "冰箱",
+            new Ingredient("Cucumber", "Vegetable", null, "piece", 3,
+                DateTime.Today, DateTime.Today.AddDays(5), "Fridge",
                 "{\"Calories\":15,\"Protein\":0.7,\"Carbs\":3.6,\"Fat\":0.1,\"Fiber\":0.5}", null),
-            new Ingredient("胡萝卜", "蔬菜", null, "克", 300,
-                DateTime.Today, DateTime.Today.AddDays(14), "冰箱",
+            new Ingredient("Carrot", "Vegetable", null, "gram", 300,
+                DateTime.Today, DateTime.Today.AddDays(14), "Fridge",
                 "{\"Calories\":41,\"Protein\":0.9,\"Carbs\":9.6,\"Fat\":0.2,\"Fiber\":2.8}", "carrot"),
-            new Ingredient("鸡胸肉", "肉类", null, "克", 400,
-                DateTime.Today, DateTime.Today.AddDays(3), "冰箱冷冻",
+            new Ingredient("Chicken Breast", "Meat", null, "gram", 400,
+                DateTime.Today, DateTime.Today.AddDays(3), "Freezer",
                 "{\"Calories\":165,\"Protein\":31,\"Carbs\":0,\"Fat\":3.6,\"Fiber\":0}", "chicken"),
-            new Ingredient("五花肉", "肉类", null, "克", 500,
-                DateTime.Today, DateTime.Today.AddDays(5), "冰箱冷冻",
+            new Ingredient("Pork Belly", "Meat", null, "gram", 500,
+                DateTime.Today, DateTime.Today.AddDays(5), "Freezer",
                 "{\"Calories\":349,\"Protein\":14.5,\"Carbs\":0,\"Fat\":30.8,\"Fiber\":0}", "pork"),
-            new Ingredient("三文鱼", "海鲜", null, "克", 200,
-                DateTime.Today, DateTime.Today.AddDays(2), "冰箱冷冻",
+            new Ingredient("Salmon", "Seafood", null, "gram", 200,
+                DateTime.Today, DateTime.Today.AddDays(2), "Freezer",
                 "{\"Calories\":208,\"Protein\":20,\"Carbs\":0,\"Fat\":13,\"Fiber\":0}", null),
-            new Ingredient("虾仁", "海鲜", null, "克", 250,
-                DateTime.Today, DateTime.Today.AddDays(3), "冰箱冷冻",
+            new Ingredient("Shrimp", "Seafood", null, "gram", 250,
+                DateTime.Today, DateTime.Today.AddDays(3), "Freezer",
                 "{\"Calories\":99,\"Protein\":24,\"Carbs\":0.2,\"Fat\":0.3,\"Fiber\":0}", "shrimp"),
-            new Ingredient("鸡蛋", "蛋奶", null, "个", 10,
-                DateTime.Today, DateTime.Today.AddDays(21), "冰箱",
+            new Ingredient("Egg", "Dairy", null, "piece", 10,
+                DateTime.Today, DateTime.Today.AddDays(21), "Fridge",
                 "{\"Calories\":155,\"Protein\":13,\"Carbs\":1.1,\"Fat\":11,\"Fiber\":0}", "egg"),
-            new Ingredient("苹果", "水果", null, "个", 4,
-                DateTime.Today, DateTime.Today.AddDays(14), "冰箱",
+            new Ingredient("Apple", "Fruit", null, "piece", 4,
+                DateTime.Today, DateTime.Today.AddDays(14), "Fridge",
                 "{\"Calories\":52,\"Protein\":0.3,\"Carbs\":14,\"Fat\":0.2,\"Fiber\":2.4}", "apple"),
-            new Ingredient("香蕉", "水果", null, "根", 3,
-                DateTime.Today, DateTime.Today.AddDays(5), "冰箱",
+            new Ingredient("Banana", "Fruit", null, "piece", 3,
+                DateTime.Today, DateTime.Today.AddDays(5), "Fridge",
                 "{\"Calories\":89,\"Protein\":1.1,\"Carbs\":23,\"Fat\":0.3,\"Fiber\":2.6}", "banana"),
-            new Ingredient("橙子", "水果", null, "个", 4,
-                DateTime.Today, DateTime.Today.AddDays(10), "冰箱",
+            new Ingredient("Orange", "Fruit", null, "piece", 4,
+                DateTime.Today, DateTime.Today.AddDays(10), "Fridge",
                 "{\"Calories\":47,\"Protein\":0.9,\"Carbs\":12,\"Fat\":0.1,\"Fiber\":2.4}", "orange"),
-            new Ingredient("大米", "主食", null, "克", 2000,
-                DateTime.Today, null, "橱柜",
+            new Ingredient("Rice", "Staple", null, "gram", 2000,
+                DateTime.Today, null, "Cabinet",
                 "{\"Calories\":346,\"Protein\":6.7,\"Carbs\":77.9,\"Fat\":0.7,\"Fiber\":0.7}", "rice"),
         };
 
@@ -232,7 +232,7 @@ public class SeedDataService
         var endDate = new DateTime(2026, 7, 1);
         var plans = new List<MealPlan>();
 
-        // 从5月25日到7月1日，共38天
+        // From May 25 to July 1, total 38 days
         for (var date = startDate; date <= endDate; date = date.AddDays(1))
         {
             var dateStr = date.ToString("yyyy-MM-dd");
@@ -241,141 +241,141 @@ public class SeedDataService
             var isToday = date.Date == today;
             var isFuture = date.Date > today;
 
-            // 过去的日期全部完成；今天早餐午餐完成，晚餐加餐未完成；未来全部未完成
+            // Past dates all completed; today breakfast lunch completed, dinner snack not completed; future all not completed
             bool donePast = !isToday && !isFuture;
             bool doneTodayMorning = isToday;
 
             if (isWeekend)
             {
-                // ===== 周末饮食 =====
-                // 早餐：煎蛋+吐司+牛奶
-                plans.Add(new MealPlan(dateStr, "早餐", null, "煎荷包蛋", 1, 110, 7, 1, 8.5, 0, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "早餐", null, "黄油吐司", 1, 180, 5, 24, 7, 1.5, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "早餐", null, "热牛奶", 1, 120, 5, 10, 4, 0, null, donePast || doneTodayMorning));
+                // ===== Weekend Diet =====
+                // Breakfast: fried egg + toast + milk
+                plans.Add(new MealPlan(dateStr, "Breakfast", null, "Fried Sunny Egg", 1, 110, 7, 1, 8.5, 0, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Breakfast", null, "Butter Toast", 1, 180, 5, 24, 7, 1.5, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Breakfast", null, "Hot Milk", 1, 120, 5, 10, 4, 0, null, donePast || doneTodayMorning));
 
-                // 午餐：三菜一汤
-                plans.Add(new MealPlan(dateStr, "午餐", null, "红烧排骨", 1, 420, 22, 12, 28, 0.8, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "午餐", null, "蒜蓉西兰花", 1, 90, 4, 6, 5, 2.5, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "午餐", null, "清炒荷兰豆", 1, 80, 3, 7, 3.5, 2.8, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "午餐", null, "紫菜蛋花汤", 1, 60, 4, 5, 2.5, 0.3, null, donePast || doneTodayMorning));
-                plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                // Lunch: three dishes one soup
+                plans.Add(new MealPlan(dateStr, "Lunch", null, "Braised Spare Ribs", 1, 420, 22, 12, 28, 0.8, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Lunch", null, "Garlic Broccoli", 1, 90, 4, 6, 5, 2.5, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Lunch", null, "Stir-fried Snow Peas", 1, 80, 3, 7, 3.5, 2.8, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Lunch", null, "Seaweed Egg Drop Soup", 1, 60, 4, 5, 2.5, 0.3, null, donePast || doneTodayMorning));
+                plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
 
-                // 晚餐：火锅/烧烤类
+                // Dinner: hotpot/BBQ style
                 if (dow == DayOfWeek.Saturday)
                 {
-                    // 周六火锅
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "肥牛卷", 1, 280, 18, 2, 22, 0, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "鱼豆腐+虾滑", 1, 160, 8, 10, 8, 0.5, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "火锅蔬菜拼盘", 1, 85, 3, 8, 3, 3.5, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "火锅底料汤底", 1, 90, 2, 6, 6, 0.5, null, donePast));
+                    // Saturday hotpot
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Beef Slices", 1, 280, 18, 2, 22, 0, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Fish Tofu + Shrimp Ball", 1, 160, 8, 10, 8, 0.5, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Hotpot Vegetable Platter", 1, 85, 3, 8, 3, 3.5, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Hotpot Broth Base", 1, 90, 2, 6, 6, 0.5, null, donePast));
                 }
                 else
                 {
-                    // 周日烧烤
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "烤鸡翅", 1, 240, 18, 4, 16, 0, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "烤茄子", 1, 100, 2, 8, 6, 2.5, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "烤金针菇", 1, 65, 2.5, 5, 3.5, 2, null, donePast));
-                    plans.Add(new MealPlan(dateStr, "晚餐", null, "烤玉米", 1, 120, 3, 22, 3, 2.5, null, donePast));
+                    // Sunday BBQ
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Grilled Chicken Wings", 1, 240, 18, 4, 16, 0, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Grilled Eggplant", 1, 100, 2, 8, 6, 2.5, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Grilled Enoki Mushroom", 1, 65, 2.5, 5, 3.5, 2, null, donePast));
+                    plans.Add(new MealPlan(dateStr, "Dinner", null, "Grilled Corn", 1, 120, 3, 22, 3, 2.5, null, donePast));
                 }
 
-                // 加餐：甜品/饮品
-                plans.Add(new MealPlan(dateStr, "加餐", null, "芒果西米露", 1, 180, 2, 32, 5, 0.8, null, donePast));
-                plans.Add(new MealPlan(dateStr, "加餐", null, "蜂蜜柠檬水", 1, 60, 0.2, 15, 0, 0.2, null, donePast));
+                // Snack: dessert/drink
+                plans.Add(new MealPlan(dateStr, "Snack", null, "Mango Sago Dessert", 1, 180, 2, 32, 5, 0.8, null, donePast));
+                plans.Add(new MealPlan(dateStr, "Snack", null, "Honey Lemon Water", 1, 60, 0.2, 15, 0, 0.2, null, donePast));
             }
             else
             {
-                // ===== 工作日饮食 =====
-                // 早餐简单：粥+鸡蛋 或 牛奶+面包
+                // ===== Weekday Diet =====
+                // Simple breakfast: congee + egg or milk + bread
                 if (dow == DayOfWeek.Monday || dow == DayOfWeek.Wednesday || dow == DayOfWeek.Friday)
                 {
-                    plans.Add(new MealPlan(dateStr, "早餐", null, "小米粥", 1, 80, 2, 15, 1, 0.5, null, donePast || doneTodayMorning));
-                    plans.Add(new MealPlan(dateStr, "早餐", null, "水煮蛋", 1, 78, 6.5, 0.6, 5.3, 0, null, donePast || doneTodayMorning));
-                    plans.Add(new MealPlan(dateStr, "早餐", null, "凉拌黄瓜", 1, 30, 1, 4, 0.5, 0.8, null, donePast || doneTodayMorning));
+                    plans.Add(new MealPlan(dateStr, "Breakfast", null, "Millet Congee", 1, 80, 2, 15, 1, 0.5, null, donePast || doneTodayMorning));
+                    plans.Add(new MealPlan(dateStr, "Breakfast", null, "Boiled Egg", 1, 78, 6.5, 0.6, 5.3, 0, null, donePast || doneTodayMorning));
+                    plans.Add(new MealPlan(dateStr, "Breakfast", null, "Cold Cucumber Salad", 1, 30, 1, 4, 0.5, 0.8, null, donePast || doneTodayMorning));
                 }
                 else
                 {
-                    plans.Add(new MealPlan(dateStr, "早餐", null, "牛奶", 1, 120, 5, 10, 4, 0, null, donePast || doneTodayMorning));
-                    plans.Add(new MealPlan(dateStr, "早餐", null, "全麦面包", 1, 160, 6, 28, 2.5, 2, null, donePast || doneTodayMorning));
+                    plans.Add(new MealPlan(dateStr, "Breakfast", null, "Milk", 1, 120, 5, 10, 4, 0, null, donePast || doneTodayMorning));
+                    plans.Add(new MealPlan(dateStr, "Breakfast", null, "Whole Wheat Bread", 1, 160, 6, 28, 2.5, 2, null, donePast || doneTodayMorning));
                 }
 
-                // 午餐：两菜一饭
+                // Lunch: two dishes one rice
                 switch (dow)
                 {
                     case DayOfWeek.Monday:
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "番茄炒蛋", 1, 150, 8, 10, 8, 2, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "青椒肉丝", 1, 210, 15, 6, 13, 1.5, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Tomato Scrambled Egg", 1, 150, 8, 10, 8, 2, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Shredded Pork with Green Pepper", 1, 210, 15, 6, 13, 1.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
                         break;
                     case DayOfWeek.Tuesday:
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "宫保鸡丁", 1, 280, 20, 12, 15, 1.5, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "清炒菠菜", 1, 65, 3, 4, 3.5, 2.2, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Kung Pao Chicken", 1, 280, 20, 12, 15, 1.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Stir-fried Spinach", 1, 65, 3, 4, 3.5, 2.2, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
                         break;
                     case DayOfWeek.Wednesday:
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "麻婆豆腐", 1, 180, 10, 8, 11, 1.5, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "回锅肉", 1, 320, 16, 8, 24, 1, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Mapo Tofu", 1, 180, 10, 8, 11, 1.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Twice-cooked Pork", 1, 320, 16, 8, 24, 1, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
                         break;
                     case DayOfWeek.Thursday:
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "糖醋里脊", 1, 350, 18, 20, 18, 0.5, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "蒜蓉生菜", 1, 55, 2, 4, 2.5, 1.8, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Sweet and Sour Pork Tenderloin", 1, 350, 18, 20, 18, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Garlic Lettuce", 1, 55, 2, 4, 2.5, 1.8, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
                         break;
                     case DayOfWeek.Friday:
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "红烧鸡腿", 1, 300, 22, 10, 18, 0.8, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "醋溜白菜", 1, 75, 2, 7, 4, 2, null, donePast || doneTodayMorning));
-                        plans.Add(new MealPlan(dateStr, "午餐", null, "米饭", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Braised Chicken Thigh", 1, 300, 22, 10, 18, 0.8, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Vinegar Cabbage", 1, 75, 2, 7, 4, 2, null, donePast || doneTodayMorning));
+                        plans.Add(new MealPlan(dateStr, "Lunch", null, "Rice", 1, 200, 4, 44, 0.5, 0.5, null, donePast || doneTodayMorning));
                         break;
                 }
 
-                // 晚餐：一荤一素一汤
+                // Dinner: one meat one vegetable one soup
                 switch (dow)
                 {
                     case DayOfWeek.Monday:
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "清蒸鲈鱼", 1, 180, 28, 2, 6, 0, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "炒豆芽", 1, 60, 3, 6, 2, 1.5, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "番茄蛋花汤", 1, 70, 4, 6, 3, 0.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Steamed Sea Bass", 1, 180, 28, 2, 6, 0, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Stir-fried Bean Sprouts", 1, 60, 3, 6, 2, 1.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Tomato Egg Drop Soup", 1, 70, 4, 6, 3, 0.5, null, donePast));
                         break;
                     case DayOfWeek.Tuesday:
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "红烧豆腐", 1, 160, 8, 8, 9, 1, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "清炒西兰花", 1, 75, 3.5, 5, 3, 2.8, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "紫菜虾皮汤", 1, 45, 3, 3, 1.5, 0.3, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Braised Tofu", 1, 160, 8, 8, 9, 1, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Stir-fried Broccoli", 1, 75, 3.5, 5, 3, 2.8, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Seaweed Shrimp Skin Soup", 1, 45, 3, 3, 1.5, 0.3, null, donePast));
                         break;
                     case DayOfWeek.Wednesday:
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "可乐鸡翅", 1, 260, 18, 14, 14, 0.2, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "蚝油生菜", 1, 65, 2, 5, 3, 1.5, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "冬瓜排骨汤", 1, 110, 8, 6, 6, 0.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Cola Chicken Wings", 1, 260, 18, 14, 14, 0.2, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Oyster Sauce Lettuce", 1, 65, 2, 5, 3, 1.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Winter Melon Spare Rib Soup", 1, 110, 8, 6, 6, 0.5, null, donePast));
                         break;
                     case DayOfWeek.Thursday:
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "蒜苔炒肉", 1, 220, 14, 8, 14, 1.8, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "凉拌木耳", 1, 55, 1.5, 6, 2, 2.5, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "玉米排骨汤", 1, 130, 9, 8, 6, 1, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Stir-fried Pork with Garlic Scapes", 1, 220, 14, 8, 14, 1.8, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Cold Wood Ear Mushroom", 1, 55, 1.5, 6, 2, 2.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Corn Spare Rib Soup", 1, 130, 9, 8, 6, 1, null, donePast));
                         break;
                     case DayOfWeek.Friday:
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "红烧鱼块", 1, 210, 22, 6, 10, 0.5, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "炒土豆丝", 1, 120, 3, 18, 4, 1.8, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "晚餐", null, "莲藕排骨汤", 1, 120, 7, 8, 5, 1.2, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Braised Fish Chunks", 1, 210, 22, 6, 10, 0.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Shredded Potato Stir-fry", 1, 120, 3, 18, 4, 1.8, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Dinner", null, "Lotus Root Spare Rib Soup", 1, 120, 7, 8, 5, 1.2, null, donePast));
                         break;
                 }
 
-                // 加餐：水果/酸奶
+                // Snack: fruit/yogurt
                 switch (dow)
                 {
                     case DayOfWeek.Monday:
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "苹果", 1, 95, 0.5, 22, 0.3, 2.4, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "Apple", 1, 95, 0.5, 22, 0.3, 2.4, null, donePast));
                         break;
                     case DayOfWeek.Tuesday:
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "原味酸奶", 1, 130, 5, 16, 4, 0, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "Plain Yogurt", 1, 130, 5, 16, 4, 0, null, donePast));
                         break;
                     case DayOfWeek.Wednesday:
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "香蕉", 1, 105, 1.3, 24, 0.4, 2.6, null, donePast));
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "坚果一小把", 1, 120, 3.5, 4, 10, 1.2, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "Banana", 1, 105, 1.3, 24, 0.4, 2.6, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "A Handful of Nuts", 1, 120, 3.5, 4, 10, 1.2, null, donePast));
                         break;
                     case DayOfWeek.Thursday:
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "橙子", 1, 70, 1.2, 16, 0.2, 3.1, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "Orange", 1, 70, 1.2, 16, 0.2, 3.1, null, donePast));
                         break;
                     case DayOfWeek.Friday:
-                        plans.Add(new MealPlan(dateStr, "加餐", null, "蓝莓酸奶杯", 1, 150, 4.5, 22, 4, 1.5, null, donePast));
+                        plans.Add(new MealPlan(dateStr, "Snack", null, "Blueberry Yogurt Cup", 1, 150, 4.5, 22, 4, 1.5, null, donePast));
                         break;
                 }
             }
@@ -393,39 +393,39 @@ public class SeedDataService
     {
         var items = new List<ShoppingItem>
         {
-            // 蔬菜
-            new ShoppingItem("西兰花", "蔬菜", 1, "颗", false, null, null),
-            new ShoppingItem("彩椒", "蔬菜", 2, "个", true, null, null),
-            new ShoppingItem("生菜", "蔬菜", 1, "颗", false, null, null),
-            new ShoppingItem("菠菜", "蔬菜", 1, "把", false, null, null),
-            new ShoppingItem("豆芽", "蔬菜", 1, "袋", false, null, null),
-            new ShoppingItem("莲藕", "蔬菜", 1, "节", false, null, null),
+            // Vegetable
+            new ShoppingItem("Broccoli", "Vegetable", 1, "head", false, null, null),
+            new ShoppingItem("Bell Pepper", "Vegetable", 2, "piece", true, null, null),
+            new ShoppingItem("Lettuce", "Vegetable", 1, "head", false, null, null),
+            new ShoppingItem("Spinach", "Vegetable", 1, "bunch", false, null, null),
+            new ShoppingItem("Bean Sprouts", "Vegetable", 1, "bag", false, null, null),
+            new ShoppingItem("Lotus Root", "Vegetable", 1, "segment", false, null, null),
 
-            // 肉类
-            new ShoppingItem("鸡腿", "肉类", 500, "克", false, null, null),
-            new ShoppingItem("猪瘦肉", "肉类", 300, "克", true, null, null),
-            new ShoppingItem("排骨", "肉类", 500, "克", false, null, null),
-            new ShoppingItem("肥牛卷", "肉类", 400, "克", false, null, null),
+            // Meat
+            new ShoppingItem("Chicken Thigh", "Meat", 500, "gram", false, null, null),
+            new ShoppingItem("Lean Pork", "Meat", 300, "gram", true, null, null),
+            new ShoppingItem("Spare Ribs", "Meat", 500, "gram", false, null, null),
+            new ShoppingItem("Beef Slices", "Meat", 400, "gram", false, null, null),
 
-            // 海鲜
-            new ShoppingItem("鲈鱼", "海鲜", 1, "条", false, null, null),
-            new ShoppingItem("虾仁", "海鲜", 250, "克", true, null, null),
+            // Seafood
+            new ShoppingItem("Sea Bass", "Seafood", 1, "fish", false, null, null),
+            new ShoppingItem("Shrimp", "Seafood", 250, "gram", true, null, null),
 
-            // 蛋奶
-            new ShoppingItem("酸奶", "蛋奶", 4, "盒", false, null, null),
-            new ShoppingItem("鲜牛奶", "蛋奶", 1, "升", false, null, null),
+            // Dairy
+            new ShoppingItem("Yogurt", "Dairy", 4, "cup", false, null, null),
+            new ShoppingItem("Fresh Milk", "Dairy", 1, "liter", false, null, null),
 
-            // 主食
-            new ShoppingItem("吐司面包", "主食", 1, "袋", false, null, null),
-            new ShoppingItem("小米", "主食", 500, "克", true, null, null),
+            // Staple
+            new ShoppingItem("Toast Bread", "Staple", 1, "bag", false, null, null),
+            new ShoppingItem("Millet", "Staple", 500, "gram", true, null, null),
 
-            // 调味料
-            new ShoppingItem("蚝油", "调味料", 1, "瓶", false, null, null),
-            new ShoppingItem("花椒粉", "调味料", 1, "袋", true, null, null),
+            // Seasoning
+            new ShoppingItem("Oyster Sauce", "Seasoning", 1, "bottle", false, null, null),
+            new ShoppingItem("Sichuan Pepper Powder", "Seasoning", 1, "bag", true, null, null),
 
-            // 水果
-            new ShoppingItem("苹果", "水果", 6, "个", false, null, null),
-            new ShoppingItem("橙子", "水果", 4, "个", false, null, null),
+            // Fruit
+            new ShoppingItem("Apple", "Fruit", 6, "piece", false, null, null),
+            new ShoppingItem("Orange", "Fruit", 4, "piece", false, null, null),
         };
 
         foreach (var item in items)
@@ -449,12 +449,12 @@ public class SeedDataService
             double cal, pro, carb, fat, fib;
             if (isWeekend)
             {
-                // 周末：饮食更丰富，目标略高
+                // Weekend: diet more rich, target slightly higher
                 cal = 2200; pro = 65; carb = 270; fat = 72; fib = 28;
             }
             else
             {
-                // 工作日：正常目标
+                // Weekday: normal target
                 cal = 2000; pro = 60; carb = 250; fat = 65; fib = 25;
             }
 

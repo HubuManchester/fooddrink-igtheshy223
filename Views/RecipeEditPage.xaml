@@ -12,91 +12,91 @@
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Padding="20" Spacing="16">
 
-                <!-- 食谱标题 -->
+                <!-- Recipe title -->
                 <VerticalStackLayout Spacing="4">
-                    <Label Text="食谱标题" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                    <Label Text="Recipe Title" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
                            AutomationId="LblTitle" />
                     <controls:VoiceEntry Text="{Binding Title}"
-                           Placeholder="食谱标题"
+                           Placeholder="Recipe Title"
                            FontSize="{DynamicResource Font16}"
                            AutomationId="EntryTitle" />
                 </VerticalStackLayout>
 
-                <!-- 描述 -->
+                <!-- Description -->
                 <VerticalStackLayout Spacing="4">
-                    <Label Text="描述" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                    <Label Text="Description" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
                            AutomationId="LblDescription" />
                     <controls:VoiceEditor Text="{Binding Description}"
-                            Placeholder="添加食谱描述..."
+                            Placeholder="Add recipe description..."
                             EditorHeight="80"
                             FontSize="{DynamicResource Font14}"
                             AutomationId="EditorDescription" />
                 </VerticalStackLayout>
 
-                <!-- 分类 + 难度 -->
+                <!-- Category + Difficulty -->
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                     <VerticalStackLayout Grid.Column="0" Spacing="4">
-                        <Label Text="分类" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
-                        <Picker Title="选择分类"
+                        <Label Text="Category" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
+                        <Picker Title="Select Category"
                                 ItemsSource="{Binding Categories}"
                                 SelectedItem="{Binding SelectedCategory}"
-                                SemanticProperties.Hint="选择分类"
+                                SemanticProperties.Hint="Select category"
                                 AutomationId="PickerCategory" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" Spacing="4">
-                        <Label Text="难度" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
-                        <Picker Title="选择难度"
+                        <Label Text="Difficulty" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
+                        <Picker Title="Select Difficulty"
                                 ItemsSource="{Binding Difficulties}"
                                 SelectedItem="{Binding SelectedDifficulty}"
-                                SemanticProperties.Hint="选择难度"
+                                SemanticProperties.Hint="Select difficulty"
                                 AutomationId="PickerDifficulty" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- 准备时间 + 烹饪时间 + 份数 -->
+                <!-- Prep time + Cook time + Servings -->
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
                     <VerticalStackLayout Grid.Column="0" Spacing="4">
-                        <Label Text="准备时间" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
+                        <Label Text="Prep Time" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
                         <Entry Text="{Binding PrepTime}"
-                               Placeholder="分钟"
+                               Placeholder="min"
                                Keyboard="Numeric"
                                FontSize="{DynamicResource Font14}"
-                               SemanticProperties.Hint="准备时间（分钟）"
+                               SemanticProperties.Hint="Prep time (min)"
                                AutomationId="EntryPrepTime" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" Spacing="4">
-                        <Label Text="烹饪时间" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
+                        <Label Text="Cook Time" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
                         <Entry Text="{Binding CookTime}"
-                               Placeholder="分钟"
+                               Placeholder="min"
                                Keyboard="Numeric"
                                FontSize="{DynamicResource Font14}"
-                               SemanticProperties.Hint="烹饪时间（分钟）"
+                               SemanticProperties.Hint="Cook time (min)"
                                AutomationId="EntryCookTime" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="2" Spacing="4">
-                        <Label Text="份数" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
+                        <Label Text="Servings" FontSize="{DynamicResource Font14}" FontAttributes="Bold" />
                         <Entry Text="{Binding Servings}"
-                               Placeholder="份"
+                               Placeholder="serving"
                                Keyboard="Numeric"
                                FontSize="{DynamicResource Font14}"
-                               SemanticProperties.Hint="份数"
+                               SemanticProperties.Hint="Servings"
                                AutomationId="EntryServings" />
                     </VerticalStackLayout>
                 </Grid>
 
-                <!-- 分隔线 -->
+                <!-- Divider -->
                 <BoxView HeightRequest="1"
                          BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}" />
 
-                <!-- 步骤编辑区 -->
+                <!-- Step editing area -->
                 <VerticalStackLayout Spacing="8">
                     <Grid ColumnDefinitions="*,Auto">
-                        <Label Grid.Column="0" Text="烹饪步骤"
+                        <Label Grid.Column="0" Text="Cooking Step"
                                FontSize="{DynamicResource Font16}" FontAttributes="Bold"
                                VerticalOptions="Center"
                                AutomationId="LblSteps" />
                         <Button Grid.Column="1"
-                                Text="&#xf067; 添加步骤"
+                                Text="&#xf067; Add Step"
                                 FontFamily="FA"
                                 Command="{Binding AddStepCommand}"
                                 BackgroundColor="{StaticResource PrimaryLight}"
@@ -104,7 +104,7 @@
                                 FontSize="13"
                                 Padding="12,6"
                                 CornerRadius="8"
-                                SemanticProperties.Hint="添加烹饪步骤"
+                                SemanticProperties.Hint="Add cooking step"
                                 AutomationId="BtnAddStep" />
                     </Grid>
 
@@ -115,7 +115,7 @@
                                 <Grid ColumnDefinitions="32,*,40"
                                       ColumnSpacing="8"
                                       Padding="0,4">
-                                    <!-- 步骤序号 -->
+                                    <!-- Step number -->
                                     <Border Grid.Column="0"
                                             StrokeShape="RoundRectangle 14"
                                             WidthRequest="28" HeightRequest="28"
@@ -129,14 +129,14 @@
                                                HorizontalOptions="Center"
                                                VerticalOptions="Center" />
                                     </Border>
-                                    <!-- 步骤内容编辑器 -->
+                                    <!-- Step content editor -->
                                     <controls:VoiceEditor Grid.Column="1"
                                             Text="{Binding Text}"
-                                            Placeholder="输入步骤描述..."
+                                            Placeholder="Input step description..."
                                             EditorHeight="60"
                                             FontSize="{DynamicResource Font13}"
                                             AutomationId="EditorStep" />
-                                    <!-- 删除按钮 -->
+                                    <!-- Delete button -->
                                     <Border Grid.Column="2"
                                             StrokeShape="RoundRectangle 16"
                                             WidthRequest="32" HeightRequest="32"
@@ -161,27 +161,27 @@
                     </CollectionView>
                 </VerticalStackLayout>
 
-                <!-- 分隔线 -->
+                <!-- Divider -->
                 <BoxView HeightRequest="1"
                          BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}" />
 
-                <!-- 标签 -->
+                <!-- Tags -->
                 <VerticalStackLayout Spacing="4">
-                    <Label Text="标签" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
+                    <Label Text="Tags" FontSize="{DynamicResource Font14}" FontAttributes="Bold"
                            AutomationId="LblTags" />
                     <controls:VoiceEntry Text="{Binding TagsInput}"
-                           Placeholder="标签，逗号分隔"
+                           Placeholder="Tags, comma separated"
                            FontSize="{DynamicResource Font14}"
                            AutomationId="EntryTags" />
                 </VerticalStackLayout>
 
-                <!-- 底部留白 -->
+                <!-- Bottom space -->
                 <BoxView HeightRequest="60" BackgroundColor="Transparent" />
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- 底部固定按钮 -->
+        <!-- Bottom fixed buttons -->
         <Grid Grid.Row="1"
               ColumnDefinitions="*,*"
               ColumnSpacing="12"
@@ -192,9 +192,9 @@
                         Offset="0,-2" Radius="8" Opacity="0.3"/>
             </Grid.Shadow>
 
-            <!-- 取消 -->
+            <!-- Cancel -->
             <Button Grid.Column="0"
-                    Text="取消"
+                    Text="Cancel"
                     Command="{Binding CancelCommand}"
                     BackgroundColor="Transparent"
                     TextColor="{AppThemeBinding Light=#374151, Dark=#D1D5DB}"
@@ -202,12 +202,12 @@
                     BorderWidth="1"
                     CornerRadius="12"
                     FontSize="{DynamicResource Font16}"
-                    SemanticProperties.Hint="取消编辑"
+                    SemanticProperties.Hint="Cancel edit"
                     AutomationId="BtnCancel" />
 
-            <!-- 保存 -->
+            <!-- Save -->
             <Button Grid.Column="1"
-                    Text="&#xf0c7; 保存"
+                    Text="&#xf0c7; Save"
                     Command="{Binding SaveCommand}"
                     FontFamily="FA"
                     BackgroundColor="{StaticResource Primary}"
@@ -215,7 +215,7 @@
                     CornerRadius="12"
                     FontSize="16"
                     FontAttributes="Bold"
-                    SemanticProperties.Hint="保存食谱"
+                    SemanticProperties.Hint="Save recipe"
                     AutomationId="BtnSave" />
         </Grid>
     </Grid>

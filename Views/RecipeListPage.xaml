@@ -6,7 +6,7 @@
              xmlns:controls="clr-namespace:ssk.Controls"
              x:Class="ssk.Views.RecipeListPage"
              x:DataType="viewmodels:RecipeListViewModel"
-             Title="食谱">
+             Title="Recipe">
 
     <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
     <Grid RowDefinitions="Auto,Auto,*,Auto"
@@ -14,16 +14,16 @@
           MaximumWidthRequest="{OnIdiom Phone=0, Tablet=1200, Desktop=1200}"
           HorizontalOptions="{OnIdiom Phone=Fill, Tablet=Center, Desktop=Center}">
 
-        <!-- 搜索栏 -->
+        <!-- Search bar -->
         <SearchBar Grid.Row="0"
-                   Placeholder="搜索食谱..."
+                   Placeholder="Search recipe..."
                    Text="{Binding SearchText}"
                    SearchCommand="{Binding SearchCommand}"
                    Margin="0,0,0,8"
                    AutomationId="SearchBar"
-                   SemanticProperties.Hint="搜索食谱" />
+                   SemanticProperties.Hint="Search recipe" />
 
-        <!-- 分类标签 -->
+        <!-- Category tags -->
         <ScrollView Grid.Row="1"
                     Orientation="Horizontal"
                     HorizontalScrollBarVisibility="Never"
@@ -32,7 +32,7 @@
                                    Spacing="8" />
         </ScrollView>
 
-        <!-- 食谱网格列表 -->
+        <!-- Recipe grid list -->
         <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Recipes}"
                         RemainingItemsThreshold="3"
@@ -61,9 +61,9 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 底部新建按钮 -->
+        <!-- Bottom create button -->
         <Button Grid.Row="3"
-                Text="&#xf067; 新建食谱"
+                Text="&#xf067; New Recipe"
                 FontFamily="FA"
                 Command="{Binding NavigateToAddCommand}"
                 BackgroundColor="{StaticResource Primary}"
@@ -73,7 +73,7 @@
                 FontAttributes="Bold"
                 HeightRequest="50"
                 Margin="0,8,0,0"
-                SemanticProperties.Hint="新建食谱"
+                SemanticProperties.Hint="New recipe"
                 AutomationId="BtnAddRecipe" />
 
     </Grid>

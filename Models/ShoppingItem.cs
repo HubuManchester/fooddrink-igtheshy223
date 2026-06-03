@@ -13,12 +13,12 @@ public class ShoppingItem
     public string Name { get; set; } = string.Empty;
 
     [MaxLength(20)]
-    public string Category { get; set; } = "蔬菜";
+    public string Category { get; set; } = "Vegetable";
 
     public double Quantity { get; set; }
 
     [MaxLength(20)]
-    public string Unit { get; set; } = "克";
+    public string Unit { get; set; } = "gram";
 
     [Ignore]
     public string QuantityDisplay => $"{Quantity:F0} {Unit}";

@@ -10,16 +10,16 @@
 
     <!-- TabBar -->
     <TabBar>
-        <Tab Title="发现" Icon="tab_home.svg">
+        <Tab Title="Discover" Icon="tab_home.svg">
             <ShellContent ContentTemplate="{DataTemplate views:HomePage}"/>
         </Tab>
-        <Tab Title="食谱" Icon="tab_recipe.svg">
+        <Tab Title="Recipe" Icon="tab_recipe.svg">
             <ShellContent ContentTemplate="{DataTemplate views:RecipeListPage}"/>
         </Tab>
-        <Tab Title="计划" Icon="tab_mealplan.svg">
+        <Tab Title="Plan" Icon="tab_mealplan.svg">
             <ShellContent ContentTemplate="{DataTemplate views:MealPlanPage}"/>
         </Tab>
-        <Tab Title="我的" Icon="tab_profile.svg">
+        <Tab Title="Me" Icon="tab_profile.svg">
             <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}"/>
         </Tab>
     </TabBar>

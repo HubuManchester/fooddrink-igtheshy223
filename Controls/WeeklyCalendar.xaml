@@ -11,17 +11,17 @@
         </Border.Shadow>
         <Grid RowDefinitions="Auto,Auto,Auto"
               BindingContext="{x:Reference This}">
-            <!-- 星期标题行 -->
+            <!-- Weekday Title Row -->
             <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*,*,*,*" Margin="0,0,0,4">
-                <Label Grid.Column="0" Text="一" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="1" Text="二" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="2" Text="三" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="3" Text="四" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="4" Text="五" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="5" Text="六" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
-                <Label Grid.Column="6" Text="日" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="0" Text="M" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="1" Text="T" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="2" Text="W" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="3" Text="T" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="4" Text="F" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="5" Text="S" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
+                <Label Grid.Column="6" Text="S" HorizontalOptions="Center" FontSize="{DynamicResource Font12}" TextColor="#6B7280"/>
             </Grid>
-            <!-- 日期数字行 -->
+            <!-- Date Number Row -->
             <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*">
                 <Button x:Name="Day0" Grid.Column="0" Clicked="OnDayClicked" FontSize="{DynamicResource Font14}" MinimumWidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"/>
                 <Button x:Name="Day1" Grid.Column="1" Clicked="OnDayClicked" FontSize="{DynamicResource Font14}" MinimumWidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"/>
@@ -31,7 +31,7 @@
                 <Button x:Name="Day5" Grid.Column="5" Clicked="OnDayClicked" FontSize="{DynamicResource Font14}" MinimumWidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"/>
                 <Button x:Name="Day6" Grid.Column="6" Clicked="OnDayClicked" FontSize="{DynamicResource Font14}" MinimumWidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"/>
             </Grid>
-            <!-- 计划圆点行 -->
+            <!-- Plan Dot Row -->
             <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*,*,*,*" HeightRequest="8">
                 <BoxView x:Name="Dot0" Grid.Column="0" WidthRequest="6" HeightRequest="6" CornerRadius="3" BackgroundColor="Transparent" HorizontalOptions="Center"/>
                 <BoxView x:Name="Dot1" Grid.Column="1" WidthRequest="6" HeightRequest="6" CornerRadius="3" BackgroundColor="Transparent" HorizontalOptions="Center"/>

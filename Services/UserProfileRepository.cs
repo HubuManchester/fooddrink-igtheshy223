@@ -76,7 +76,7 @@ public class UserProfileRepository
 
     public async Task<string> GetUserNameAsync()
     {
-        return await GetAsync("user_name") ?? "美食家";
+        return await GetAsync("user_name") ?? "Food Lover";
     }
 
     public async Task SetUserNameAsync(string name)

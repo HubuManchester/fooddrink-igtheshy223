@@ -11,42 +11,42 @@
             <Shadow Brush="{AppThemeBinding Light=#20000000, Dark=#40000000}" Offset="0,2" Radius="8" Opacity="0.3"/>
         </Border.Shadow>
         <VerticalStackLayout BindingContext="{x:Reference This}">
-            <Label Text="营养信息" FontSize="{DynamicResource Font16}" FontAttributes="Bold" Margin="0,0,0,12"/>
+            <Label Text="Nutrition Info" FontSize="{DynamicResource Font16}" FontAttributes="Bold" Margin="0,0,0,12"/>
             <Grid ColumnDefinitions="*,*,*,*,*">
-                <!-- 热量 -->
+                <!-- Calorie -->
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
                     <Label Text="{Binding Calories, StringFormat='{0:F0}'}" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                            TextColor="{StaticResource Primary}" HorizontalOptions="Center"/>
-                    <Label Text="热量" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
-                    <Label Text="千卡" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                    <Label Text="Calorie" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
+                    <Label Text="kcal" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
-                <!-- 蛋白质 -->
+                <!-- Protein -->
                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
                     <Label Text="{Binding Protein, StringFormat='{0:F0}'}" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                            TextColor="#EC4899" HorizontalOptions="Center"/>
-                    <Label Text="蛋白质" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
-                    <Label Text="克" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                    <Label Text="Protein" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
+                    <Label Text="gram" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
-                <!-- 碳水 -->
+                <!-- Carb -->
                 <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
                     <Label Text="{Binding Carbs, StringFormat='{0:F0}'}" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                            TextColor="#F97316" HorizontalOptions="Center"/>
-                    <Label Text="碳水" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
-                    <Label Text="克" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                    <Label Text="Carb" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
+                    <Label Text="gram" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
-                <!-- 脂肪 -->
+                <!-- Fat -->
                 <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
                     <Label Text="{Binding Fat, StringFormat='{0:F0}'}" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                            TextColor="#22C55E" HorizontalOptions="Center"/>
-                    <Label Text="脂肪" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
-                    <Label Text="克" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                    <Label Text="Fat" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
+                    <Label Text="gram" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
-                <!-- 纤维 -->
+                <!-- Fiber -->
                 <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center">
                     <Label Text="{Binding Fiber, StringFormat='{0:F0}'}" FontSize="{DynamicResource Font18}" FontAttributes="Bold"
                            TextColor="#3B82F6" HorizontalOptions="Center"/>
-                    <Label Text="纤维" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
-                    <Label Text="克" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
+                    <Label Text="Fiber" FontSize="{DynamicResource Font12}" TextColor="#6B7280" HorizontalOptions="Center"/>
+                    <Label Text="gram" FontSize="10" TextColor="#9CA3AF" HorizontalOptions="Center"/>
                 </VerticalStackLayout>
             </Grid>
         </VerticalStackLayout>

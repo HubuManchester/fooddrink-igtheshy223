@@ -11,7 +11,7 @@ public class AuthService
 
     private UserAccount? _currentUser;
 
-    /// <summary>当前登录用户，null 表示游客模式</summary>
+    /// <summary>Current logged in user, null means guest mode</summary>
     public UserAccount? CurrentUser
     {
         get => _currentUser;
@@ -22,13 +22,13 @@ public class AuthService
         }
     }
 
-    /// <summary>是否已登录</summary>
+    /// <summary>Is user logged in</summary>
     public bool IsLoggedIn => CurrentUser != null;
 
-    /// <summary>当前用户ID，未登录返回 0（游客）</summary>
+    /// <summary>Current user ID, returns 0 (guest) if not logged in</summary>
     public int CurrentUserId => CurrentUser?.Id ?? 0;
 
-    /// <summary>登录状态变化事件</summary>
+    /// <summary>Login state changed event</summary>
     public event EventHandler? LoginStateChanged;
 
     public AuthService(DatabaseService db, UserProfileRepository userProfileRepository)
@@ -37,7 +37,7 @@ public class AuthService
         _userProfileRepository = userProfileRepository;
     }
 
-    /// <summary>启动时从 UserPreference 恢复登录状态</summary>
+    /// <summary>Restore login state from UserPreference on startup</summary>
     public async Task CheckAutoLoginAsync()
     {
         try
@@ -63,19 +63,19 @@ public class AuthService
         }
     }
 
-    /// <summary>注册新用户</summary>
+    /// <summary>Register new user</summary>
     public async Task<AuthResult> RegisterAsync(string username, string password)
     {
         try
         {
             await _db.Init();
 
-            // 检查用户名是否已存在
+            // Check if username already exists
             var existing = await _db.Database.Table<UserAccount>()
                 .Where(u => u.Username == username)
                 .FirstOrDefaultAsync();
             if (existing != null)
-                return AuthResult.Fail("用户名已存在");
+                return AuthResult.Fail("Username already exist");
 
             var user = new UserAccount
             {
@@ -93,11 +93,11 @@ public class AuthService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[AuthService] Register error: {ex.Message}");
-            return AuthResult.Fail("注册失败，请重试");
+            return AuthResult.Fail("Register fail, please try again");
         }
     }
 
-    /// <summary>用户登录</summary>
+    /// <summary>User login</summary>
     public async Task<AuthResult> LoginAsync(string username, string password)
     {
         try
@@ -109,10 +109,10 @@ public class AuthService
                 .FirstOrDefaultAsync();
 
             if (user == null)
-                return AuthResult.Fail("用户不存在");
+                return AuthResult.Fail("User not exist");
 
             if (user.PasswordHash != HashPassword(password))
-                return AuthResult.Fail("密码错误");
+                return AuthResult.Fail("Password wrong");
 
             user.LastLoginAt = DateTime.UtcNow;
             await _db.Database.UpdateAsync(user);
@@ -123,11 +123,11 @@ public class AuthService
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[AuthService] Login error: {ex.Message}");
-            return AuthResult.Fail("登录失败，请重试");
+            return AuthResult.Fail("Login fail, please try again");
         }
     }
 
-    /// <summary>退出登录</summary>
+    /// <summary>Logout</summary>
     public async Task LogoutAsync()
     {
         try
@@ -141,14 +141,14 @@ public class AuthService
         }
     }
 
-    /// <summary>获取登录提示是否已被关闭</summary>
+    /// <summary>Check if login prompt has been dismissed</summary>
     public async Task<bool> IsLoginPromptDismissedAsync()
     {
         var value = await _userProfileRepository.GetAsync("login_prompt_dismissed");
         return value == "true";
     }
 
-    /// <summary>关闭登录提示</summary>
+    /// <summary>Dismiss login prompt</summary>
     public async Task DismissLoginPromptAsync()
     {
         await _userProfileRepository.SetAsync("login_prompt_dismissed", "true");
@@ -166,7 +166,7 @@ public class AuthService
     }
 }
 
-/// <summary>认证操作结果</summary>
+/// <summary>Auth operation result</summary>
 public class AuthResult
 {
     public bool Success { get; init; }

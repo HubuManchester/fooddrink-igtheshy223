@@ -38,7 +38,7 @@ public class NutritionRepository
             if (existing != null)
                 return existing;
 
-            // 查询最近一天的目标值作为默认值
+            // Query the most recent target as default value
             var allTargets = await _db.Database.Table<NutritionTarget>()
                 .OrderByDescending(t => t.TargetDate)
                 .ToListAsync();

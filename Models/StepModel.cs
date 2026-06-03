@@ -5,7 +5,7 @@ public class StepModel
     public int Index { get; set; }
     public string Text { get; set; } = string.Empty;
 
-    public string DisplayIndex => $"步骤{Index + 1}";
+    public string DisplayIndex => $"Step{Index + 1}";
 
     public StepModel() { }
 
